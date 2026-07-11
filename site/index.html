@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Draft Banket — еда на банкеты</title>
+<meta name="description" content="Draft Banket — витрина блюд для банкетов: брускетты, тарталетки, салаты, сеты и многое другое. Соберите заказ и отправьте заявку." />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="brand">Draft <span>Banket</span></div>
+      <div class="header-actions">
+        <a class="phone-link" href="tel:+375000000000">
+          ☎ +375 (00) 000-00-00
+        </a>
+        <button class="icon-btn" id="cartOpenBtn" aria-label="Открыть корзину">
+          🛒
+          <span class="cart-count" id="cartCount" hidden>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <h1>Еда на банкеты Draft Banket</h1>
+      <p>Выберите блюда из каталога, соберите заказ и отправьте заявку — мы свяжемся с вами для подтверждения.</p>
+    </section>
+
+    <nav class="category-nav">
+      <div class="container">
+        <div class="category-nav-scroll" id="categoryNav"></div>
+      </div>
+    </nav>
+
+    <div class="container" id="catalog"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div>Draft Banket — еда на банкеты</div>
+      <div>Телефон: <a href="tel:+375000000000">+375 (00) 000-00-00</a></div>
+    </div>
+  </footer>
+
+  <!-- Cart overlay -->
+  <div class="overlay" id="cartOverlay">
+    <div class="overlay-backdrop" data-close-overlay></div>
+    <div class="overlay-panel">
+
+      <div id="viewCart">
+        <div class="overlay-header">
+          <h3>Ваша корзина</h3>
+          <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
+        </div>
+        <div class="overlay-body" id="cartBody"></div>
+        <div class="overlay-footer" id="cartFooter">
+          <div class="cart-total-row">
+            <span>Итого</span>
+            <span id="cartTotal">0 ₽</span>
+          </div>
+          <button class="primary-btn" id="toCheckoutBtn">Оформить заявку</button>
+        </div>
+      </div>
+
+      <div id="viewCheckout" hidden>
+        <div class="overlay-header">
+          <h3>Оформление заявки</h3>
+          <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
+        </div>
+        <div class="overlay-body">
+          <div class="order-summary" id="checkoutSummary"></div>
+          <form id="checkoutForm" novalidate>
+            <div class="field" id="fieldName">
+              <label for="tgNick">Ник в Telegram</label>
+              <input type="text" id="tgNick" placeholder="@username" autocomplete="off" />
+              <div class="field-error">Укажите ник в Telegram</div>
+            </div>
+            <div class="field" id="fieldPhone">
+              <label for="phone">Номер телефона</label>
+              <input type="tel" id="phone" placeholder="+375 29 000-00-00" autocomplete="off" />
+              <div class="field-error">Укажите корректный номер телефона</div>
+            </div>
+          </form>
+          <p class="form-note">Нажимая «Отправить заявку», вы соглашаетесь на обработку данных для связи с вами по заказу.</p>
+        </div>
+        <div class="overlay-footer">
+          <button class="primary-btn" id="submitOrderBtn">Отправить заявку</button>
+          <button class="secondary-btn" id="backToCartBtn">Назад в корзину</button>
+        </div>
+      </div>
+
+      <div id="viewSuccess" hidden>
+        <div class="overlay-header">
+          <h3>Заявка отправлена</h3>
+          <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
+        </div>
+        <div class="overlay-body">
+          <div class="success-view">
+            <div class="icon">✅</div>
+            <h3>Спасибо за заявку!</h3>
+            <p>Мы скоро свяжемся с вами для подтверждения заказа.</p>
+            <button class="primary-btn" id="closeSuccessBtn">Продолжить покупки</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
