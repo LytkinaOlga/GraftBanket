@@ -1,330 +1,115 @@
 (function () {
-  "use strict";
+  'use strict';
+  var KEY = 'draftbanket_cart_v2';
+  var products = ITEMS.filter(function (item) { return item.type === 'snack'; });
+  var byId = Object.fromEntries(products.map(function (item) { return [item.id, item]; }));
+  var cart = loadCart();
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' BYN'; };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
-  var CART_STORAGE_KEY = "draftbanket_cart_v1";
-  var CART_TTL_MS = 48 * 60 * 60 * 1000; // 48 часов
-
-  var itemsById = {};
-  ITEMS.forEach(function (it) { itemsById[it.id] = it; });
-
-  var cart = loadCart(); // { itemId: qty }
-
-  // ---------- storage ----------
-
+  function validQty(item, qty) { return Number.isInteger(qty) && qty >= item.minQty && (qty - item.minQty) % item.qtyStep === 0; }
   function loadCart() {
     try {
-      var raw = localStorage.getItem(CART_STORAGE_KEY);
-      if (!raw) return {};
-      var data = JSON.parse(raw);
-      if (!data || typeof data !== "object") return {};
-      if (typeof data.savedAt !== "number" || Date.now() - data.savedAt > CART_TTL_MS) {
-        localStorage.removeItem(CART_STORAGE_KEY);
-        return {};
-      }
-      return data.items || {};
-    } catch (e) {
-      return {};
-    }
-  }
-
-  function saveCart() {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), items: cart }));
-    } catch (e) {
-      /* ignore quota / privacy-mode errors */
-    }
-  }
-
-  function clearCart() {
-    cart = {};
-    try { localStorage.removeItem(CART_STORAGE_KEY); } catch (e) {}
-  }
-
-  // ---------- cart helpers ----------
-
-  function cartCount() {
-    var n = 0;
-    for (var id in cart) n += cart[id];
-    return n;
-  }
-
-  function cartTotal() {
-    var sum = 0;
-    for (var id in cart) {
-      var it = itemsById[id];
-      if (it) sum += it.price * cart[id];
-    }
-    return sum;
-  }
-
-  function formatPrice(n) {
-    return n.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " BYN";
-  }
-
-  function setQty(id, qty) {
-    if (qty <= 0) delete cart[id];
-    else cart[id] = qty;
-    saveCart();
-    renderAll();
-  }
-
-  function addOne(id) { setQty(id, (cart[id] || 0) + 1); }
-  function removeOne(id) { setQty(id, (cart[id] || 0) - 1); }
-
-  // ---------- rendering: catalog ----------
-
-  var catalogEl = document.getElementById("catalog");
-  var categoryNavEl = document.getElementById("categoryNav");
-
-  function buildCatalog() {
-    categoryNavEl.innerHTML = CATEGORIES.map(function (c) {
-      return '<a class="chip" data-cat="' + c.id + '" href="#cat-' + c.id + '">' + c.title + "</a>";
-    }).join("");
-
-    catalogEl.innerHTML = CATEGORIES.map(function (c) {
-      var items = ITEMS.filter(function (it) { return it.category === c.id; });
-      return (
-        '<section class="category-section" id="cat-' + c.id + '">' +
-        "<h2>" + c.title + "</h2>" +
-        '<div class="grid">' +
-        items.map(renderCard).join("") +
-        "</div>" +
-        "</section>"
-      );
-    }).join("");
-  }
-
-  function renderCard(it) {
-    return (
-      '<article class="card" data-id="' + it.id + '">' +
-      '<div class="card-photo"><img src="' + it.img + '" alt="' + escapeHtml(it.name) + '" loading="lazy" /></div>' +
-      '<div class="card-body">' +
-      '<div class="card-name">' + escapeHtml(it.name) + "</div>" +
-      '<div class="card-weight">' + escapeHtml(it.weight) + "</div>" +
-      '<div class="card-desc">' + escapeHtml(it.description) + "</div>" +
-      '<div class="card-composition">' + escapeHtml(it.composition) + "</div>" +
-      '<div class="card-footer">' +
-      '<div class="card-price">' + formatPrice(it.price) + "</div>" +
-      '<div class="card-action" data-action-for="' + it.id + '"></div>' +
-      "</div>" +
-      "</div>" +
-      "</article>"
-    );
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-
-  function renderCardActions() {
-    document.querySelectorAll(".card-action").forEach(function (el) {
-      var id = el.getAttribute("data-action-for");
-      var qty = cart[id] || 0;
-      if (qty === 0) {
-        el.innerHTML = '<button class="add-btn" data-add="' + id + '">Добавить</button>';
-      } else {
-        el.innerHTML =
-          '<div class="qty-stepper">' +
-          '<button data-minus="' + id + '" aria-label="Уменьшить">−</button>' +
-          "<span>" + qty + "</span>" +
-          '<button data-plus="' + id + '" aria-label="Увеличить">+</button>' +
-          "</div>";
-      }
-    });
-  }
-
-  // ---------- rendering: cart panel ----------
-
-  var cartCountEl = document.getElementById("cartCount");
-  var cartBodyEl = document.getElementById("cartBody");
-  var cartTotalEl = document.getElementById("cartTotal");
-  var cartFooterEl = document.getElementById("cartFooter");
-  var toCheckoutBtn = document.getElementById("toCheckoutBtn");
-
-  function renderCartPanel() {
-    var count = cartCount();
-    if (count > 0) {
-      cartCountEl.hidden = false;
-      cartCountEl.textContent = String(count);
-    } else {
-      cartCountEl.hidden = true;
-    }
-
-    var ids = Object.keys(cart);
-    if (ids.length === 0) {
-      cartBodyEl.innerHTML = '<div class="cart-empty">Корзина пока пуста.<br>Добавьте блюда из каталога.</div>';
-      cartFooterEl.hidden = true;
-      return;
-    }
-
-    cartFooterEl.hidden = false;
-    cartBodyEl.innerHTML = ids.map(function (id) {
-      var it = itemsById[id];
-      var qty = cart[id];
-      if (!it) return "";
-      return (
-        '<div class="cart-line">' +
-        '<img src="' + it.img + '" alt="" />' +
-        '<div class="cart-line-info">' +
-        '<div class="cart-line-name">' + escapeHtml(it.name) + "</div>" +
-        '<div class="cart-line-price">' + formatPrice(it.price) + " × " + qty + " = " + formatPrice(it.price * qty) + "</div>" +
-        '<div class="cart-line-controls">' +
-        '<div class="qty-stepper">' +
-        '<button data-minus="' + id + '" aria-label="Уменьшить">−</button>' +
-        "<span>" + qty + "</span>" +
-        '<button data-plus="' + id + '" aria-label="Увеличить">+</button>' +
-        "</div>" +
-        '<button class="remove-btn" data-remove="' + id + '">Удалить</button>' +
-        "</div>" +
-        "</div>" +
-        "</div>"
-      );
-    }).join("");
-
-    cartTotalEl.textContent = formatPrice(cartTotal());
-  }
-
-  function renderAll() {
-    renderCardActions();
-    renderCartPanel();
-  }
-
-  // ---------- delegated click handling ----------
-
-  document.addEventListener("click", function (e) {
-    var addId = e.target.closest("[data-add]");
-    var plusId = e.target.closest("[data-plus]");
-    var minusId = e.target.closest("[data-minus]");
-    var removeId = e.target.closest("[data-remove]");
-
-    if (addId) addOne(addId.getAttribute("data-add"));
-    else if (plusId) addOne(plusId.getAttribute("data-plus"));
-    else if (minusId) removeOne(minusId.getAttribute("data-minus"));
-    else if (removeId) setQty(removeId.getAttribute("data-remove"), 0);
-  });
-
-  // ---------- category nav active state ----------
-
-  document.addEventListener("click", function (e) {
-    var chip = e.target.closest(".chip");
-    if (!chip) return;
-    document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("active"); });
-    chip.classList.add("active");
-  });
-
-  // ---------- overlay: open/close & views ----------
-
-  var cartOverlay = document.getElementById("cartOverlay");
-  var viewCart = document.getElementById("viewCart");
-  var viewCheckout = document.getElementById("viewCheckout");
-  var viewSuccess = document.getElementById("viewSuccess");
-
-  function showView(view) {
-    [viewCart, viewCheckout, viewSuccess].forEach(function (v) { v.hidden = v !== view; });
-  }
-
-  function openOverlay() {
-    cartOverlay.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeOverlay() {
-    cartOverlay.classList.remove("open");
-    document.body.style.overflow = "";
-  }
-
-  document.getElementById("cartOpenBtn").addEventListener("click", function () {
-    showView(viewCart);
-    renderCartPanel();
-    openOverlay();
-  });
-
-  document.querySelectorAll("[data-close-overlay]").forEach(function (el) {
-    el.addEventListener("click", closeOverlay);
-  });
-
-  // ---------- checkout ----------
-
-  var checkoutSummary = document.getElementById("checkoutSummary");
-  var tgNickInput = document.getElementById("tgNick");
-  var phoneInput = document.getElementById("phone");
-  var fieldName = document.getElementById("fieldName");
-  var fieldPhone = document.getElementById("fieldPhone");
-  var submitBtn = document.getElementById("submitOrderBtn");
-
-  toCheckoutBtn.addEventListener("click", function () {
-    if (cartCount() === 0) return;
-    checkoutSummary.textContent = cartCount() + " поз. на сумму " + formatPrice(cartTotal());
-    showView(viewCheckout);
-  });
-
-  document.getElementById("backToCartBtn").addEventListener("click", function () {
-    showView(viewCart);
-  });
-
-  document.getElementById("closeSuccessBtn").addEventListener("click", function () {
-    closeOverlay();
-    showView(viewCart);
-  });
-
-  function validatePhone(value) {
-    var digits = value.replace(/\D/g, "");
-    return digits.length >= 10 && digits.length <= 15;
-  }
-
-  function validateForm() {
-    var nickOk = tgNickInput.value.trim().length >= 2;
-    var phoneOk = validatePhone(phoneInput.value);
-    fieldName.classList.toggle("invalid", !nickOk);
-    fieldPhone.classList.toggle("invalid", !phoneOk);
-    return nickOk && phoneOk;
-  }
-
-  submitBtn.addEventListener("click", function () {
-    if (!validateForm()) return;
-
-    var payload = {
-      telegramNick: tgNickInput.value.trim(),
-      phone: phoneInput.value.trim(),
-      items: Object.keys(cart).map(function (id) {
-        var it = itemsById[id];
-        return { name: it.name, quantity: cart[id], price: it.price, sum: it.price * cart[id] };
-      }),
-      total: cartTotal(),
-    };
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Отправляем…";
-
-    fetch("/api/order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error("request failed");
-        return res.json();
-      })
-      .then(function () {
-        clearCart();
-        renderAll();
-        tgNickInput.value = "";
-        phoneInput.value = "";
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Отправить заявку";
-        showView(viewSuccess);
-      })
-      .catch(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Отправить заявку";
-        alert("Не удалось отправить заявку. Попробуйте ещё раз или свяжитесь с нами по телефону.");
+      var saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      if (!saved.savedAt || Date.now() - saved.savedAt > 48 * 3600000) return {};
+      var clean = {};
+      Object.keys(saved.items || {}).forEach(function (id) {
+        if (byId[id] && validQty(byId[id], saved.items[id])) clean[id] = saved.items[id];
       });
+      return clean;
+    } catch (_) { return {}; }
+  }
+  function saveCart() { try { localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), items: cart })); } catch (_) {} }
+  function subtotal() { return Object.keys(cart).reduce(function (sum, id) { return sum + byId[id].price * cart[id]; }, 0); }
+  function lineCount() { return Object.keys(cart).length; }
+  function delivery() {
+    var method = $('fulfillment').value;
+    if (method === 'pickup') return 0;
+    if (method === 'minsk') return subtotal() >= 500 ? 0 : 20;
+    return null;
+  }
+  function changeQty(id, direction) {
+    var item = byId[id]; if (!item) return;
+    var current = cart[id] || 0;
+    var next = direction === 'remove' ? 0 : current === 0 ? item.minQty : current + (direction === 'plus' ? item.qtyStep : -item.qtyStep);
+    if (next < item.minQty) delete cart[id]; else cart[id] = next;
+    saveCart(); render();
+  }
+  function control(id) {
+    var item = byId[id], qty = cart[id] || 0;
+    if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">Добавить</button>';
+    return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
+  }
+  function renderCatalog() {
+    var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets'; });
+    $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
+    $('catalog').innerHTML = categories.map(function (category) {
+      return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.category === category.id; }).map(function (item) {
+        return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
+      }).join('') + '</div></section>';
+    }).join('');
+  }
+  function renderCart() {
+    var ids = Object.keys(cart);
+    $('cartCount').hidden = ids.length === 0;
+    $('cartCount').textContent = String(ids.length);
+    $('cartFooter').hidden = ids.length === 0;
+    $('cartBody').innerHTML = ids.length ? ids.map(function (id) {
+      var item = byId[id], qty = cart[id];
+      return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(item.price * qty) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
+    }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте закуски из конструктора.</div>';
+    $('cartTotal').textContent = money(subtotal());
+    renderSummary();
+  }
+  function renderSummary() {
+    var fee = delivery();
+    $('checkoutSummary').innerHTML = '<div>Закуски: <strong>' + money(subtotal()) + '</strong></div><div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div><div>Предварительный итог: <strong>' + (fee === null ? money(subtotal()) + ' + доставка' : money(subtotal() + fee)) + '</strong></div>';
+  }
+  function render() { document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control); }); renderCart(); }
+  function show(view) { ['viewCart', 'viewCheckout', 'viewSuccess'].forEach(function (id) { $(id).hidden = id !== view; }); }
+  function open() { $('cartOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function close() { $('cartOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function updateMethod() { $('fieldAddress').hidden = $('fulfillment').value === 'pickup'; renderSummary(); }
+  function fieldValid(id, ok) { $(id).classList.toggle('invalid', !ok); return ok; }
+  function validate() {
+    var name = fieldValid('fieldName', $('customerName').value.trim().length >= 2);
+    var digits = $('phone').value.replace(/\D/g, '');
+    var phone = fieldValid('fieldPhone', digits.length >= 10 && digits.length <= 15);
+    var day = $('eventDate').value;
+    var date = fieldValid('fieldDate', !!day && day >= new Date().toISOString().slice(0, 10));
+    var time = fieldValid('fieldTime', !!$('eventTime').value);
+    var address = fieldValid('fieldAddress', $('fulfillment').value === 'pickup' || $('address').value.trim().length >= 3);
+    return name && phone && date && time && address;
+  }
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-action]');
+    if (button) changeQty(button.dataset.id, button.dataset.action);
   });
-
-  // ---------- init ----------
-
-  buildCatalog();
-  renderAll();
+  $('cartOpenBtn').addEventListener('click', function () { show('viewCart'); open(); });
+  document.querySelectorAll('[data-close-overlay]').forEach(function (el) { el.addEventListener('click', close); });
+  $('toCheckoutBtn').addEventListener('click', function () { if (lineCount()) { show('viewCheckout'); updateMethod(); } });
+  $('backToCartBtn').addEventListener('click', function () { show('viewCart'); });
+  $('closeSuccessBtn').addEventListener('click', function () { close(); show('viewCart'); });
+  $('fulfillment').addEventListener('change', updateMethod);
+  $('eventDate').min = new Date().toISOString().slice(0, 10);
+  $('submitOrderBtn').addEventListener('click', async function () {
+    if (!lineCount() || !validate()) return;
+    var button = this;
+    var payload = {
+      name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
+      eventDate: $('eventDate').value, eventTime: $('eventTime').value,
+      fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
+      items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
+      source: new URLSearchParams(location.search).get('utm_source') || 'site'
+    };
+    button.disabled = true; button.textContent = 'Отправляем…';
+    try {
+      var response = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!response.ok) throw new Error('request failed');
+      cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
+    } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
+    finally { button.disabled = false; button.textContent = 'Отправить заявку'; }
+  });
+  renderCatalog(); render(); updateMethod();
 })();

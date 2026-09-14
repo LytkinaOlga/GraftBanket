@@ -91,3 +91,21 @@ const ITEMS = [
   { id: "set3", category: "sets", name: "Фритюрный сет", weight: "на 10 персон", price: 95.00, composition: "Ассорти закусок во фритюре: наггетсы, кольца кальмара, сырные шарики, соусы", description: "Горячие закуски для активного банкета.", img: placeholderImg("🍤", "#F1F8E9") },
   { id: "set4", category: "sets", name: "Сет «Под крепкие напитки»", weight: "на 10 персон", price: 110.00, composition: "Солёности, маринады, мясная и сырная нарезка, хлеб", description: "Классическая закуска под крепкий алкоголь.", img: placeholderImg("🥃", "#F1F8E9") },
 ];
+
+// Временные правила конструктора для локального прототипа. Перед публикацией
+// minQty и qtyStep утверждаются отдельно для каждой реальной позиции.
+const DEMO_RULES = {
+  bruschette: [6, 6], profiteroles: [8, 4], rolls: [6, 6],
+  tartlets: [8, 4], sandwiches: [6, 6], salads: [2, 1],
+  burgers: [6, 3], quiches: [6, 3], cheesecakes: [4, 2],
+  "biscuit-rolls": [4, 2]
+};
+ITEMS.forEach(function (item) {
+  item.type = item.category === "sets" ? "legacy-placeholder" : "snack";
+  if (item.type === "snack") {
+    item.minQty = DEMO_RULES[item.category][0];
+    item.qtyStep = DEMO_RULES[item.category][1];
+  }
+});
+
+if (typeof module !== "undefined") module.exports = { CATEGORIES, ITEMS };

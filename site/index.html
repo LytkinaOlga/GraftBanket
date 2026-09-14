@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Draft Banket — еда на банкеты</title>
-<meta name="description" content="Draft Banket — витрина блюд для банкетов: брускетты, тарталетки, салаты, сеты и многое другое. Соберите заказ и отправьте заявку." />
+<title>draft banket — боксы и закуски в Минске</title>
+<meta name="description" content="Draft Banket: готовые боксы и наборы закусок в Минске. Выберите готовое или соберите свой набор и оставьте заявку." />
+<link rel="icon" type="image/png" href="assets/draft-catering-logo.png" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
   <header class="site-header">
     <div class="container">
-      <div class="brand">Draft <span>Banket</span></div>
+      <a class="brand" href="#top" aria-label="Draft Catering — на главную"><img src="assets/draft-catering-logo.png" alt="Draft Catering" /></a>
       <div class="header-actions">
-        <a class="phone-link" href="tel:+375000000000">
-          ☎ +375 (00) 000-00-00
-        </a>
         <button class="icon-btn" id="cartOpenBtn" aria-label="Открыть корзину">
-          🛒
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l-1.5 13h-13L4 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
           <span class="cart-count" id="cartCount" hidden>0</span>
         </button>
       </div>
@@ -25,10 +23,46 @@
   </header>
 
   <main>
-    <section class="hero container">
-      <h1>Еда на банкеты Draft Banket</h1>
-      <p>Выберите блюда из каталога, соберите заказ и отправьте заявку — мы свяжемся с вами для подтверждения.</p>
+    <section class="hero" id="top">
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <div class="hero-overline"><span>КЕЙТЕРИНГ В МИНСКЕ</span></div>
+          <h1>Боксы и<br><span>закуски</span> для<br>ваших событий.</h1>
+          <p>Выберите готовый бокс или соберите свой набор из закусок. Оставьте заявку — мы свяжемся с вами и согласуем детали.</p>
+          <div class="hero-actions"><a class="primary-link" href="#ready-boxes"><small>01</small><strong>Готовые боксы</strong><span aria-hidden="true">↗</span></a><a class="secondary-link" href="#constructor"><small>02</small><strong>Собрать свой набор</strong><span aria-hidden="true">↗</span></a></div>
+        </div>
+        <div class="hero-visual"><img src="assets/hero-snacks-yellow-v8.png" alt="Брускетты, тарталетки, закусочные шарики и рулетики из ветчины на жёлтом фоне" /></div>
+      </div>
     </section>
+
+    <section class="container how-it-works" aria-label="Как заказать">
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">01</span>
+          <div class="step-text"><strong>Выберите</strong><span>Готовый бокс или свой набор закусок</span></div>
+        </li>
+        <li class="step">
+          <span class="step-num">02</span>
+          <div class="step-text"><strong>Оформите заявку</strong><span>Имя, телефон и удобное время</span></div>
+        </li>
+        <li class="step">
+          <span class="step-num">03</span>
+          <div class="step-text"><strong>Мы свяжемся</strong><span>Администратор подтвердит детали и стоимость</span></div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="container ready-section" id="ready-boxes">
+      <div class="section-heading"><div><span class="eyebrow">Готовое решение</span><h2>Наши боксы</h2></div></div>
+      <p class="section-intro">Мы оформляем уже проработанные боксы. Пока их точные составы и цены уточняются, посмотрите реальные примеры.</p>
+      <div class="ready-grid">
+        <figure><img src="assets/boxes/box-01.jpg" alt="Пример готового бокса с закусками" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
+        <figure><img src="assets/boxes/box-02.jpg" alt="Пример бокса с несколькими видами закусок" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
+        <figure><img src="assets/boxes/box-03.jpg" alt="Пример бокса с мини-сэндвичами" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="container constructor-heading" id="constructor"><span class="eyebrow">Ваш выбор</span><h2>Соберите свой набор</h2><p>Добавляйте разные закуски. У каждой позиции указан минимальный заказ и шаг количества.</p><div class="demo-notice">Сейчас показан демонстрационный ассортимент: названия, цены и правила количества ещё будут заменены на утверждённые.</div></section>
 
     <nav class="category-nav">
       <div class="container">
@@ -41,8 +75,8 @@
 
   <footer class="site-footer">
     <div class="container">
-      <div>Draft Banket — еда на банкеты</div>
-      <div>Телефон: <a href="tel:+375000000000">+375 (00) 000-00-00</a></div>
+      <div>draft banket · Минск</div>
+      <div>Самовывоз или доставка. Детали заказа подтвердит администратор.</div>
     </div>
   </footer>
 
@@ -51,7 +85,7 @@
     <div class="overlay-backdrop" data-close-overlay></div>
     <div class="overlay-panel">
 
-      <div id="viewCart">
+      <div id="viewCart" class="overlay-view">
         <div class="overlay-header">
           <h3>Ваша корзина</h3>
           <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
@@ -60,13 +94,13 @@
         <div class="overlay-footer" id="cartFooter">
           <div class="cart-total-row">
             <span>Итого</span>
-            <span id="cartTotal">0 ₽</span>
+            <span id="cartTotal">0 BYN</span>
           </div>
           <button class="primary-btn" id="toCheckoutBtn">Оформить заявку</button>
         </div>
       </div>
 
-      <div id="viewCheckout" hidden>
+      <div id="viewCheckout" class="overlay-view" hidden>
         <div class="overlay-header">
           <h3>Оформление заявки</h3>
           <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
@@ -75,17 +109,23 @@
           <div class="order-summary" id="checkoutSummary"></div>
           <form id="checkoutForm" novalidate>
             <div class="field" id="fieldName">
-              <label for="tgNick">Ник в Telegram</label>
-              <input type="text" id="tgNick" placeholder="@username" autocomplete="off" />
-              <div class="field-error">Укажите ник в Telegram</div>
+              <label for="customerName">Ваше имя</label>
+              <input type="text" id="customerName" autocomplete="name" />
+              <div class="field-error">Укажите имя</div>
             </div>
             <div class="field" id="fieldPhone">
               <label for="phone">Номер телефона</label>
               <input type="tel" id="phone" placeholder="+375 29 000-00-00" autocomplete="off" />
               <div class="field-error">Укажите корректный номер телефона</div>
             </div>
+            <div class="field" id="fieldDate"><label for="eventDate">Дата заказа</label><input type="date" id="eventDate" /><div class="field-error">Выберите будущую дату</div></div>
+            <div class="field" id="fieldTime"><label for="eventTime">Желаемое время</label><input type="time" id="eventTime" /><div class="field-error">Укажите время</div></div>
+            <div class="field" id="fieldMethod"><label for="fulfillment">Как получите заказ</label><select id="fulfillment"><option value="pickup">Самовывоз</option><option value="minsk">Доставка в пределах МКАД</option><option value="other">Другое место — обсудить с администратором</option></select></div>
+            <div class="field" id="fieldAddress" hidden><label for="address">Адрес или район доставки</label><input type="text" id="address" autocomplete="street-address" /><div class="field-error">Укажите адрес или район</div></div>
+            <div class="field"><label for="comment">Комментарий</label><textarea id="comment" rows="3" placeholder="Что важно учесть?"></textarea></div>
+            <div class="field"><label for="tgNick">Ник в Telegram <span class="optional">необязательно</span></label><input type="text" id="tgNick" placeholder="@username" autocomplete="off" /></div>
           </form>
-          <p class="form-note">Нажимая «Отправить заявку», вы соглашаетесь на обработку данных для связи с вами по заказу.</p>
+          <p class="form-note">Это заявка, а не подтверждённый заказ. Администратор свяжется с вами, уточнит доступность и итоговую стоимость.</p>
         </div>
         <div class="overlay-footer">
           <button class="primary-btn" id="submitOrderBtn">Отправить заявку</button>
@@ -93,7 +133,7 @@
         </div>
       </div>
 
-      <div id="viewSuccess" hidden>
+      <div id="viewSuccess" class="overlay-view" hidden>
         <div class="overlay-header">
           <h3>Заявка отправлена</h3>
           <button class="overlay-close" data-close-overlay aria-label="Закрыть">✕</button>
@@ -102,7 +142,7 @@
           <div class="success-view">
             <div class="icon">✅</div>
             <h3>Спасибо за заявку!</h3>
-            <p>Мы скоро свяжемся с вами для подтверждения заказа.</p>
+            <p>Администратор свяжется с вами, чтобы подтвердить детали заказа.</p>
             <button class="primary-btn" id="closeSuccessBtn">Продолжить покупки</button>
           </div>
         </div>
