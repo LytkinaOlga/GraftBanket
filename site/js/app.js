@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var KEY = 'draftbanket_cart_v2';
-  var products = ITEMS.filter(function (item) { return item.type === 'snack'; });
+  var products = ITEMS.filter(function (item) { return item.type === 'snack' || item.type === 'ready-box'; });
   var byId = Object.fromEntries(products.map(function (item) { return [item.id, item]; }));
   var cart = loadCart();
   var $ = function (id) { return document.getElementById(id); };
@@ -45,7 +45,7 @@
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets'; });
     $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
-      return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.category === category.id; }).map(function (item) {
+      return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
       }).join('') + '</div></section>';
     }).join('');
@@ -58,7 +58,7 @@
     $('cartBody').innerHTML = ids.length ? ids.map(function (id) {
       var item = byId[id], qty = cart[id];
       return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(item.price * qty) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
-    }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте закуски из конструктора.</div>';
+    }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте готовый бокс или закуски из конструктора.</div>';
     $('cartTotal').textContent = money(subtotal());
     renderSummary();
   }
@@ -83,8 +83,27 @@
     return name && phone && date && time && address;
   }
   document.addEventListener('click', function (event) {
+    if (event.target.closest('[data-telegram-placeholder]')) {
+      event.preventDefault();
+      return;
+    }
+    var galleryButton = event.target.closest('[data-gallery-prev], [data-gallery-next]');
+    if (galleryButton) {
+      var gallery = galleryButton.closest('[data-gallery]');
+      var track = gallery.querySelector('.ready-box-gallery-track');
+      track.scrollBy({ left: track.clientWidth * (galleryButton.hasAttribute('data-gallery-next') ? 1 : -1), behavior: 'smooth' });
+      return;
+    }
     var button = event.target.closest('[data-action]');
     if (button) changeQty(button.dataset.id, button.dataset.action);
+  });
+  document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+    var track = gallery.querySelector('.ready-box-gallery-track');
+    var dots = gallery.querySelectorAll('.gallery-dots span');
+    track.addEventListener('scroll', function () {
+      var active = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+      dots.forEach(function (dot, index) { dot.classList.toggle('active', index === active); });
+    }, { passive: true });
   });
   $('cartOpenBtn').addEventListener('click', function () { show('viewCart'); open(); });
   document.querySelectorAll('[data-close-overlay]').forEach(function (el) { el.addEventListener('click', close); });

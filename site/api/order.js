@@ -1,5 +1,5 @@
 const { ITEMS } = require('../js/data.js');
-const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'snack').map(item => [item.id, item]));
+const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'snack' || item.type === 'ready-box').map(item => [item.id, item]));
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
 

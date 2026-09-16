@@ -14,6 +14,10 @@
     <div class="container">
       <a class="brand" href="#top" aria-label="Draft Catering — на главную"><img src="assets/draft-catering-logo.png" alt="Draft Catering" /></a>
       <div class="header-actions">
+        <a class="header-phone" href="tel:+375295704749" aria-label="Позвонить по номеру плюс триста семьдесят пять двадцать девять пятьсот семьдесят сорок семь сорок девять">+375 29 570-47-49</a>
+        <a class="header-telegram" href="#" data-telegram-placeholder aria-disabled="true" title="Ссылка на Telegram скоро появится" aria-label="Telegram — ссылка скоро появится">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.7 3.4 18.8 20c-.2 1.2-.8 1.5-1.8.9l-4.4-3.3-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.4-.3-.1-.5-.5-.2L7.5 14.3l-4.4-1.4c-1-.3-1-1 .2-1.4L20.5 2.9c.8-.3 1.5.2 1.2.5Z" fill="currentColor"/></svg>
+        </a>
         <button class="icon-btn" id="cartOpenBtn" aria-label="Открыть корзину">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l-1.5 13h-13L4 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
           <span class="cart-count" id="cartCount" hidden>0</span>
@@ -36,29 +40,300 @@
     </section>
 
     <section class="container how-it-works" aria-label="Как заказать">
-      <ol class="steps">
-        <li class="step">
-          <span class="step-num">01</span>
-          <div class="step-text"><strong>Выберите</strong><span>Готовый бокс или свой набор закусок</span></div>
-        </li>
-        <li class="step">
-          <span class="step-num">02</span>
-          <div class="step-text"><strong>Оформите заявку</strong><span>Имя, телефон и удобное время</span></div>
-        </li>
-        <li class="step">
-          <span class="step-num">03</span>
-          <div class="step-text"><strong>Мы свяжемся</strong><span>Администратор подтвердит детали и стоимость</span></div>
-        </li>
-      </ol>
+      <div class="how-panel">
+        <div class="section-heading how-heading"><div><span class="eyebrow">Как это работает</span><h2>От выбора до праздника — три шага</h2></div></div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">01</span>
+            <div class="step-text"><strong>Выберите</strong><span>Готовый бокс или свой набор закусок</span></div>
+          </li>
+          <li class="step">
+            <span class="step-num">02</span>
+            <div class="step-text"><strong>Оформите заявку</strong><span>Имя, телефон и удобное время</span></div>
+          </li>
+          <li class="step">
+            <span class="step-num">03</span>
+            <div class="step-text"><strong>Мы свяжемся</strong><span>Администратор подтвердит детали и стоимость</span></div>
+          </li>
+        </ol>
+      </div>
     </section>
 
     <section class="container ready-section" id="ready-boxes">
-      <div class="section-heading"><div><span class="eyebrow">Готовое решение</span><h2>Наши боксы</h2></div></div>
-      <p class="section-intro">Мы оформляем уже проработанные боксы. Пока их точные составы и цены уточняются, посмотрите реальные примеры.</p>
+      <div class="section-heading"><div><span class="eyebrow">Готовое решение</span><h2>Наши <span>боксы</span></h2></div></div>
+      <p class="section-intro">Выберите готовый бокс для встречи, праздника или уютного вечера.</p>
       <div class="ready-grid">
-        <figure><img src="assets/boxes/box-01.jpg" alt="Пример готового бокса с закусками" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
-        <figure><img src="assets/boxes/box-02.jpg" alt="Пример бокса с несколькими видами закусок" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
-        <figure><img src="assets/boxes/box-03.jpg" alt="Пример бокса с мини-сэндвичами" loading="lazy"><figcaption>Пример готового бокса</figcaption></figure>
+        <article class="ready-box">
+          <picture>
+            <source media="(max-width: 680px)" srcset="assets/boxes/ham-rolls-appetizing-mobile.jpg">
+            <img src="assets/boxes/ham-rolls-appetizing-desktop.jpg" alt="Бокс с рулетиками из ветчины, салатом и помидорами черри" loading="lazy">
+          </picture>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №1 · 21 шт. · <span class="ready-box-weight">1 050 г</span></span>
+            <h3><span>Рулетики из ветчины</span></h3>
+            <p>Три начинки в одном боксе:</p>
+            <ul>
+              <li>крем-сыр и вяленые томаты — 7 шт.</li>
+              <li>чеснок и грецкий орех — 7 шт.</li>
+              <li>фета и зелень — 7 шт.</li>
+            </ul>
+            <p class="ready-box-note">Один рулетик — 50 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>75 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-ham-rolls"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса Лосось и краб">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/salmon-crab-appetizing-mobile.jpg">
+                <img src="assets/boxes/salmon-crab-appetizing-desktop.jpg" alt="Бокс с тарталетками, крабовыми шариками и шпинатным рулетом" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/salmon-crab-detail-mobile.jpg">
+                <img src="assets/boxes/salmon-crab-detail-desktop.jpg" alt="Тарталетки, крабовые шарики и шпинатный рулет крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №2 · 44 шт. + рулет · <span class="ready-box-weight">1 490 г</span></span>
+            <h3><span>Лосось и краб</span></h3>
+            <p>Четыре вида закусок в одном боксе:</p>
+            <ul>
+              <li>тарталетки с лососем и манго — 14 шт.</li>
+              <li>тарталетки с икрой — 14 шт.</li>
+              <li>крабовые шарики с сыром и чесноком, в зелени и кокосовой стружке — 16 шт.</li>
+              <li>шпинатный рулет с лососем и крем-сыром (можем разрезать на нужное количество штук)</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>180 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-salmon-crab"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <img src="assets/boxes/assorted-rolls-box.jpg" alt="Бокс с рулетиками из ветчины, цукини и баклажанов" loading="lazy">
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №3 · 30 шт. · <span class="ready-box-weight">1 340 г</span></span>
+            <h3><span>Ассорти рулетиков</span></h3>
+            <p>Четыре вкуса в одном боксе:</p>
+            <ul>
+              <li>ветчина с крем-сыром и вялеными томатами — 7 шт.</li>
+              <li>цукини с ростбифом — 8 шт.</li>
+              <li>баклажан с сыром и чесноком — 8 шт.</li>
+              <li>ветчина с чесноком и грецким орехом — 7 шт.</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>110 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-assorted-rolls"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <picture>
+            <source media="(max-width: 680px)" srcset="assets/boxes/croissants-appetizing-mobile.jpg">
+            <img src="assets/boxes/croissants-appetizing-desktop.jpg" alt="Бокс из 15 мини-круассанов с курицей, форелью и ростбифом" loading="lazy">
+          </picture>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №4 · 15 шт. · <span class="ready-box-weight">1 350 г</span></span>
+            <h3><span>Мини-круассаны</span></h3>
+            <p>Три начинки в одном боксе:</p>
+            <ul>
+              <li>ростбиф, маринованный огурец и вяленые томаты — 5 шт.</li>
+              <li>крем-сыр и слабосолёная форель — 5 шт.</li>
+              <li>«Цезарь» с куриным филе, томатом и соусом «Цезарь» — 5 шт.</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>120 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-croissants"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с кростини">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/crostini-overview-mobile.jpg">
+                <img src="assets/boxes/crostini-overview-desktop.jpg" alt="Общий вид бокса с кростини на чёрном хлебе" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/crostini-detail-mobile.jpg">
+                <img src="assets/boxes/crostini-detail-desktop.jpg" alt="Кростини с грудинкой и корнишонами, сельдью и сладким перцем крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №5 · 20 шт. · <span class="ready-box-weight">1 100 г</span></span>
+            <h3><span>Кростини к крепким напиткам</span></h3>
+            <p>Два сытных вкуса на чёрном хлебе:</p>
+            <ul>
+              <li>с грудинкой и корнишонами — 10 шт.</li>
+              <li>с сельдью и сладким перцем — 10 шт.</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>65 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-crostini"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с запечёнными тарталетками">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/baked-tartlets-overview-mobile.jpg">
+                <img src="assets/boxes/baked-tartlets-overview-desktop.jpg" alt="Общий вид бокса с запечёнными тарталетками" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/baked-tartlets-detail-mobile.jpg">
+                <img src="assets/boxes/baked-tartlets-detail-desktop.jpg" alt="Запечённые тарталетки с четырьмя начинками крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №6 · 16 шт. · <span class="ready-box-weight">960 г</span></span>
+            <h3><span>Запечённые тарталетки</span></h3>
+            <p>Четыре начинки в одном боксе:</p>
+            <ul>
+              <li>курица и грибы — 4 шт.</li>
+              <li>лосось и брокколи — 4 шт.</li>
+              <li>белые грибы — 4 шт.</li>
+              <li>снежный краб — терияки — 4 шт.</li>
+            </ul>
+            <p class="ready-box-note">Одна тарталетка — 60 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>65 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-baked-tartlets"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с рулетиками из баклажана">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-detail-mobile.jpg">
+                <img src="assets/boxes/eggplant-rolls-detail-desktop.jpg" alt="Рулетики из баклажана с начинкой и зеленью крупным планом" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-overview-mobile.jpg">
+                <img src="assets/boxes/eggplant-rolls-overview-desktop.jpg" alt="Общий вид бокса с рулетиками из баклажана" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №7 · 18 шт. · <span class="ready-box-weight">720 г</span></span>
+            <h3><span>Рулетики из баклажана</span></h3>
+            <p class="ready-box-note">В боксе 18 штук по 40 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>65 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-eggplant-rolls"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с солёными Наполеонами">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/napoleons-overview-mobile.jpg">
+                <img src="assets/boxes/napoleons-overview-desktop.jpg" alt="Общий вид бокса с солёными Наполеонами" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/napoleons-detail-mobile.jpg">
+                <img src="assets/boxes/napoleons-detail-desktop.jpg" alt="Солёные Наполеоны с тремя начинками крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №8 · 18 шт. · <span class="ready-box-weight">вес уточняется</span></span>
+            <h3><span>Солёные «Наполеоны»</span></h3>
+            <p>Хрустящие слоёные закуски с тремя начинками:</p>
+            <ul>
+              <li>утиный паштет и клюквенный конфитюр — 6 шт.</li>
+              <li>курица и грибы — 6 шт.</li>
+              <li>тунец и сыр — 6 шт.</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>55 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-napoleons"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с салатами Цезарь">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/caesar-outdoor-box-mobile.jpg">
+                <img src="assets/boxes/caesar-outdoor-box-desktop.jpg" alt="Бокс порционных салатов Цезарь на свежем воздухе" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/caesar-table-mobile.jpg">
+                <img src="assets/boxes/caesar-table-desktop.jpg" alt="Бокс с девятью порционными салатами Цезарь с курицей" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/caesar-portion-mobile.jpg">
+                <img src="assets/boxes/caesar-portion-desktop.jpg" alt="Порционный салат Цезарь с курицей крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №9 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <h3><span>«Цезарь» с курицей</span></h3>
+            <p>Девять порционных салатов «Цезарь» с курицей.</p>
+            <p class="ready-box-note">Одна порция — 130 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>81 р</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-caesar"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с салатами Цезарь с креветками">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/caesar-shrimp-mobile.jpg">
+                <img src="assets/boxes/caesar-shrimp-desktop.jpg" alt="Бокс с девятью порционными салатами Цезарь с креветками" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/caesar-shrimp-detail-mobile.jpg">
+                <img src="assets/boxes/caesar-shrimp-detail-desktop.jpg" alt="Порционный салат Цезарь с двумя креветками крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №10 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <h3><span>«Цезарь» с креветками</span></h3>
+            <p>Девять порционных салатов «Цезарь» с креветками.</p>
+            <p class="ready-box-note">Одна порция — 130 г. В каждой порции — 2 креветки.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>—</strong><span>Цена уточняется</span></div><div class="ready-box-action"><button class="add-btn" type="button" disabled title="Добавление станет доступно после утверждения цены">Добавить</button></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с греческими салатами">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/greek-overview-mobile.jpg">
+                <img src="assets/boxes/greek-overview-desktop.jpg" alt="Бокс с девятью порционными греческими салатами" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/greek-detail-mobile.jpg">
+                <img src="assets/boxes/greek-detail-desktop.jpg" alt="Греческие салаты в боксе крупным планом" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/greek-portion-table-mobile.jpg">
+                <img src="assets/boxes/greek-portion-table-desktop.jpg" alt="Порционный греческий салат на столе" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/greek-portion-hand-mobile.jpg">
+                <img src="assets/boxes/greek-portion-hand-desktop.jpg" alt="Порционный греческий салат крупным планом" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №11 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <h3><span>Греческий салат</span></h3>
+            <p>Девять порционных греческих салатов.</p>
+            <p class="ready-box-note">Одна порция — 130 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>—</strong><span>Цена уточняется</span></div><div class="ready-box-action"><button class="add-btn" type="button" disabled title="Добавление станет доступно после утверждения цены">Добавить</button></div></div>
+          </div>
+        </article>
       </div>
     </section>
 

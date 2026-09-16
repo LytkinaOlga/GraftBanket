@@ -6,3 +6,6 @@ node_modules/
 
 # Внутренние заметки для Claude — не для публичного репозитория
 CLAUDE.md
+
+# macOS
+.DS_Store

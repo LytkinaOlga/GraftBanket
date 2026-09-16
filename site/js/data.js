@@ -100,8 +100,21 @@ const DEMO_RULES = {
   burgers: [6, 3], quiches: [6, 3], cheesecakes: [4, 2],
   "biscuit-rolls": [4, 2]
 };
+
+ITEMS.push(
+  { id: "box-ham-rolls", type: "ready-box", name: "Рулетики из ветчины", weight: "Бокс №1 · 21 шт. · 1 050 г", price: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-salmon-crab", type: "ready-box", name: "Лосось и краб", weight: "Бокс №2 · 44 шт. + рулет · 1 490 г", price: 180, img: "assets/boxes/salmon-crab-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-assorted-rolls", type: "ready-box", name: "Ассорти рулетиков", weight: "Бокс №3 · 30 шт. · 1 340 г", price: 110, img: "assets/boxes/assorted-rolls-box.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-croissants", type: "ready-box", name: "Мини-круассаны", weight: "Бокс №4 · 15 шт. · 1 350 г", price: 120, img: "assets/boxes/croissants-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-crostini", type: "ready-box", name: "Кростини к крепким напиткам", weight: "Бокс №5 · 20 шт. · 1 100 г", price: 65, img: "assets/boxes/crostini-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-baked-tartlets", type: "ready-box", name: "Запечённые тарталетки", weight: "Бокс №6 · 16 шт. · 960 г", price: 65, img: "assets/boxes/baked-tartlets-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-eggplant-rolls", type: "ready-box", name: "Рулетики из баклажана", weight: "Бокс №7 · 18 шт. · 720 г", price: 65, img: "assets/boxes/eggplant-rolls-detail-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №8 · 18 шт. · вес уточняется", price: 55, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №9 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 }
+);
+
 ITEMS.forEach(function (item) {
-  item.type = item.category === "sets" ? "legacy-placeholder" : "snack";
+  if (!item.type) item.type = item.category === "sets" ? "legacy-placeholder" : "snack";
   if (item.type === "snack") {
     item.minQty = DEMO_RULES[item.category][0];
     item.qtyStep = DEMO_RULES[item.category][1];
