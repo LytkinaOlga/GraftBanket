@@ -1,14 +1,17 @@
 (function () {
   'use strict';
   var KEY = 'draftbanket_cart_v2';
-  var products = ITEMS.filter(function (item) { return item.type === 'snack' || item.type === 'ready-box'; });
+  var hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
+  var products = ITEMS.filter(function (item) {
+    return item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category));
+  });
   var byId = Object.fromEntries(products.map(function (item) { return [item.id, item]; }));
   var cart = loadCart();
   var $ = function (id) { return document.getElementById(id); };
   var money = function (n) { return n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' BYN'; };
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
-  function validQty(item, qty) { return Number.isInteger(qty) && qty >= item.minQty && (qty - item.minQty) % item.qtyStep === 0; }
+  function validQty(item, qty) { return item.available !== false && Number.isInteger(qty) && qty >= item.minQty && (qty - item.minQty) % item.qtyStep === 0; }
   function loadCart() {
     try {
       var saved = JSON.parse(localStorage.getItem(KEY) || '{}');
@@ -38,14 +41,22 @@
   }
   function control(id) {
     var item = byId[id], qty = cart[id] || 0;
+    if (item.available === false) return '<button class="add-btn" type="button" disabled>Цена уточняется</button>';
     if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">Добавить</button>';
     return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
   }
   function renderCatalog() {
-    var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets'; });
+    var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
     $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
+        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets'].indexOf(item.category) !== -1) {
+          var orderLabel = item.orderLabel || (item.category === 'bruschette' ? 'Заказ кратно 4 шт.' : 'Минимальный заказ — ' + item.minQty + ' шт.');
+          var priceUnit = item.priceUnit || 'шт.';
+          var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
+          var price = item.available === false ? 'Цена уточняется' : money(item.price) + ' / ' + esc(priceUnit);
+          return '<article class="card card-simple"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">Вес: ' + esc(item.weight) + '</div>' + note + '<div class="quantity-rule">' + esc(orderLabel) + '</div><div class="card-footer"><div class="card-price">' + price + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
+        }
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
       }).join('') + '</div></section>';
     }).join('');
@@ -78,9 +89,8 @@
     var phone = fieldValid('fieldPhone', digits.length >= 10 && digits.length <= 15);
     var day = $('eventDate').value;
     var date = fieldValid('fieldDate', !!day && day >= new Date().toISOString().slice(0, 10));
-    var time = fieldValid('fieldTime', !!$('eventTime').value);
     var address = fieldValid('fieldAddress', $('fulfillment').value === 'pickup' || $('address').value.trim().length >= 3);
-    return name && phone && date && time && address;
+    return name && phone && date && address;
   }
   document.addEventListener('click', function (event) {
     if (event.target.closest('[data-telegram-placeholder]')) {
@@ -117,7 +127,7 @@
     var button = this;
     var payload = {
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
-      eventDate: $('eventDate').value, eventTime: $('eventTime').value,
+      eventDate: $('eventDate').value,
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
       source: new URLSearchParams(location.search).get('utm_source') || 'site'

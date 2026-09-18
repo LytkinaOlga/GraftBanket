@@ -4,14 +4,16 @@
 const CATEGORIES = [
   { id: "bruschette", title: "Брускетты" },
   { id: "profiteroles", title: "Профитроли" },
-  { id: "rolls", title: "Рулетики" },
+  { id: "rolls", title: "Рулетики из ветчины" },
+  { id: "croissants", title: "Мини-круассаны" },
+  { id: "crostini", title: "Кростини" },
   { id: "tartlets", title: "Тарталетки" },
   { id: "sandwiches", title: "Мини сэндвичи" },
   { id: "salads", title: "Салаты" },
   { id: "burgers", title: "Мини бургеры" },
   { id: "quiches", title: "Киши" },
   { id: "cheesecakes", title: "Чизкейки" },
-  { id: "biscuit-rolls", title: "Рулеты бисквитные" },
+  { id: "biscuit-rolls", title: "Закусочные рулеты" },
   { id: "sets", title: "Сеты" },
 ];
 
@@ -26,10 +28,13 @@ function placeholderImg(emoji, bg) {
 
 const ITEMS = [
   // Брускетты
-  { id: "b1", category: "bruschette", name: "Брускетта с томатами и базиликом", weight: "40 г", price: 3.20, composition: "Хлеб чиабатта, томаты, базилик, оливковое масло, чеснок", description: "Классика на хрустящей чиабатте.", img: placeholderImg("🍅", "#FCEEE0") },
-  { id: "b2", category: "bruschette", name: "Брускетта с лососем", weight: "40 г", price: 4.50, composition: "Хлеб чиабатта, слабосолёный лосось, крем-сыр, укроп", description: "Нежный крем-сыр и лосось на поджаристом хлебе.", img: placeholderImg("🐟", "#FCEEE0") },
-  { id: "b3", category: "bruschette", name: "Брускетта с прошутто и грушей", weight: "40 г", price: 4.80, composition: "Чиабатта, прошутто, груша, руккола, мёд", description: "Сладко-солёное сочетание для банкетного стола.", img: placeholderImg("🍐", "#FCEEE0") },
-  { id: "b4", category: "bruschette", name: "Брускетта с грибами", weight: "40 г", price: 3.50, composition: "Чиабатта, шампиньоны, сливочный соус, пармезан", description: "Тёплая брускетта с ароматными грибами.", img: placeholderImg("🍄", "#FCEEE0") },
+  { id: "b1", category: "bruschette", name: "Брускетта с лососем и крем-сыром", weight: "60 г", price: 4.50, composition: "Хрустящая чиабатта, слабосолёный лосось, крем-сыр", description: "Нежный лосось и сливочный крем-сыр на хрустящей чиабатте.", img: "assets/bruschette/salmon-cream-cheese.jpg" },
+  { id: "b2", category: "bruschette", name: "Брускетта с креветкой и муссом из авокадо", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, креветка, мусс из авокадо", description: "Свежая закуска с нежным муссом из авокадо и креветкой.", img: "assets/bruschette/shrimp-avocado.jpg?v=2" },
+  { id: "b3", category: "bruschette", name: "Брускетта с ростбифом, вялеными томатами и медово-горчичным соусом", weight: "60 г", price: 3.00, composition: "Хрустящая чиабатта, ростбиф, вяленые томаты, медово-горчичный соус", description: "Сытное сочетание ростбифа, вяленых томатов и пикантного соуса.", img: "assets/bruschette/roast-beef-tomatoes.jpg?v=2" },
+  { id: "b4", category: "bruschette", name: "Брускетта с риетом из утки, вишнёвым конфитюром и лепестками миндаля", weight: "60 г", price: 2.70, composition: "Хрустящая чиабатта, риет из утки, вишнёвый конфитюр, лепестки миндаля", description: "Насыщенный утиный риет с вишнёвой нотой и лепестками миндаля.", img: "assets/bruschette/duck-rillette-cherry.jpg?v=2" },
+  { id: "b5", category: "bruschette", name: "Брускетта с жареным куриным бедром, сельдереем, виноградом и беконом", weight: "60 г", price: 3.30, composition: "Хрустящая чиабатта, жареное куриное бедро, сельдерей, виноград, бекон", description: "Сочная курица с виноградом, сельдереем и хрустящим беконом.", img: "assets/bruschette/chicken-grape-bacon.jpg?v=2" },
+  { id: "b6", category: "bruschette", name: "Брускетта с тартаром из говядины", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, тартар из говядины", description: "Выразительная мясная закуска в аккуратной порционной подаче.", img: "assets/bruschette/beef-tartare.jpg" },
+  { id: "b7", category: "bruschette", name: "Брускетта с тартаром из сыровяленой колбасы", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, тартар из сыровяленой колбасы", description: "Пикантный тартар из сыровяленой колбасы на хрустящей чиабатте.", img: "assets/bruschette/salami-tartare.jpg" },
 
   // Профитроли
   { id: "p1", category: "profiteroles", name: "Профитроли с курицей и сыром", weight: "25 г", price: 2.60, composition: "Заварное тесто, куриное филе, сыр, соус", description: "Мини-профитроли с сытной начинкой.", img: placeholderImg("🍗", "#F3E8FF") },
@@ -37,17 +42,25 @@ const ITEMS = [
   { id: "p3", category: "profiteroles", name: "Профитроли с ветчиной и грибами", weight: "25 г", price: 2.80, composition: "Заварное тесто, ветчина, грибы, сливочный соус", description: "Насыщенная начинка в нежном тесте.", img: placeholderImg("🍄", "#F3E8FF") },
   { id: "p4", category: "profiteroles", name: "Профитроли сладкие (крем)", weight: "25 г", price: 2.40, composition: "Заварное тесто, заварной крем, сахарная пудра", description: "Десертный вариант для сладкого стола.", img: placeholderImg("🍮", "#F3E8FF") },
 
-  // Рулетики
-  { id: "r1", category: "rolls", name: "Рулетики из лаваша с курицей", weight: "35 г", price: 2.90, composition: "Лаваш, куриное филе, овощи, соус", description: "Сочная начинка в тонком лаваше.", img: placeholderImg("🍗", "#E8F5E9") },
-  { id: "r2", category: "rolls", name: "Рулетики с ветчиной и сыром", weight: "35 г", price: 3.00, composition: "Лаваш, ветчина, сыр, зелень", description: "Простое и любимое сочетание.", img: placeholderImg("🧀", "#E8F5E9") },
-  { id: "r3", category: "rolls", name: "Рулетики с лососем и крем-сыром", weight: "35 г", price: 4.00, composition: "Лаваш, лосось, крем-сыр, укроп", description: "Праздничный вариант рулетиков.", img: placeholderImg("🐟", "#E8F5E9") },
-  { id: "r4", category: "rolls", name: "Рулетики овощные", weight: "35 г", price: 2.60, composition: "Лаваш, овощи гриль, соус, зелень", description: "Лёгкий вегетарианский вариант.", img: placeholderImg("🥒", "#E8F5E9") },
+  // Рулетики из ветчины
+  { id: "r1", category: "rolls", name: "Рулетик из ветчины с крем-сыром и вялеными томатами", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+  { id: "r2", category: "rolls", name: "Рулетик из ветчины с чесноком и грецким орехом", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+  { id: "r3", category: "rolls", name: "Рулетик из ветчины с фетой и зеленью", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+
+  // Мини-круассаны
+  { id: "cr1", category: "croissants", name: "Мини-круассан с ростбифом, маринованным огурцом и вялеными томатами", weight: "90 г", price: 8.00, img: "assets/croissants/croissant-roast-beef.jpg" },
+  { id: "cr2", category: "croissants", name: "Мини-круассан с крем-сыром и слабосолёной форелью", weight: "90 г", price: 8.00, img: "assets/croissants/croissant-trout.jpg" },
+  { id: "cr3", category: "croissants", name: "Мини-круассан «Цезарь» с куриным филе и томатом", weight: "90 г", price: 8.00, img: "assets/croissants/croissant-caesar.jpg" },
+
+  // Кростини
+  { id: "kr1", category: "crostini", name: "Кростини с грудинкой и корнишонами", weight: "55 г", price: 3.25, img: "assets/boxes/crostini-detail-mobile.jpg" },
+  { id: "kr2", category: "crostini", name: "Кростини с сельдью и сладким перцем", weight: "55 г", price: 3.25, img: "assets/boxes/crostini-overview-mobile.jpg" },
 
   // Тарталетки
-  { id: "t1", category: "tartlets", name: "Тарталетка с салатом «Оливье»", weight: "30 г", price: 2.70, composition: "Песочная тарталетка, салат оливье", description: "Порционная классика в удобном формате.", img: placeholderImg("🥗", "#FFF3E0") },
-  { id: "t2", category: "tartlets", name: "Тарталетка с красной икрой", weight: "30 г", price: 5.50, composition: "Песочная тарталетка, сливочный сыр, красная икра", description: "Праздничная закуска для банкета.", img: placeholderImg("🍣", "#FFF3E0") },
-  { id: "t3", category: "tartlets", name: "Тарталетка с грибным жюльеном", weight: "30 г", price: 3.50, composition: "Песочная тарталетка, грибы, сливочный соус, сыр", description: "Тёплая и ароматная закуска.", img: placeholderImg("🍄", "#FFF3E0") },
-  { id: "t4", category: "tartlets", name: "Тарталетка с креветкой и авокадо", weight: "30 г", price: 4.60, composition: "Песочная тарталетка, креветка, авокадо, соус", description: "Свежий и лёгкий вкус.", img: placeholderImg("🍤", "#FFF3E0") },
+  { id: "t1", category: "tartlets", name: "Запечённая тарталетка с курицей и грибами", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-chicken-mushrooms.jpg" },
+  { id: "t2", category: "tartlets", name: "Запечённая тарталетка с лососем и брокколи", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-salmon-broccoli.jpg" },
+  { id: "t3", category: "tartlets", name: "Запечённая тарталетка с белыми грибами", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-porcini.jpg" },
+  { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
 
   // Мини сэндвичи
   { id: "s1", category: "sandwiches", name: "Мини сэндвич с ростбифом", weight: "45 г", price: 3.80, composition: "Хлеб, ростбиф, руккола, соус", description: "Сытный и аккуратный мини-формат.", img: placeholderImg("🥩", "#E3F2FD") },
@@ -56,10 +69,9 @@ const ITEMS = [
   { id: "s4", category: "sandwiches", name: "Мини сэндвич вегетарианский", weight: "45 г", price: 3.20, composition: "Хлеб, овощи, хумус, зелень", description: "Свежий вегетарианский выбор.", img: placeholderImg("🥬", "#E3F2FD") },
 
   // Салаты
-  { id: "sl1", category: "salads", name: "Салат «Цезарь» порционный", weight: "150 г", price: 6.50, composition: "Курица, салат ромэн, пармезан, соус цезарь, гренки", description: "Порционная подача классического салата.", img: placeholderImg("🥗", "#EAF7E9") },
-  { id: "sl2", category: "salads", name: "Салат с креветками и авокадо", weight: "150 г", price: 7.80, composition: "Креветки, авокадо, микс салатов, соус", description: "Лёгкий салат для праздничного стола.", img: placeholderImg("🍤", "#EAF7E9") },
-  { id: "sl3", category: "salads", name: "Греческий салат порционный", weight: "150 г", price: 5.60, composition: "Огурцы, томаты, перец, сыр фета, оливки", description: "Свежий средиземноморский вкус.", img: placeholderImg("🫒", "#EAF7E9") },
-  { id: "sl4", category: "salads", name: "Салат со свёклой и козьим сыром", weight: "150 г", price: 6.20, composition: "Свёкла, козий сыр, грецкий орех, микс салатов", description: "Яркое сочетание вкусов и текстур.", img: placeholderImg("🧀", "#EAF7E9") },
+  { id: "sl1", category: "salads", name: "«Цезарь» с курицей", weight: "130 г", price: 9.00, img: "assets/boxes/caesar-portion-mobile.jpg" },
+  { id: "sl2", category: "salads", name: "«Цезарь» с креветками", weight: "130 г", price: 0, available: false, note: "В каждой порции — 2 креветки", img: "assets/boxes/caesar-shrimp-detail-mobile.jpg" },
+  { id: "sl3", category: "salads", name: "Греческий салат", weight: "130 г", price: 0, available: false, img: "assets/salads/greek-salad-portion-box.jpg" },
 
   // Мини бургеры
   { id: "bg1", category: "burgers", name: "Мини бургер classic", weight: "70 г", price: 5.20, composition: "Булочка бриошь, говяжья котлета, сыр, соус", description: "Мини-версия классического бургера.", img: placeholderImg("🍔", "#FDEBEB") },
@@ -79,11 +91,10 @@ const ITEMS = [
   { id: "c3", category: "cheesecakes", name: "Чизкейк шоколадный", weight: "60 г", price: 4.70, composition: "Творожный сыр, какао, шоколадная основа", description: "Насыщенный шоколадный вкус.", img: placeholderImg("🍫", "#FCE4EC") },
   { id: "c4", category: "cheesecakes", name: "Чизкейк с манго и маракуйей", weight: "60 г", price: 5.00, composition: "Творожный сыр, манго, маракуйя, песочная основа", description: "Яркий тропический десерт.", img: placeholderImg("🥭", "#FCE4EC") },
 
-  // Рулеты бисквитные
-  { id: "br1", category: "biscuit-rolls", name: "Бисквитный рулет с вишней", weight: "60 г", price: 4.00, composition: "Бисквит, сливочный крем, вишня", description: "Классика в порционном формате.", img: placeholderImg("🍒", "#EDE7F6") },
-  { id: "br2", category: "biscuit-rolls", name: "Бисквитный рулет с клубникой", weight: "60 г", price: 4.10, composition: "Бисквит, сливочный крем, клубника", description: "Лёгкий и свежий десерт.", img: placeholderImg("🍓", "#EDE7F6") },
-  { id: "br3", category: "biscuit-rolls", name: "Бисквитный рулет шоколадный", weight: "60 г", price: 4.30, composition: "Шоколадный бисквит, шоколадный крем", description: "Для любителей насыщенного шоколада.", img: placeholderImg("🍫", "#EDE7F6") },
-  { id: "br4", category: "biscuit-rolls", name: "Бисквитный рулет карамельный", weight: "60 г", price: 4.30, composition: "Бисквит, крем со сгущённым молоком, карамель", description: "Нежный вкус карамели и сливок.", img: placeholderImg("🍮", "#EDE7F6") },
+  // Закусочные рулеты
+  { id: "br1", category: "biscuit-rolls", name: "Шпинатный рулет", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/spinach-roll.jpg" },
+  { id: "br2", category: "biscuit-rolls", name: "Свекольный рулет с сыром, чесноком и зеленью", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/beetroot-roll.jpg" },
+  { id: "br3", category: "biscuit-rolls", name: "Морковный рулет с курицей, грибами и грецким орехом", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/carrot-roll.jpg" },
 
   // Сеты
   { id: "set1", category: "sets", name: "Сет «Сыры и фрукты»", weight: "на 10 персон", price: 105.00, composition: "Ассорти сыров, виноград, орехи, мёд, крекеры", description: "Изысканная сырная тарелка для гостей.", img: placeholderImg("🧀", "#F1F8E9") },
@@ -95,10 +106,11 @@ const ITEMS = [
 // Временные правила конструктора для локального прототипа. Перед публикацией
 // minQty и qtyStep утверждаются отдельно для каждой реальной позиции.
 const DEMO_RULES = {
-  bruschette: [6, 6], profiteroles: [8, 4], rolls: [6, 6],
-  tartlets: [8, 4], sandwiches: [6, 6], salads: [2, 1],
+  bruschette: [4, 4], profiteroles: [8, 4], rolls: [21, 1],
+  croissants: [5, 1], crostini: [10, 1],
+  tartlets: [4, 1], sandwiches: [6, 6], salads: [9, 1],
   burgers: [6, 3], quiches: [6, 3], cheesecakes: [4, 2],
-  "biscuit-rolls": [4, 2]
+  "biscuit-rolls": [1, 1]
 };
 
 ITEMS.push(

@@ -1,5 +1,6 @@
 const { ITEMS } = require('../js/data.js');
-const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'snack' || item.type === 'ready-box').map(item => [item.id, item]));
+const hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
+const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category))).map(item => [item.id, item]));
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
 
@@ -12,18 +13,18 @@ module.exports = async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     if (!body || JSON.stringify(body).length > 12000) return res.status(400).json({ error: 'Invalid payload' });
     const name = clean(body.name, 80), phone = clean(body.phone, 40);
-    const date = clean(body.eventDate, 10), time = clean(body.eventTime, 5);
+    const date = clean(body.eventDate, 10);
     const method = clean(body.fulfillment, 12), address = clean(body.address, 200);
     const comment = clean(body.comment, 500), nick = clean(body.telegramNick, 80);
     const digits = phone.replace(/\D/g, '');
-    if (name.length < 2 || digits.length < 10 || digits.length > 15 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time) || !['pickup', 'minsk', 'other'].includes(method) || (method !== 'pickup' && address.length < 3)) return res.status(400).json({ error: 'Invalid contact details' });
+    if (name.length < 2 || digits.length < 10 || digits.length > 15 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !['pickup', 'minsk', 'other'].includes(method) || (method !== 'pickup' && address.length < 3)) return res.status(400).json({ error: 'Invalid contact details' });
     if (date < new Date().toISOString().slice(0, 10)) return res.status(400).json({ error: 'Date is in the past' });
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
     let subtotal = 0;
     const lines = body.items.map(row => {
       const item = catalog[row.id], qty = row.quantity;
-      if (!item || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
+      if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
       seen.add(row.id); subtotal += item.price * qty;
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(item.price * qty);
     });
@@ -32,7 +33,7 @@ module.exports = async function handler(req, res) {
     const methodLabel = { pickup: 'Самовывоз', minsk: 'Доставка в пределах МКАД', other: 'Другое место, согласовать' }[method];
     const message = [
       '🆕 Заявка ' + orderId, 'Имя: ' + name, 'Телефон: ' + phone,
-      nick ? 'Telegram: ' + nick : '', 'Дата и время: ' + date + ' ' + time,
+      nick ? 'Telegram: ' + nick : '', 'Дата заказа: ' + date,
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
       comment ? 'Комментарий: ' + comment : '', 'Источник: ' + clean(body.source, 80),
       '', 'Состав:', ...lines, '', 'Товары: ' + money(subtotal),
