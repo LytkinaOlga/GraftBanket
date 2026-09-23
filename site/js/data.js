@@ -132,8 +132,10 @@ ITEMS.push(
   { id: "box-greek", type: "ready-box", name: "Греческий салат", weight: "Бокс №11 · 9 шт. · 1 170 г", price: 72, img: "assets/boxes/greek-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-three-rolls", type: "ready-box", name: "Три закусочных рулета", weight: "Бокс №12 · 3 рулета · 1 350 г", price: 120, img: "assets/boxes/three-savory-rolls-box.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-profiteroles", type: "ready-box", name: "Профитроли", weight: "Бокс №13 · 25 шт. · 750 г", price: 70, img: "assets/boxes/profiteroles-overview.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №14 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
-  { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №15 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
+  { id: "box-mini-tartlets", type: "ready-box", name: "Мини-тарталетки", weight: "Бокс №14 · 64 шт. · 1 280 г", price: 130, img: "assets/boxes/mini-tartlets-box.jpg?v=3", minQty: 1, qtyStep: 1 },
+  { id: "box-canapes", type: "ready-box", name: "Канапе", weight: "Бокс №15 · 21 шт. · 630 г", price: 65, img: "assets/boxes/canapes-overview.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №16 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
+  { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №17 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
 );
 
 ITEMS.forEach(function (item) {
