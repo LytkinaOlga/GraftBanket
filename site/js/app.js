@@ -9,6 +9,7 @@
   var cart = loadCart();
   var $ = function (id) { return document.getElementById(id); };
   var money = function (n) { return n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' BYN'; };
+  var shortMoney = function (n) { return n.toLocaleString('ru-RU', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }) + ' BYN'; };
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
   function validQty(item, qty) { return item.available !== false && Number.isInteger(qty) && qty >= item.minQty && (qty - item.minQty) % item.qtyStep === 0; }
@@ -24,7 +25,8 @@
     } catch (_) { return {}; }
   }
   function saveCart() { try { localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), items: cart })); } catch (_) {} }
-  function subtotal() { return Object.keys(cart).reduce(function (sum, id) { return sum + byId[id].price * cart[id]; }, 0); }
+  function lineTotal(item, qty) { return item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty; }
+  function subtotal() { return Object.keys(cart).reduce(function (sum, id) { return sum + lineTotal(byId[id], cart[id]); }, 0); }
   function lineCount() { return Object.keys(cart).length; }
   function delivery() {
     var method = $('fulfillment').value;
@@ -45,17 +47,31 @@
     if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">Добавить</button>';
     return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
   }
+  function itemUnit(item, qty) {
+    if (item.priceUnit !== 'рулет') return 'шт.';
+    var mod10 = qty % 10, mod100 = qty % 100;
+    if (mod10 === 1 && mod100 !== 11) return 'рулет';
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'рулета';
+    return 'рулетов';
+  }
+  function priceSummary(item) {
+    if (item.available === false) return '<div class="card-price">Цена уточняется</div>';
+    var qty = cart[item.id] || item.minQty;
+    var singleUnit = item.priceUnit === 'рулет' ? 'рулет' : 'шт.';
+    return '<div class="card-price">' + shortMoney(lineTotal(item, qty)) + ' / ' + qty + ' ' + itemUnit(item, qty) + '</div><small>' + shortMoney(item.price) + ' за 1 ' + singleUnit + '</small>';
+  }
   function renderCatalog() {
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
     $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
         if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets'].indexOf(item.category) !== -1) {
-          var orderLabel = item.orderLabel || (item.category === 'bruschette' ? 'Заказ кратно 4 шт.' : 'Минимальный заказ — ' + item.minQty + ' шт.');
-          var priceUnit = item.priceUnit || 'шт.';
           var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
-          var price = item.available === false ? 'Цена уточняется' : money(item.price) + ' / ' + esc(priceUnit);
-          return '<article class="card card-simple"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">Вес: ' + esc(item.weight) + '</div>' + note + '<div class="quantity-rule">' + esc(orderLabel) + '</div><div class="card-footer"><div class="card-price">' + price + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
+          var orderText = item.orderLabel || (item.qtyStep === item.minQty
+            ? 'Заказ кратно ' + item.minQty + ' шт.'
+            : 'Минимум ' + item.minQty + ' шт., далее по ' + item.qtyStep + ' шт.');
+          var orderNote = '<div class="quantity-rule">' + esc(orderText) + '</div>';
+          return '<article class="card card-simple"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">Вес: ' + esc(item.weight) + '</div>' + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
         }
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
       }).join('') + '</div></section>';
@@ -68,7 +84,7 @@
     $('cartFooter').hidden = ids.length === 0;
     $('cartBody').innerHTML = ids.length ? ids.map(function (id) {
       var item = byId[id], qty = cart[id];
-      return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(item.price * qty) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
+      return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(lineTotal(item, qty)) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
     }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте готовый бокс или закуски из конструктора.</div>';
     $('cartTotal').textContent = money(subtotal());
     renderSummary();
@@ -77,7 +93,14 @@
     var fee = delivery();
     $('checkoutSummary').innerHTML = '<div>Закуски: <strong>' + money(subtotal()) + '</strong></div><div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div><div>Предварительный итог: <strong>' + (fee === null ? money(subtotal()) + ' + доставка' : money(subtotal() + fee)) + '</strong></div>';
   }
-  function render() { document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control); }); renderCart(); }
+  function render() {
+    document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control); });
+    document.querySelectorAll('[data-price-summary]').forEach(function (el) {
+      var item = byId[el.dataset.priceSummary];
+      if (item) el.innerHTML = priceSummary(item);
+    });
+    renderCart();
+  }
   function show(view) { ['viewCart', 'viewCheckout', 'viewSuccess'].forEach(function (id) { $(id).hidden = id !== view; }); }
   function open() { $('cartOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
   function close() { $('cartOverlay').classList.remove('open'); document.body.style.overflow = ''; }

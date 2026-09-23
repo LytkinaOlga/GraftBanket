@@ -1,6 +1,7 @@
 const { ITEMS } = require('../js/data.js');
 const hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
 const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category))).map(item => [item.id, item]));
+const lineTotal = (item, qty) => item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty;
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
 
@@ -25,8 +26,8 @@ module.exports = async function handler(req, res) {
     const lines = body.items.map(row => {
       const item = catalog[row.id], qty = row.quantity;
       if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
-      seen.add(row.id); subtotal += item.price * qty;
-      return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(item.price * qty);
+      seen.add(row.id); subtotal += lineTotal(item, qty);
+      return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
     const delivery = method === 'pickup' ? 0 : method === 'minsk' ? (subtotal >= 500 ? 0 : 20) : null;
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();

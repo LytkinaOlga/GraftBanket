@@ -28,11 +28,11 @@ function placeholderImg(emoji, bg) {
 
 const ITEMS = [
   // Брускетты
-  { id: "b1", category: "bruschette", name: "Брускетта с лососем и крем-сыром", weight: "60 г", price: 4.50, composition: "Хрустящая чиабатта, слабосолёный лосось, крем-сыр", description: "Нежный лосось и сливочный крем-сыр на хрустящей чиабатте.", img: "assets/bruschette/salmon-cream-cheese.jpg" },
-  { id: "b2", category: "bruschette", name: "Брускетта с креветкой и муссом из авокадо", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, креветка, мусс из авокадо", description: "Свежая закуска с нежным муссом из авокадо и креветкой.", img: "assets/bruschette/shrimp-avocado.jpg?v=2" },
-  { id: "b3", category: "bruschette", name: "Брускетта с ростбифом, вялеными томатами и медово-горчичным соусом", weight: "60 г", price: 3.00, composition: "Хрустящая чиабатта, ростбиф, вяленые томаты, медово-горчичный соус", description: "Сытное сочетание ростбифа, вяленых томатов и пикантного соуса.", img: "assets/bruschette/roast-beef-tomatoes.jpg?v=2" },
-  { id: "b4", category: "bruschette", name: "Брускетта с риетом из утки, вишнёвым конфитюром и лепестками миндаля", weight: "60 г", price: 2.70, composition: "Хрустящая чиабатта, риет из утки, вишнёвый конфитюр, лепестки миндаля", description: "Насыщенный утиный риет с вишнёвой нотой и лепестками миндаля.", img: "assets/bruschette/duck-rillette-cherry.jpg?v=2" },
-  { id: "b5", category: "bruschette", name: "Брускетта с жареным куриным бедром, сельдереем, виноградом и беконом", weight: "60 г", price: 3.30, composition: "Хрустящая чиабатта, жареное куриное бедро, сельдерей, виноград, бекон", description: "Сочная курица с виноградом, сельдереем и хрустящим беконом.", img: "assets/bruschette/chicken-grape-bacon.jpg?v=2" },
+  { id: "b1", category: "bruschette", name: "Брускетта с лососем и крем-сыром", weight: "60 г", price: 5.50, composition: "Хрустящая чиабатта, слабосолёный лосось, крем-сыр", description: "Нежный лосось и сливочный крем-сыр на хрустящей чиабатте.", img: "assets/bruschette/salmon-cream-cheese.jpg" },
+  { id: "b2", category: "bruschette", name: "Брускетта с креветкой и муссом из авокадо", weight: "60 г", price: 5.00, composition: "Хрустящая чиабатта, креветка, мусс из авокадо", description: "Свежая закуска с нежным муссом из авокадо и креветкой.", img: "assets/bruschette/shrimp-avocado-green.jpg" },
+  { id: "b3", category: "bruschette", name: "Брускетта с ростбифом, вялеными томатами и медово-горчичным соусом", weight: "60 г", price: 4.00, composition: "Хрустящая чиабатта, ростбиф, вяленые томаты, медово-горчичный соус", description: "Сытное сочетание ростбифа, вяленых томатов и пикантного соуса.", img: "assets/bruschette/roast-beef-tomatoes.jpg?v=2" },
+  { id: "b4", category: "bruschette", name: "Брускетта с риетом из утки, вишнёвым конфитюром и лепестками миндаля", weight: "60 г", price: 4.00, composition: "Хрустящая чиабатта, риет из утки, вишнёвый конфитюр, лепестки миндаля", description: "Насыщенный утиный риет с вишнёвой нотой и лепестками миндаля.", img: "assets/bruschette/duck-rillette-cherry.jpg?v=2" },
+  { id: "b5", category: "bruschette", name: "Брускетта с жареным куриным бедром, сельдереем, виноградом и беконом", weight: "60 г", price: 4.00, composition: "Хрустящая чиабатта, жареное куриное бедро, сельдерей, виноград, бекон", description: "Сочная курица с виноградом, сельдереем и хрустящим беконом.", img: "assets/bruschette/chicken-grape-bacon.jpg?v=2" },
   { id: "b6", category: "bruschette", name: "Брускетта с тартаром из говядины", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, тартар из говядины", description: "Выразительная мясная закуска в аккуратной порционной подаче.", img: "assets/bruschette/beef-tartare.jpg" },
   { id: "b7", category: "bruschette", name: "Брускетта с тартаром из сыровяленой колбасы", weight: "60 г", price: 4.20, composition: "Хрустящая чиабатта, тартар из сыровяленой колбасы", description: "Пикантный тартар из сыровяленой колбасы на хрустящей чиабатте.", img: "assets/bruschette/salami-tartare.jpg" },
 
@@ -43,9 +43,9 @@ const ITEMS = [
   { id: "p4", category: "profiteroles", name: "Профитроли сладкие (крем)", weight: "25 г", price: 2.40, composition: "Заварное тесто, заварной крем, сахарная пудра", description: "Десертный вариант для сладкого стола.", img: placeholderImg("🍮", "#F3E8FF") },
 
   // Рулетики из ветчины
-  { id: "r1", category: "rolls", name: "Рулетик из ветчины с крем-сыром и вялеными томатами", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
-  { id: "r2", category: "rolls", name: "Рулетик из ветчины с чесноком и грецким орехом", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
-  { id: "r3", category: "rolls", name: "Рулетик из ветчины с фетой и зеленью", weight: "50 г", price: 3.60, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+  { id: "r1", category: "rolls", name: "Рулетик из ветчины с крем-сыром и вялеными томатами", weight: "50 г", price: 75 / 21, bundlePrice: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+  { id: "r2", category: "rolls", name: "Рулетик из ветчины с чесноком и грецким орехом", weight: "50 г", price: 75 / 21, bundlePrice: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
+  { id: "r3", category: "rolls", name: "Рулетик из ветчины с фетой и зеленью", weight: "50 г", price: 75 / 21, bundlePrice: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg" },
 
   // Мини-круассаны
   { id: "cr1", category: "croissants", name: "Мини-круассан с ростбифом, маринованным огурцом и вялеными томатами", weight: "90 г", price: 8.00, img: "assets/croissants/croissant-roast-beef.jpg" },
@@ -57,10 +57,10 @@ const ITEMS = [
   { id: "kr2", category: "crostini", name: "Кростини с сельдью и сладким перцем", weight: "55 г", price: 3.25, img: "assets/boxes/crostini-overview-mobile.jpg" },
 
   // Тарталетки
-  { id: "t1", category: "tartlets", name: "Запечённая тарталетка с курицей и грибами", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-chicken-mushrooms.jpg" },
-  { id: "t2", category: "tartlets", name: "Запечённая тарталетка с лососем и брокколи", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-salmon-broccoli.jpg" },
-  { id: "t3", category: "tartlets", name: "Запечённая тарталетка с белыми грибами", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-porcini.jpg" },
-  { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.10, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
+  { id: "t1", category: "tartlets", name: "Запечённая тарталетка с курицей и грибами", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-chicken-mushrooms.jpg" },
+  { id: "t2", category: "tartlets", name: "Запечённая тарталетка с лососем и брокколи", weight: "60 г", price: 5.50, img: "assets/tartlets/tartlet-salmon-broccoli.jpg" },
+  { id: "t3", category: "tartlets", name: "Запечённая тарталетка с белыми грибами", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-porcini.jpg" },
+  { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
 
   // Мини сэндвичи
   { id: "s1", category: "sandwiches", name: "Мини сэндвич с ростбифом", weight: "45 г", price: 3.80, composition: "Хлеб, ростбиф, руккола, соус", description: "Сытный и аккуратный мини-формат.", img: placeholderImg("🥩", "#E3F2FD") },
@@ -70,8 +70,8 @@ const ITEMS = [
 
   // Салаты
   { id: "sl1", category: "salads", name: "«Цезарь» с курицей", weight: "130 г", price: 9.00, img: "assets/boxes/caesar-portion-mobile.jpg" },
-  { id: "sl2", category: "salads", name: "«Цезарь» с креветками", weight: "130 г", price: 0, available: false, note: "В каждой порции — 2 креветки", img: "assets/boxes/caesar-shrimp-detail-mobile.jpg" },
-  { id: "sl3", category: "salads", name: "Греческий салат", weight: "130 г", price: 0, available: false, img: "assets/salads/greek-salad-portion-box.jpg" },
+  { id: "sl2", category: "salads", name: "«Цезарь» с креветками", weight: "130 г", price: 11.00, note: "В каждой порции — 2 креветки", img: "assets/boxes/caesar-shrimp-detail-mobile.jpg" },
+  { id: "sl3", category: "salads", name: "Греческий салат", weight: "130 г", price: 8.00, img: "assets/salads/greek-salad-portion-box.jpg" },
 
   // Мини бургеры
   { id: "bg1", category: "burgers", name: "Мини бургер classic", weight: "70 г", price: 5.20, composition: "Булочка бриошь, говяжья котлета, сыр, соус", description: "Мини-версия классического бургера.", img: placeholderImg("🍔", "#FDEBEB") },
@@ -92,8 +92,8 @@ const ITEMS = [
   { id: "c4", category: "cheesecakes", name: "Чизкейк с манго и маракуйей", weight: "60 г", price: 5.00, composition: "Творожный сыр, манго, маракуйя, песочная основа", description: "Яркий тропический десерт.", img: placeholderImg("🥭", "#FCE4EC") },
 
   // Закусочные рулеты
-  { id: "br1", category: "biscuit-rolls", name: "Шпинатный рулет", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/spinach-roll.jpg" },
-  { id: "br2", category: "biscuit-rolls", name: "Свекольный рулет с сыром, чесноком и зеленью", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/beetroot-roll.jpg" },
+  { id: "br1", category: "biscuit-rolls", name: "Шпинатный рулет", weight: "450 г", price: 55.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/spinach-roll.jpg" },
+  { id: "br2", category: "biscuit-rolls", name: "Свекольный рулет с сыром, чесноком и зеленью", weight: "450 г", price: 40.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/beetroot-roll.jpg" },
   { id: "br3", category: "biscuit-rolls", name: "Морковный рулет с курицей, грибами и грецким орехом", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/carrot-roll.jpg" },
 
   // Сеты
@@ -106,15 +106,15 @@ const ITEMS = [
 // Временные правила конструктора для локального прототипа. Перед публикацией
 // minQty и qtyStep утверждаются отдельно для каждой реальной позиции.
 const DEMO_RULES = {
-  bruschette: [4, 4], profiteroles: [8, 4], rolls: [21, 1],
-  croissants: [5, 1], crostini: [10, 1],
-  tartlets: [4, 1], sandwiches: [6, 6], salads: [9, 1],
-  burgers: [6, 3], quiches: [6, 3], cheesecakes: [4, 2],
+  bruschette: [4, 4], profiteroles: [8, 8], rolls: [21, 21],
+  croissants: [5, 5], crostini: [10, 10],
+  tartlets: [4, 4], sandwiches: [6, 6], salads: [9, 9],
+  burgers: [6, 6], quiches: [6, 6], cheesecakes: [4, 4],
   "biscuit-rolls": [1, 1]
 };
 
 ITEMS.push(
-  { id: "box-ham-rolls", type: "ready-box", name: "Рулетики из ветчины", weight: "Бокс №1 · 21 шт. · 1 050 г", price: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-ham-rolls", type: "ready-box", name: "Рулетики из ветчины (три начинки)", weight: "Бокс №1 · 21 шт. · 1 050 г", price: 75, img: "assets/boxes/ham-rolls-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-salmon-crab", type: "ready-box", name: "Лосось и краб", weight: "Бокс №2 · 44 шт. + рулет · 1 490 г", price: 180, img: "assets/boxes/salmon-crab-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-assorted-rolls", type: "ready-box", name: "Ассорти рулетиков", weight: "Бокс №3 · 30 шт. · 1 340 г", price: 110, img: "assets/boxes/assorted-rolls-box.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-croissants", type: "ready-box", name: "Мини-круассаны", weight: "Бокс №4 · 15 шт. · 1 350 г", price: 120, img: "assets/boxes/croissants-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
@@ -122,7 +122,10 @@ ITEMS.push(
   { id: "box-baked-tartlets", type: "ready-box", name: "Запечённые тарталетки", weight: "Бокс №6 · 16 шт. · 960 г", price: 65, img: "assets/boxes/baked-tartlets-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-eggplant-rolls", type: "ready-box", name: "Рулетики из баклажана", weight: "Бокс №7 · 18 шт. · 720 г", price: 65, img: "assets/boxes/eggplant-rolls-detail-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №8 · 18 шт. · вес уточняется", price: 55, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №9 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 }
+  { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №9 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-caesar-shrimp", type: "ready-box", name: "«Цезарь» с креветками", weight: "Бокс №10 · 9 шт. · 1 170 г", price: 99, img: "assets/boxes/caesar-shrimp-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-greek", type: "ready-box", name: "Греческий салат", weight: "Бокс №11 · 9 шт. · 1 170 г", price: 72, img: "assets/boxes/greek-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-three-rolls", type: "ready-box", name: "Три закусочных рулета", weight: "Бокс №12 · 3 рулета · 1 350 г", price: 120, img: "assets/boxes/three-savory-rolls-box.jpg", minQty: 1, qtyStep: 1 }
 );
 
 ITEMS.forEach(function (item) {

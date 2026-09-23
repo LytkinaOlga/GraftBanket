@@ -20,7 +20,7 @@
 <text x="710" y="564" font-size="14" fill="#656b6f">Один рулетик — 50 г. Количество для заказа кратно 7 шт.</text>
 <line x1="710" y1="625" x2="1262" y2="625" stroke="#dce0e2"/>
 <rect x="710" y="642" width="95" height="49" fill="#f3ca52"/>
-<text x="724" y="676" font-size="28" font-weight="800">0 р</text>
+<text x="724" y="676" font-size="28" font-weight="800">0 BYN</text>
 <text x="825" y="672" font-size="13" fill="#656b6f">Итоговая цена уточняется</text>
 </g>
 </svg>
