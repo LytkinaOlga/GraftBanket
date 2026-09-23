@@ -48,6 +48,13 @@
     return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
   }
   function itemUnit(item, qty) {
+    if (item.priceUnit === 'кг') return 'кг';
+    if (item.priceUnit === 'чизкейк') {
+      var cakeMod10 = qty % 10, cakeMod100 = qty % 100;
+      if (cakeMod10 === 1 && cakeMod100 !== 11) return 'чизкейк';
+      if (cakeMod10 >= 2 && cakeMod10 <= 4 && (cakeMod100 < 12 || cakeMod100 > 14)) return 'чизкейка';
+      return 'чизкейков';
+    }
     if (item.priceUnit !== 'рулет') return 'шт.';
     var mod10 = qty % 10, mod100 = qty % 100;
     if (mod10 === 1 && mod100 !== 11) return 'рулет';
@@ -57,7 +64,7 @@
   function priceSummary(item) {
     if (item.available === false) return '<div class="card-price">Цена уточняется</div>';
     var qty = cart[item.id] || item.minQty;
-    var singleUnit = item.priceUnit === 'рулет' ? 'рулет' : 'шт.';
+    var singleUnit = item.priceUnit || 'шт.';
     return '<div class="card-price">' + shortMoney(lineTotal(item, qty)) + ' / ' + qty + ' ' + itemUnit(item, qty) + '</div><small>' + shortMoney(item.price) + ' за 1 ' + singleUnit + '</small>';
   }
   function renderCatalog() {
@@ -65,13 +72,14 @@
     $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
-        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets'].indexOf(item.category) !== -1) {
+        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts'].indexOf(item.category) !== -1) {
           var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
           var orderText = item.orderLabel || (item.qtyStep === item.minQty
             ? 'Заказ кратно ' + item.minQty + ' шт.'
             : 'Минимум ' + item.minQty + ' шт., далее по ' + item.qtyStep + ' шт.');
-          var orderNote = '<div class="quantity-rule">' + esc(orderText) + '</div>';
-          return '<article class="card card-simple"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">Вес: ' + esc(item.weight) + '</div>' + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
+          var orderNote = item.hideOrderLabel ? '' : '<div class="quantity-rule">' + esc(orderText) + '</div>';
+          var weight = item.weight ? '<div class="card-weight">Вес: ' + esc(item.weight) + '</div>' : '';
+          return '<article class="card card-simple"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div>' + weight + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
         }
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
       }).join('') + '</div></section>';

@@ -14,6 +14,7 @@ const CATEGORIES = [
   { id: "quiches", title: "Киши" },
   { id: "cheesecakes", title: "Чизкейки" },
   { id: "biscuit-rolls", title: "Закусочные рулеты" },
+  { id: "desserts", title: "Десерты" },
   { id: "sets", title: "Сеты" },
 ];
 
@@ -96,6 +97,10 @@ const ITEMS = [
   { id: "br2", category: "biscuit-rolls", name: "Свекольный рулет с сыром, чесноком и зеленью", weight: "450 г", price: 40.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/beetroot-roll.jpg" },
   { id: "br3", category: "biscuit-rolls", name: "Морковный рулет с курицей, грибами и грецким орехом", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/carrot-roll.jpg" },
 
+  // Десерты
+  { id: "d1", category: "desserts", name: "Шоколадное пирожное", price: 55.00, priceUnit: "кг", orderLabel: "Заказ кратно 1 кг. Разрежем на нужное количество кусочков", img: "assets/boxes/chocolate-cakes-detail.jpg" },
+  { id: "d2", category: "desserts", name: "Басский чизкейк", weight: "900 г", price: 70.00, priceUnit: "чизкейк", hideOrderLabel: true, img: "assets/desserts/basque-cheesecake.jpg" },
+
   // Сеты
   { id: "set1", category: "sets", name: "Сет «Сыры и фрукты»", weight: "на 10 персон", price: 105.00, composition: "Ассорти сыров, виноград, орехи, мёд, крекеры", description: "Изысканная сырная тарелка для гостей.", img: placeholderImg("🧀", "#F1F8E9") },
   { id: "set2", category: "sets", name: "Сет «Мясные нарезки»", weight: "на 10 персон", price: 115.00, composition: "Ассорти колбас и мясных деликатесов, маслины, зелень", description: "Насыщенное мясное ассорти.", img: placeholderImg("🥩", "#F1F8E9") },
@@ -110,7 +115,7 @@ const DEMO_RULES = {
   croissants: [5, 5], crostini: [10, 10],
   tartlets: [4, 4], sandwiches: [6, 6], salads: [9, 9],
   burgers: [6, 6], quiches: [6, 6], cheesecakes: [4, 4],
-  "biscuit-rolls": [1, 1]
+  "biscuit-rolls": [1, 1], desserts: [1, 1]
 };
 
 ITEMS.push(
@@ -125,7 +130,10 @@ ITEMS.push(
   { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №9 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-caesar-shrimp", type: "ready-box", name: "«Цезарь» с креветками", weight: "Бокс №10 · 9 шт. · 1 170 г", price: 99, img: "assets/boxes/caesar-shrimp-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-greek", type: "ready-box", name: "Греческий салат", weight: "Бокс №11 · 9 шт. · 1 170 г", price: 72, img: "assets/boxes/greek-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-three-rolls", type: "ready-box", name: "Три закусочных рулета", weight: "Бокс №12 · 3 рулета · 1 350 г", price: 120, img: "assets/boxes/three-savory-rolls-box.jpg", minQty: 1, qtyStep: 1 }
+  { id: "box-three-rolls", type: "ready-box", name: "Три закусочных рулета", weight: "Бокс №12 · 3 рулета · 1 350 г", price: 120, img: "assets/boxes/three-savory-rolls-box.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-profiteroles", type: "ready-box", name: "Профитроли", weight: "Бокс №13 · 25 шт. · 750 г", price: 70, img: "assets/boxes/profiteroles-overview.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №14 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
+  { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №15 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
 );
 
 ITEMS.forEach(function (item) {
