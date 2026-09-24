@@ -8,12 +8,14 @@ const CATEGORIES = [
   { id: "croissants", title: "Мини-круассаны" },
   { id: "crostini", title: "Кростини" },
   { id: "tartlets", title: "Тарталетки" },
+  { id: "napoleons", title: "Солёные наполеоны" },
   { id: "sandwiches", title: "Мини сэндвичи" },
   { id: "salads", title: "Салаты" },
   { id: "burgers", title: "Мини бургеры" },
   { id: "quiches", title: "Киши" },
   { id: "cheesecakes", title: "Чизкейки" },
   { id: "biscuit-rolls", title: "Закусочные рулеты" },
+  { id: "pies", title: "Пироги" },
   { id: "desserts", title: "Десерты" },
   { id: "sets", title: "Сеты" },
 ];
@@ -63,6 +65,11 @@ const ITEMS = [
   { id: "t3", category: "tartlets", name: "Запечённая тарталетка с белыми грибами", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-porcini.jpg" },
   { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
 
+  // Солёные наполеоны
+  { id: "napoleon-duck", category: "napoleons", name: "Наполеон с утиным паштетом и клюквенным конфитюром", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+  { id: "napoleon-chicken", category: "napoleons", name: "Наполеон с курицей и грибами", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+  { id: "napoleon-tuna", category: "napoleons", name: "Наполеон с тунцом и сыром", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+
   // Мини сэндвичи
   { id: "s1", category: "sandwiches", name: "Мини сэндвич с ростбифом", weight: "45 г", price: 3.80, composition: "Хлеб, ростбиф, руккола, соус", description: "Сытный и аккуратный мини-формат.", img: placeholderImg("🥩", "#E3F2FD") },
   { id: "s2", category: "sandwiches", name: "Мини сэндвич с индейкой и авокадо", weight: "45 г", price: 3.60, composition: "Хлеб, индейка, авокадо, листовой салат", description: "Лёгкий вариант с нежной начинкой.", img: placeholderImg("🥑", "#E3F2FD") },
@@ -97,6 +104,10 @@ const ITEMS = [
   { id: "br2", category: "biscuit-rolls", name: "Свекольный рулет с сыром, чесноком и зеленью", weight: "450 г", price: 40.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/beetroot-roll.jpg" },
   { id: "br3", category: "biscuit-rolls", name: "Морковный рулет с курицей, грибами и грецким орехом", weight: "450 г", price: 45.00, priceUnit: "рулет", orderLabel: "Нарежем на любое количество кусков", img: "assets/rolls/carrot-roll.jpg" },
 
+  // Пироги
+  { id: "pie-chicken", category: "pies", name: "Пирог с курицей, сыром фета и томатами черри", weight: "1 кг", price: 45.00, priceUnit: "пирог", hideOrderLabel: true, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg" },
+  { id: "pie-cabbage", category: "pies", name: "Пирог с капустой и грибами", weight: "1 кг", price: 40.00, priceUnit: "пирог", hideOrderLabel: true, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg" },
+
   // Десерты
   { id: "d1", category: "desserts", name: "Шоколадное пирожное", price: 55.00, priceUnit: "кг", orderLabel: "Заказ кратно 1 кг. Разрежем на нужное количество кусочков", img: "assets/boxes/chocolate-cakes-detail.jpg" },
   { id: "d2", category: "desserts", name: "Басский чизкейк", weight: "900 г", price: 70.00, priceUnit: "чизкейк", hideOrderLabel: true, img: "assets/desserts/basque-cheesecake.jpg" },
@@ -115,7 +126,8 @@ const DEMO_RULES = {
   croissants: [5, 5], crostini: [10, 10],
   tartlets: [4, 4], sandwiches: [6, 6], salads: [9, 9],
   burgers: [6, 6], quiches: [6, 6], cheesecakes: [4, 4],
-  "biscuit-rolls": [1, 1], desserts: [1, 1]
+  "biscuit-rolls": [1, 1], desserts: [1, 1],
+  napoleons: [18, 18], pies: [1, 1]
 };
 
 ITEMS.push(
@@ -135,8 +147,8 @@ ITEMS.push(
   { id: "box-profiteroles", type: "ready-box", name: "Большой бокс профитролей", weight: "Бокс №14 · 25 шт. · 750 г", price: 70, img: "assets/boxes/profiteroles-overview.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-mini-tartlets", type: "ready-box", name: "Мини-тарталетки", weight: "Бокс №15 · 64 шт. · 1 280 г", price: 130, img: "assets/boxes/mini-tartlets-box.jpg?v=3", minQty: 1, qtyStep: 1 },
   { id: "box-canapes", type: "ready-box", name: "Канапе", weight: "Бокс №16 · 21 шт. · 630 г", price: 65, img: "assets/boxes/canapes-overview.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-chicken-pie", type: "ready-box", name: "Пирог с курицей, сыром фета и томатами черри", weight: "Бокс №17 · 1 пирог · 1 кг", price: 45, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-cabbage-pie", type: "ready-box", name: "Пирог с капустой и грибами", weight: "Бокс №18 · 1 пирог · 1 кг", price: 40, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-chicken-pie", type: "ready-box", name: "Пирог с курицей, сыром фета и томатами черри", weight: "Бокс №20 · 1 пирог · 1 кг", price: 45, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-cabbage-pie", type: "ready-box", name: "Пирог с капустой и грибами", weight: "Бокс №21 · 1 пирог · 1 кг", price: 40, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №22 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
   { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №23 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
 );

@@ -63,6 +63,12 @@
       if (cakeMod10 >= 2 && cakeMod10 <= 4 && (cakeMod100 < 12 || cakeMod100 > 14)) return 'чизкейка';
       return 'чизкейков';
     }
+    if (item.priceUnit === 'пирог') {
+      var pieMod10 = qty % 10, pieMod100 = qty % 100;
+      if (pieMod10 === 1 && pieMod100 !== 11) return 'пирог';
+      if (pieMod10 >= 2 && pieMod10 <= 4 && (pieMod100 < 12 || pieMod100 > 14)) return 'пирога';
+      return 'пирогов';
+    }
     if (item.priceUnit !== 'рулет') return 'шт.';
     var mod10 = qty % 10, mod100 = qty % 100;
     if (mod10 === 1 && mod100 !== 11) return 'рулет';
@@ -77,10 +83,10 @@
   }
   function renderCatalog() {
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
-    $('categoryNav').innerHTML = categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
+    $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
-        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts'].indexOf(item.category) !== -1) {
+        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons'].indexOf(item.category) !== -1) {
           var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
           var orderText = item.orderLabel || (item.qtyStep === item.minQty
             ? 'Заказ кратно ' + item.minQty + ' шт.'
@@ -229,6 +235,13 @@
   $('menuToggle').addEventListener('click', toggleMenu);
   $('mobileMenu').querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
   window.addEventListener('resize', function () { if (window.innerWidth > 680) closeMenu(); });
+  var scrollTopBtn = $('scrollTopBtn');
+  if (scrollTopBtn) {
+    function toggleScrollTopBtn() { scrollTopBtn.classList.toggle('visible', window.scrollY > 500); }
+    window.addEventListener('scroll', toggleScrollTopBtn, { passive: true });
+    toggleScrollTopBtn();
+    scrollTopBtn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  }
   document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeMenu(); });
   document.querySelectorAll('[data-close-overlay]').forEach(function (el) { el.addEventListener('click', close); });
   $('toCheckoutBtn').addEventListener('click', function () { if (lineCount()) { show('viewCheckout'); updateMethod(); } });
