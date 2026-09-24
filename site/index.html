@@ -589,7 +589,7 @@
       <div class="faq-list">
         <details><summary>Можно ли заказать блюдо не из меню или изменить состав?</summary><p>Да, мы можем обсудить индивидуальный состав или приготовить блюдо по вашему референсу. Позвоните нам по номеру <a href="tel:+375295704749">+375 29 570-47-49</a> и при необходимости отправьте фотографии примеров — администратор предложит возможные варианты.</p></details>
         <details><summary>Можно ли заказать посуду для мероприятия?</summary><p>Да, предоставление посуды возможно. Позвоните по номеру <a href="tel:+375295704749">+375 29 570-47-49</a>, чтобы обсудить количество, формат мероприятия и остальные детали.</p></details>
-        <details><summary>Есть ли доставка и сколько она стоит?</summary><p>Мы доставляем заказы по Минску и можем обсудить доставку за его пределы. Стоимость и удобное время зависят от адреса и объёма заказа — администратор рассчитает их после получения заявки.</p></details>
+        <details><summary>Есть ли доставка и сколько она стоит?</summary><p>Самовывоз по адресу Минск, Нововиленская 51 — бесплатно. Доставка по Минску в пределах МКАД — 20 BYN, а при заказе от 500 BYN бесплатно. Доставку за пределы МКАД обсудим отдельно — администратор уточнит стоимость и удобное время после получения заявки.</p></details>
         <details><summary>За сколько дней лучше оформить заказ?</summary><p>Желательно оформить заказ за 2–3 дня, а для крупных мероприятий — как можно раньше. Срочные заказы тоже возможны: позвоните нам, и мы проверим, что успеем приготовить к нужному времени.</p></details>
         <details><summary>Как можно оплатить заказ?</summary><p>После оформления заявки с вами свяжется администратор и согласует удобный способ оплаты. Возможен наличный и безналичный расчёт.</p></details>
         <details><summary>Работаете ли вы с юридическими лицами?</summary><p>Да, мы принимаем заказы от компаний и организаций. Условия, документы и способ расчёта согласуются с администратором.</p></details>
@@ -644,11 +644,11 @@
               <div class="field-error">Укажите корректный номер телефона</div>
             </div>
             <div class="field" id="fieldDate"><label for="eventDate">Дата заказа</label><input type="date" id="eventDate" /><div class="field-error">Выберите будущую дату</div></div>
-            <div class="field" id="fieldMethod"><label for="fulfillment">Как получите заказ</label><select id="fulfillment"><option value="pickup">Самовывоз</option><option value="minsk">Доставка в пределах МКАД</option><option value="other">Другое место — обсудить с администратором</option></select></div>
+            <div class="field" id="fieldMethod"><label for="fulfillment">Как получите заказ</label><select id="fulfillment"><option value="pickup">Самовывоз — Минск, Нововиленская 51</option><option value="minsk">Доставка в пределах МКАД</option><option value="other">Другое место — обсудить с администратором</option></select></div>
             <div class="field" id="fieldAddress" hidden><label for="address">Адрес или район доставки</label><input type="text" id="address" autocomplete="street-address" /><div class="field-error">Укажите адрес или район</div></div>
             <div class="field"><label for="comment">Комментарий</label><textarea id="comment" rows="3" placeholder="Что важно учесть?"></textarea></div>
             <div class="field"><label for="tgNick">Ник в Telegram <span class="optional">необязательно</span></label><input type="text" id="tgNick" placeholder="@username" autocomplete="off" /></div>
-            <p class="promo-note">Акции не суммируются: при заказе от 200 BYN — на выбор скидка 10% ко дню рождения или бокс профитролей в подарок.</p>
+            <p class="promo-note" id="promoNote">Акции не суммируются: при заказе от 200 BYN — на выбор скидка 10% ко дню рождения или бокс профитролей в подарок.</p>
             <div class="field field-checkbox" id="fieldBirthday">
               <label class="checkbox-birthday">
                 <input type="checkbox" id="birthdayDiscount" />

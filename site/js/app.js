@@ -111,6 +111,8 @@
     var sub = subtotal();
     var discount = discountAmount();
     var afterDiscount = sub - discount;
+    var promoNote = $('promoNote');
+    if (promoNote) promoNote.hidden = sub < GIFT_THRESHOLD;
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
     if (discount > 0) html += '<div class="summary-discount">Скидка ко дню рождения (−10%): <strong>−' + money(discount) + '</strong></div>';
     html += '<div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div>';
