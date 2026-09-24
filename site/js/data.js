@@ -66,9 +66,9 @@ const ITEMS = [
   { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
 
   // Солёные наполеоны
-  { id: "napoleon-duck", category: "napoleons", name: "Наполеон с утиным паштетом и клюквенным конфитюром", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
-  { id: "napoleon-chicken", category: "napoleons", name: "Наполеон с курицей и грибами", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
-  { id: "napoleon-tuna", category: "napoleons", name: "Наполеон с тунцом и сыром", weight: "1 шт. ≈ 35 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+  { id: "napoleon-duck", category: "napoleons", name: "Наполеон с утиным паштетом и клюквенным конфитюром", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+  { id: "napoleon-chicken", category: "napoleons", name: "Наполеон с курицей и грибами", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
+  { id: "napoleon-tuna", category: "napoleons", name: "Наполеон с тунцом и сыром", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/boxes/napoleons-detail-mobile.jpg" },
 
   // Мини сэндвичи
   { id: "s1", category: "sandwiches", name: "Мини сэндвич с ростбифом", weight: "45 г", price: 3.80, composition: "Хлеб, ростбиф, руккола, соус", description: "Сытный и аккуратный мини-формат.", img: placeholderImg("🥩", "#E3F2FD") },
@@ -135,7 +135,7 @@ ITEMS.push(
   { id: "box-salmon-crab", type: "ready-box", name: "Бокс «Фуршетный»", weight: "Бокс №2 · 44 шт. + рулет · 1 490 г", price: 180, img: "assets/boxes/salmon-crab-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-crostini", type: "ready-box", name: "Кростини к крепким напиткам", weight: "Бокс №3 · 20 шт. · 1 100 г", price: 65, img: "assets/boxes/crostini-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-baked-tartlets", type: "ready-box", name: "Запечённые тарталетки", weight: "Бокс №4 · 16 шт. · 960 г", price: 65, img: "assets/boxes/baked-tartlets-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №5 · 18 шт. · вес уточняется", price: 55, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №5 · 18 шт. · 720 г", price: 55, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №6 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-caesar-shrimp", type: "ready-box", name: "«Цезарь» с креветками", weight: "Бокс №7 · 9 шт. · 1 170 г", price: 99, img: "assets/boxes/caesar-shrimp-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-greek", type: "ready-box", name: "Греческий салат", weight: "Бокс №8 · 9 шт. · 1 170 г", price: 72, img: "assets/boxes/greek-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
