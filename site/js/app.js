@@ -97,7 +97,7 @@
     $('cartCount').hidden = ids.length === 0;
     $('cartCount').textContent = String(ids.length);
     $('cartFooter').hidden = ids.length === 0;
-    var giftBanner = giftEligible() ? '<div class="cart-line cart-line-gift"><span class="cart-gift-badge">🎁 В подарок</span><img src="' + giftItem().img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(giftItem().name) + '</div><div class="cart-line-price">Бесплатно — дарим при заказе от ' + GIFT_THRESHOLD + ' BYN</div></div></div>' : '';
+    var giftBanner = giftEligible() ? '<div class="cart-line cart-line-gift"><img src="' + giftItem().img + '" alt=""><div class="cart-line-info"><div class="cart-gift-row"><div class="cart-line-name">' + esc(giftItem().name) + '</div><span class="cart-gift-tag">В подарок</span></div><div class="cart-line-price"><span class="cart-gift-strike">' + money(giftItem().price) + '</span>Бесплатно</div></div></div>' : '';
     $('cartBody').innerHTML = (ids.length ? ids.map(function (id) {
       var item = byId[id], qty = cart[id];
       return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(lineTotal(item, qty)) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
@@ -113,7 +113,7 @@
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
     if (discount > 0) html += '<div class="summary-discount">Скидка ко дню рождения (−10%): <strong>−' + money(discount) + '</strong></div>';
     html += '<div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div>';
-    if (giftEligible()) html += '<div class="summary-gift"><img src="' + giftItem().img + '" alt=""><div class="summary-gift-text"><strong>🎁 ' + esc(giftItem().name) + '</strong><span>в подарок, бесплатно</span></div></div>';
+    if (giftEligible()) html += '<div class="summary-gift"><img src="' + giftItem().img + '" alt=""><div class="summary-gift-text"><div class="cart-gift-row"><strong>' + esc(giftItem().name) + '</strong><span class="cart-gift-tag">В подарок</span></div><span><span class="cart-gift-strike">' + money(giftItem().price) + '</span>Бесплатно</span></div></div>';
     html += '<div>Предварительный итог: <strong>' + (fee === null ? money(afterDiscount) + ' + доставка' : money(afterDiscount + fee)) + '</strong></div>';
     $('checkoutSummary').innerHTML = html;
   }
