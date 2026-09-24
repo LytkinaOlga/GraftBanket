@@ -1,8 +1,8 @@
 {
-  "name": "draft-banket-site",
+  "name": "draft-catering-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Draft Banket — сайт-витрина с корзиной и отправкой заявки в Telegram",
+  "description": "Draft Catering — сайт-витрина с корзиной и отправкой заявки в Telegram",
   "engines": {
     "node": ">=18"
   }

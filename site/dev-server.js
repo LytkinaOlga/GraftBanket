@@ -27,4 +27,4 @@ http.createServer(async (req, res) => {
     res.setHeader('Content-Type', (types[path.extname(file).toLowerCase()] || 'application/octet-stream') + '; charset=utf-8');
     res.end(content);
   });
-}).listen(port, '127.0.0.1', () => console.log('Draft Banket preview: http://127.0.0.1:' + port));
+}).listen(port, '127.0.0.1', () => console.log('Draft Catering preview: http://127.0.0.1:' + port));

@@ -42,10 +42,22 @@
     if (method === 'minsk') return subtotal() >= 500 ? 0 : 20;
     return null;
   }
+  function ecommerceProduct(item, qty) {
+    return { id: item.id, name: item.name, price: item.price, category: item.category || item.type, quantity: qty };
+  }
+  function pushEcommerce(action, products, actionField) {
+    if (!window.dataLayer) return;
+    var payload = {}; payload[action] = { products: products };
+    if (actionField) payload[action].actionField = actionField;
+    window.dataLayer.push({ ecommerce: Object.assign({ currencyCode: 'BYN' }, payload) });
+  }
   function changeQty(id, direction) {
     var item = byId[id]; if (!item) return;
     var current = cart[id] || 0;
     var next = direction === 'remove' ? 0 : current === 0 ? item.minQty : current + (direction === 'plus' ? item.qtyStep : -item.qtyStep);
+    var delta = next - current;
+    if (delta > 0) pushEcommerce('add', [ecommerceProduct(item, delta)]);
+    else if (delta < 0) pushEcommerce('remove', [ecommerceProduct(item, -delta)]);
     if (next < item.minQty) delete cart[id]; else cart[id] = next;
     saveCart(); render();
   }
@@ -265,6 +277,11 @@
     try {
       var response = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!response.ok) throw new Error('request failed');
+      var result = await response.json().catch(function () { return {}; });
+      var fee = delivery();
+      var revenue = Math.round((subtotal() - discountAmount() + (fee || 0)) * 100) / 100;
+      var purchaseProducts = Object.keys(cart).map(function (id) { return ecommerceProduct(byId[id], cart[id]); });
+      pushEcommerce('purchase', purchaseProducts, { id: result.orderId || (payload.eventDate + '-' + Date.now()), revenue: revenue });
       cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
     } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
     finally { button.disabled = false; button.textContent = 'Отправить заявку'; }
