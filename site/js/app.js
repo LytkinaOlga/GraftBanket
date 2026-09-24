@@ -202,6 +202,22 @@
     promoDots.forEach(function (dot) {
       dot.addEventListener('click', function () { showPromo(Number(dot.dataset.promoDot)); startPromoRotation(); });
     });
+    var promoTouchStartX = 0;
+    var promoTouchStartY = 0;
+    promoCarousel.addEventListener('touchstart', function (event) {
+      var touch = event.changedTouches[0];
+      promoTouchStartX = touch.clientX;
+      promoTouchStartY = touch.clientY;
+    }, { passive: true });
+    promoCarousel.addEventListener('touchend', function (event) {
+      var touch = event.changedTouches[0];
+      var deltaX = touch.clientX - promoTouchStartX;
+      var deltaY = touch.clientY - promoTouchStartY;
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        showPromo(promoIndex + (deltaX < 0 ? 1 : -1));
+        startPromoRotation();
+      }
+    }, { passive: true });
     promoCarousel.addEventListener('mouseenter', function () { window.clearInterval(promoTimer); });
     promoCarousel.addEventListener('mouseleave', startPromoRotation);
     promoCarousel.addEventListener('focusin', function () { window.clearInterval(promoTimer); });
