@@ -35,7 +35,8 @@ module.exports = async function handler(req, res) {
     const birthdayDiscount = Boolean(body.birthdayDiscount);
     const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
     const giftItem = catalog[GIFT_ITEM_ID];
-    const giftApplied = subtotal >= GIFT_THRESHOLD && Boolean(giftItem);
+    // Promos don't stack: no gift box when the birthday discount is applied.
+    const giftApplied = subtotal >= GIFT_THRESHOLD && Boolean(giftItem) && !birthdayDiscount;
     const discountedSubtotal = subtotal - discount;
     const delivery = method === 'pickup' ? 0 : method === 'minsk' ? (subtotal >= 500 ? 0 : 20) : null;
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();

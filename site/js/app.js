@@ -32,7 +32,8 @@
   var BIRTHDAY_DISCOUNT_RATE = 0.10;
   var GIFT_ITEM_ID = 'box-profiteroles-mini';
   function giftItem() { return byId[GIFT_ITEM_ID]; }
-  function giftEligible() { return subtotal() >= GIFT_THRESHOLD && !!giftItem(); }
+  // Promos don't stack: the gift box only shows when the birthday discount is not selected.
+  function giftEligible() { return subtotal() >= GIFT_THRESHOLD && !!giftItem() && !birthdayChecked(); }
   function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
   function discountAmount() { return birthdayChecked() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
   function delivery() {
@@ -216,7 +217,7 @@
   $('backToCartBtn').addEventListener('click', function () { show('viewCart'); });
   $('closeSuccessBtn').addEventListener('click', function () { close(); show('viewCart'); });
   $('fulfillment').addEventListener('change', updateMethod);
-  $('birthdayDiscount').addEventListener('change', renderSummary);
+  $('birthdayDiscount').addEventListener('change', render);
   $('eventDate').min = new Date().toISOString().slice(0, 10);
   $('submitOrderBtn').addEventListener('click', async function () {
     if (!lineCount() || !validate()) return;
