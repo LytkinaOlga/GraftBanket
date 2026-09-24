@@ -28,6 +28,13 @@
   function lineTotal(item, qty) { return item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty; }
   function subtotal() { return Object.keys(cart).reduce(function (sum, id) { return sum + lineTotal(byId[id], cart[id]); }, 0); }
   function lineCount() { return Object.keys(cart).length; }
+  var GIFT_THRESHOLD = 200;
+  var BIRTHDAY_DISCOUNT_RATE = 0.10;
+  var GIFT_ITEM_ID = 'box-profiteroles-mini';
+  function giftItem() { return byId[GIFT_ITEM_ID]; }
+  function giftEligible() { return subtotal() >= GIFT_THRESHOLD && !!giftItem(); }
+  function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
+  function discountAmount() { return birthdayChecked() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
   function delivery() {
     var method = $('fulfillment').value;
     if (method === 'pickup') return 0;
@@ -90,16 +97,25 @@
     $('cartCount').hidden = ids.length === 0;
     $('cartCount').textContent = String(ids.length);
     $('cartFooter').hidden = ids.length === 0;
-    $('cartBody').innerHTML = ids.length ? ids.map(function (id) {
+    var giftBanner = giftEligible() ? '<div class="cart-line cart-line-gift"><span class="cart-gift-badge">🎁 В подарок</span><img src="' + giftItem().img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(giftItem().name) + '</div><div class="cart-line-price">Бесплатно — дарим при заказе от ' + GIFT_THRESHOLD + ' BYN</div></div></div>' : '';
+    $('cartBody').innerHTML = (ids.length ? ids.map(function (id) {
       var item = byId[id], qty = cart[id];
       return '<div class="cart-line"><img src="' + item.img + '" alt=""><div class="cart-line-info"><div class="cart-line-name">' + esc(item.name) + '</div><div class="cart-line-price">' + money(item.price) + ' × ' + qty + ' = ' + money(lineTotal(item, qty)) + '</div><div class="cart-line-controls">' + control(id) + '<button class="remove-btn" data-action="remove" data-id="' + id + '">Удалить</button></div></div></div>';
-    }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте готовый бокс или закуски из конструктора.</div>';
+    }).join('') : '<div class="cart-empty">Корзина пока пуста.<br>Добавьте готовый бокс или закуски из конструктора.</div>') + giftBanner;
     $('cartTotal').textContent = money(subtotal());
     renderSummary();
   }
   function renderSummary() {
     var fee = delivery();
-    $('checkoutSummary').innerHTML = '<div>Закуски: <strong>' + money(subtotal()) + '</strong></div><div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div><div>Предварительный итог: <strong>' + (fee === null ? money(subtotal()) + ' + доставка' : money(subtotal() + fee)) + '</strong></div>';
+    var sub = subtotal();
+    var discount = discountAmount();
+    var afterDiscount = sub - discount;
+    var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
+    if (discount > 0) html += '<div class="summary-discount">Скидка ко дню рождения (−10%): <strong>−' + money(discount) + '</strong></div>';
+    html += '<div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div>';
+    if (giftEligible()) html += '<div class="summary-gift"><img src="' + giftItem().img + '" alt=""><div class="summary-gift-text"><strong>🎁 ' + esc(giftItem().name) + '</strong><span>в подарок, бесплатно</span></div></div>';
+    html += '<div>Предварительный итог: <strong>' + (fee === null ? money(afterDiscount) + ' + доставка' : money(afterDiscount + fee)) + '</strong></div>';
+    $('checkoutSummary').innerHTML = html;
   }
   function render() {
     document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control); });
@@ -112,6 +128,17 @@
   function show(view) { ['viewCart', 'viewCheckout', 'viewSuccess'].forEach(function (id) { $(id).hidden = id !== view; }); }
   function open() { $('cartOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
   function close() { $('cartOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function closeMenu() {
+    $('mobileMenu').hidden = true;
+    $('menuToggle').setAttribute('aria-expanded', 'false');
+    $('menuToggle').setAttribute('aria-label', 'Открыть меню');
+  }
+  function toggleMenu() {
+    var willOpen = $('mobileMenu').hidden;
+    $('mobileMenu').hidden = !willOpen;
+    $('menuToggle').setAttribute('aria-expanded', String(willOpen));
+    $('menuToggle').setAttribute('aria-label', willOpen ? 'Закрыть меню' : 'Открыть меню');
+  }
   function updateMethod() { $('fieldAddress').hidden = $('fulfillment').value === 'pickup'; renderSummary(); }
   function fieldValid(id, ok) { $(id).classList.toggle('invalid', !ok); return ok; }
   function validate() {
@@ -146,12 +173,50 @@
       dots.forEach(function (dot, index) { dot.classList.toggle('active', index === active); });
     }, { passive: true });
   });
+  var promoCarousel = document.querySelector('[data-promo-carousel]');
+  if (promoCarousel) {
+    var promoSlides = Array.from(promoCarousel.querySelectorAll('[data-promo-slide]'));
+    var promoDots = Array.from(promoCarousel.querySelectorAll('[data-promo-dot]'));
+    var promoIndex = 0;
+    var promoTimer;
+    function showPromo(index) {
+      promoIndex = (index + promoSlides.length) % promoSlides.length;
+      promoSlides.forEach(function (slide, slideIndex) {
+        var active = slideIndex === promoIndex;
+        slide.classList.toggle('active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      promoDots.forEach(function (dot, dotIndex) {
+        var active = dotIndex === promoIndex;
+        dot.classList.toggle('active', active);
+        dot.setAttribute('aria-current', String(active));
+      });
+    }
+    function startPromoRotation() {
+      window.clearInterval(promoTimer);
+      promoTimer = window.setInterval(function () { showPromo(promoIndex + 1); }, 6000);
+    }
+    promoDots.forEach(function (dot) {
+      dot.addEventListener('click', function () { showPromo(Number(dot.dataset.promoDot)); startPromoRotation(); });
+    });
+    promoCarousel.addEventListener('mouseenter', function () { window.clearInterval(promoTimer); });
+    promoCarousel.addEventListener('mouseleave', startPromoRotation);
+    promoCarousel.addEventListener('focusin', function () { window.clearInterval(promoTimer); });
+    promoCarousel.addEventListener('focusout', startPromoRotation);
+    showPromo(0);
+    startPromoRotation();
+  }
   $('cartOpenBtn').addEventListener('click', function () { show('viewCart'); open(); });
+  $('menuToggle').addEventListener('click', toggleMenu);
+  $('mobileMenu').querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 680) closeMenu(); });
+  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeMenu(); });
   document.querySelectorAll('[data-close-overlay]').forEach(function (el) { el.addEventListener('click', close); });
   $('toCheckoutBtn').addEventListener('click', function () { if (lineCount()) { show('viewCheckout'); updateMethod(); } });
   $('backToCartBtn').addEventListener('click', function () { show('viewCart'); });
   $('closeSuccessBtn').addEventListener('click', function () { close(); show('viewCart'); });
   $('fulfillment').addEventListener('change', updateMethod);
+  $('birthdayDiscount').addEventListener('change', renderSummary);
   $('eventDate').min = new Date().toISOString().slice(0, 10);
   $('submitOrderBtn').addEventListener('click', async function () {
     if (!lineCount() || !validate()) return;
@@ -160,6 +225,7 @@
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
       eventDate: $('eventDate').value,
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
+      birthdayDiscount: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
       source: new URLSearchParams(location.search).get('utm_source') || 'site'
     };

@@ -3,26 +3,40 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>draft banket — боксы и закуски в Минске</title>
-<meta name="description" content="Draft Banket: готовые боксы и наборы закусок в Минске. Выберите готовое или соберите свой набор и оставьте заявку." />
+<title>Кейтеринг и фуршетные боксы в Минске — Draft Catering</title>
+<meta name="description" content="Кейтеринг в Минске: готовые фуршетные боксы, канапе, брускетты, тарталетки, салаты и десерты. Соберите набор закусок и оформите заявку онлайн." />
 <link rel="icon" type="image/png" href="assets/draft-catering-logo.png" />
-<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/styles.css?v=20260924-mobile-phone" />
 </head>
 <body>
 
   <header class="site-header">
     <div class="container">
       <a class="brand" href="#top" aria-label="Draft Catering — на главную"><img src="assets/draft-catering-logo.png" alt="Draft Catering" /></a>
+      <nav class="header-nav" aria-label="Основная навигация">
+        <a href="#how-it-works">Как это работает</a>
+        <a href="#faq">Частые вопросы</a>
+      </nav>
       <div class="header-actions">
         <a class="header-phone" href="tel:+375295704749" aria-label="Позвонить по номеру плюс триста семьдесят пять двадцать девять пятьсот семьдесят сорок семь сорок девять">+375 29 570-47-49</a>
         <a class="header-telegram" href="#" data-telegram-placeholder aria-disabled="true" title="Ссылка на Telegram скоро появится" aria-label="Telegram — ссылка скоро появится">
           <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.7 3.4 18.8 20c-.2 1.2-.8 1.5-1.8.9l-4.4-3.3-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.4-.3-.1-.5-.5-.2L7.5 14.3l-4.4-1.4c-1-.3-1-1 .2-1.4L20.5 2.9c.8-.3 1.5.2 1.2.5Z" fill="currentColor"/></svg>
         </a>
+        <a class="header-social header-instagram" href="https://www.instagram.com/draft.catering.minsk/" target="_blank" rel="noopener noreferrer" aria-label="Draft Catering в Instagram">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
         <button class="icon-btn" id="cartOpenBtn" aria-label="Открыть корзину">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l-1.5 13h-13L4 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
           <span class="cart-count" id="cartCount" hidden>0</span>
         </button>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
       </div>
+      <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация" hidden>
+        <a href="#ready-boxes">Готовые боксы</a>
+        <a href="#constructor">Собрать набор</a>
+        <a href="#how-it-works">Как это работает</a>
+        <a href="#faq">Частые вопросы</a>
+      </nav>
     </div>
   </header>
 
@@ -31,58 +45,60 @@
       <div class="container hero-layout">
         <div class="hero-copy">
           <div class="hero-overline"><span>КЕЙТЕРИНГ В МИНСКЕ</span></div>
-          <h1>Боксы и<br><span>закуски</span> для<br>ваших событий.</h1>
-          <p>Выберите готовый бокс или соберите свой набор из закусок. Оставьте заявку — мы свяжемся с вами и согласуем детали.</p>
+          <h1>Кейтеринг и<br><span>фуршетные боксы</span><br>в Минске.</h1>
+          <p>Готовые боксы, канапе, брускетты, тарталетки и десерты для праздников, офиса и домашних событий. Выберите готовое решение или соберите свой набор.</p>
           <div class="hero-actions"><a class="primary-link" href="#ready-boxes"><small>01</small><strong>Готовые боксы</strong><span aria-hidden="true">↗</span></a><a class="secondary-link" href="#constructor"><small>02</small><strong>Собрать свой набор</strong><span aria-hidden="true">↗</span></a></div>
         </div>
         <div class="hero-visual"><img src="assets/hero-snacks-yellow-v8.png" alt="Брускетты, тарталетки, закусочные шарики и рулетики из ветчины на жёлтом фоне" /></div>
       </div>
     </section>
 
-    <section class="container how-it-works" aria-label="Как заказать">
-      <div class="how-panel">
-        <div class="section-heading how-heading"><div><span class="eyebrow">Как это работает</span><h2>От выбора до праздника — три шага</h2></div></div>
-        <ol class="steps">
-          <li class="step">
-            <span class="step-num">01</span>
-            <div class="step-text"><strong>Выберите</strong><span>Готовый бокс или свой набор закусок</span></div>
-          </li>
-          <li class="step">
-            <span class="step-num">02</span>
-            <div class="step-text"><strong>Оформите заявку</strong><span>Имя, телефон и удобное время</span></div>
-          </li>
-          <li class="step">
-            <span class="step-num">03</span>
-            <div class="step-text"><strong>Мы свяжемся</strong><span>Администратор подтвердит детали и стоимость</span></div>
-          </li>
-        </ol>
+    <aside class="promo-carousel" aria-label="Акции Draft Catering" data-promo-carousel>
+      <div class="promo-track">
+        <article class="promo-slide promo-birthday active" data-promo-slide aria-hidden="false">
+          <div class="container promo-slide-inner">
+            <div class="promo-badge">−10%</div>
+            <div class="promo-copy"><span class="promo-kicker">Подарок именинникам</span><strong>Праздник становится ещё приятнее</strong><p>Дарим скидку 10% на весь заказ — за 5 дней до и 5 дней после дня рождения.</p></div>
+            <a href="#ready-boxes">Выбрать угощения <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+        <article class="promo-slide promo-profiteroles" data-promo-slide aria-hidden="true">
+          <div class="container promo-slide-inner">
+            <div class="promo-badge promo-gift" aria-hidden="true">🎁</div>
+            <div class="promo-copy"><span class="promo-kicker">Комплимент к заказу</span><strong>Малый бокс профитролей в подарок</strong><p>При заказе от 200 BYN подарим бокс из 16 профитролей.</p></div>
+            <a href="#ready-boxes">Собрать заказ <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
       </div>
-    </section>
+      <div class="promo-controls" aria-label="Переключение акций">
+        <button class="active" type="button" data-promo-dot="0" aria-label="Акция для именинников" aria-current="true"></button>
+        <button type="button" data-promo-dot="1" aria-label="Профитроли в подарок" aria-current="false"></button>
+      </div>
+    </aside>
 
     <section class="container ready-section" id="ready-boxes">
-      <div class="section-heading"><div><span class="eyebrow">Готовое решение</span><h2>Наши <span>боксы</span></h2></div></div>
+      <div class="section-heading"><div><span class="eyebrow">Кейтеринг в Минске</span><h2>Готовые <span>фуршетные боксы</span></h2></div></div>
       <p class="section-intro">Выберите готовый бокс для встречи, праздника или уютного вечера.</p>
       <div class="ready-grid">
         <article class="ready-box">
           <picture>
-            <source media="(max-width: 680px)" srcset="assets/boxes/ham-rolls-appetizing-mobile.jpg">
-            <img src="assets/boxes/ham-rolls-appetizing-desktop.jpg" alt="Бокс с рулетиками из ветчины, салатом и помидорами черри" loading="lazy">
+            <source media="(max-width: 680px)" srcset="assets/boxes/croissants-appetizing-mobile.jpg">
+            <img src="assets/boxes/croissants-appetizing-desktop.jpg" alt="Бокс из 15 мини-круассанов с курицей, форелью и ростбифом" loading="lazy">
           </picture>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №1 · 21 шт. · <span class="ready-box-weight">1 050 г</span></span>
-            <h3><span>Рулетики из ветчины (три начинки)</span></h3>
+            <span class="ready-box-kicker">Бокс №1 · 15 шт. · <span class="ready-box-weight">1 350 г</span></span>
+            <h3><span>Мини-круассаны</span></h3>
             <p>Три начинки в одном боксе:</p>
             <ul>
-              <li>крем-сыр и вяленые томаты — 7 шт.</li>
-              <li>чеснок и грецкий орех — 7 шт.</li>
-              <li>фета и зелень — 7 шт.</li>
+              <li>ростбиф, маринованный огурец и вяленые томаты — 5 шт.</li>
+              <li>крем-сыр и слабосолёная форель — 5 шт.</li>
+              <li>«Цезарь» с куриным филе, томатом и соусом «Цезарь» — 5 шт.</li>
             </ul>
-            <p class="ready-box-note">Один рулетик — 50 г.</p>
-            <div class="ready-box-order"><div class="ready-box-price"><strong>75 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-ham-rolls"></div></div>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>120 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-croissants"></div></div>
           </div>
         </article>
         <article class="ready-box">
-          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса Лосось и краб">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса «Фуршетный»">
             <div class="ready-box-gallery-track">
               <picture>
                 <source media="(max-width: 680px)" srcset="assets/boxes/salmon-crab-appetizing-mobile.jpg">
@@ -99,7 +115,7 @@
           </div>
           <div class="ready-box-content">
             <span class="ready-box-kicker">Бокс №2 · 44 шт. + рулет · <span class="ready-box-weight">1 490 г</span></span>
-            <h3><span>Лосось и краб</span></h3>
+            <h3><span>Бокс «Фуршетный»</span></h3>
             <p>Четыре вида закусок в одном боксе:</p>
             <ul>
               <li>тарталетки с лососем и манго — 14 шт.</li>
@@ -108,38 +124,6 @@
               <li>шпинатный рулет с лососем и крем-сыром (можем разрезать на нужное количество штук)</li>
             </ul>
             <div class="ready-box-order"><div class="ready-box-price"><strong>180 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-salmon-crab"></div></div>
-          </div>
-        </article>
-        <article class="ready-box">
-          <img src="assets/boxes/assorted-rolls-box.jpg" alt="Бокс с рулетиками из ветчины, цукини и баклажанов" loading="lazy">
-          <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №3 · 30 шт. · <span class="ready-box-weight">1 340 г</span></span>
-            <h3><span>Ассорти рулетиков</span></h3>
-            <p>Четыре вкуса в одном боксе:</p>
-            <ul>
-              <li>ветчина с крем-сыром и вялеными томатами — 7 шт.</li>
-              <li>цукини с ростбифом — 8 шт.</li>
-              <li>баклажан с сыром и чесноком — 8 шт.</li>
-              <li>ветчина с чесноком и грецким орехом — 7 шт.</li>
-            </ul>
-            <div class="ready-box-order"><div class="ready-box-price"><strong>110 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-assorted-rolls"></div></div>
-          </div>
-        </article>
-        <article class="ready-box">
-          <picture>
-            <source media="(max-width: 680px)" srcset="assets/boxes/croissants-appetizing-mobile.jpg">
-            <img src="assets/boxes/croissants-appetizing-desktop.jpg" alt="Бокс из 15 мини-круассанов с курицей, форелью и ростбифом" loading="lazy">
-          </picture>
-          <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №4 · 15 шт. · <span class="ready-box-weight">1 350 г</span></span>
-            <h3><span>Мини-круассаны</span></h3>
-            <p>Три начинки в одном боксе:</p>
-            <ul>
-              <li>ростбиф, маринованный огурец и вяленые томаты — 5 шт.</li>
-              <li>крем-сыр и слабосолёная форель — 5 шт.</li>
-              <li>«Цезарь» с куриным филе, томатом и соусом «Цезарь» — 5 шт.</li>
-            </ul>
-            <div class="ready-box-order"><div class="ready-box-price"><strong>120 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-croissants"></div></div>
           </div>
         </article>
         <article class="ready-box">
@@ -159,7 +143,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №5 · 20 шт. · <span class="ready-box-weight">1 100 г</span></span>
+            <span class="ready-box-kicker">Бокс №3 · 20 шт. · <span class="ready-box-weight">1 100 г</span></span>
             <h3><span>Кростини к крепким напиткам</span></h3>
             <p>Два сытных вкуса на чёрном хлебе:</p>
             <ul>
@@ -186,7 +170,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №6 · 16 шт. · <span class="ready-box-weight">960 г</span></span>
+            <span class="ready-box-kicker">Бокс №4 · 16 шт. · <span class="ready-box-weight">960 г</span></span>
             <h3><span>Запечённые тарталетки</span></h3>
             <p>Четыре начинки в одном боксе:</p>
             <ul>
@@ -197,29 +181,6 @@
             </ul>
             <p class="ready-box-note">Одна тарталетка — 60 г.</p>
             <div class="ready-box-order"><div class="ready-box-price"><strong>65 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-baked-tartlets"></div></div>
-          </div>
-        </article>
-        <article class="ready-box">
-          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с рулетиками из баклажана">
-            <div class="ready-box-gallery-track">
-              <picture>
-                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-detail-mobile.jpg">
-                <img src="assets/boxes/eggplant-rolls-detail-desktop.jpg" alt="Рулетики из баклажана с начинкой и зеленью крупным планом" loading="lazy">
-              </picture>
-              <picture>
-                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-overview-mobile.jpg">
-                <img src="assets/boxes/eggplant-rolls-overview-desktop.jpg" alt="Общий вид бокса с рулетиками из баклажана" loading="lazy">
-              </picture>
-            </div>
-            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
-            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
-            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
-          </div>
-          <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №7 · 18 шт. · <span class="ready-box-weight">720 г</span></span>
-            <h3><span>Рулетики из баклажана</span></h3>
-            <p class="ready-box-note">В боксе 18 штук по 40 г.</p>
-            <div class="ready-box-order"><div class="ready-box-price"><strong>65 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-eggplant-rolls"></div></div>
           </div>
         </article>
         <article class="ready-box">
@@ -239,7 +200,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №8 · 18 шт. · <span class="ready-box-weight">вес уточняется</span></span>
+            <span class="ready-box-kicker">Бокс №5 · 18 шт. · <span class="ready-box-weight">вес уточняется</span></span>
             <h3><span>Солёные «Наполеоны»</span></h3>
             <p>Хрустящие слоёные закуски с тремя начинками:</p>
             <ul>
@@ -271,7 +232,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №9 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <span class="ready-box-kicker">Бокс №6 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
             <h3><span>«Цезарь» с курицей</span></h3>
             <p>Девять порционных салатов «Цезарь» с курицей.</p>
             <p class="ready-box-note">Одна порция — 130 г.</p>
@@ -295,7 +256,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №10 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <span class="ready-box-kicker">Бокс №7 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
             <h3><span>«Цезарь» с креветками</span></h3>
             <p>Девять порционных салатов «Цезарь» с креветками.</p>
             <p class="ready-box-note">Одна порция — 130 г. В каждой порции — 2 креветки.</p>
@@ -327,11 +288,67 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span><span></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №11 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
+            <span class="ready-box-kicker">Бокс №8 · 9 шт. · <span class="ready-box-weight">1 170 г</span></span>
             <h3><span>Греческий салат</span></h3>
             <p>Девять порционных греческих салатов.</p>
             <p class="ready-box-note">Одна порция — 130 г.</p>
             <div class="ready-box-order"><div class="ready-box-price"><strong>72 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-greek"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <picture>
+            <source media="(max-width: 680px)" srcset="assets/boxes/ham-rolls-appetizing-mobile.jpg">
+            <img src="assets/boxes/ham-rolls-appetizing-desktop.jpg" alt="Бокс с рулетиками из ветчины, салатом и помидорами черри" loading="lazy">
+          </picture>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №9 · 21 шт. · <span class="ready-box-weight">1 050 г</span></span>
+            <h3><span>Рулетики из ветчины (три начинки)</span></h3>
+            <p>Три начинки в одном боксе:</p>
+            <ul>
+              <li>крем-сыр и вяленые томаты — 7 шт.</li>
+              <li>чеснок и грецкий орех — 7 шт.</li>
+              <li>фета и зелень — 7 шт.</li>
+            </ul>
+            <p class="ready-box-note">Один рулетик — 50 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>75 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-ham-rolls"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <img src="assets/boxes/assorted-rolls-box.jpg" alt="Бокс с рулетиками из ветчины, цукини и баклажанов" loading="lazy">
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №10 · 30 шт. · <span class="ready-box-weight">1 340 г</span></span>
+            <h3><span>Ассорти рулетиков</span></h3>
+            <p>Четыре вкуса в одном боксе:</p>
+            <ul>
+              <li>ветчина с крем-сыром и вялеными томатами — 7 шт.</li>
+              <li>цукини с ростбифом — 8 шт.</li>
+              <li>баклажан с сыром и чесноком — 8 шт.</li>
+              <li>ветчина с чесноком и грецким орехом — 7 шт.</li>
+            </ul>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>110 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-assorted-rolls"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery" data-gallery aria-label="Фотографии бокса с рулетиками из баклажана">
+            <div class="ready-box-gallery-track">
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-detail-mobile.jpg">
+                <img src="assets/boxes/eggplant-rolls-detail-desktop.jpg" alt="Рулетики из баклажана с начинкой и зеленью крупным планом" loading="lazy">
+              </picture>
+              <picture>
+                <source media="(max-width: 680px)" srcset="assets/boxes/eggplant-rolls-overview-mobile.jpg">
+                <img src="assets/boxes/eggplant-rolls-overview-desktop.jpg" alt="Общий вид бокса с рулетиками из баклажана" loading="lazy">
+              </picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №11 · 18 шт. · <span class="ready-box-weight">720 г</span></span>
+            <h3><span>Рулетики из баклажана</span></h3>
+            <p class="ready-box-note">В боксе 18 штук по 40 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>65 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-eggplant-rolls"></div></div>
           </div>
         </article>
         <article class="ready-box ready-box-landscape">
@@ -361,7 +378,7 @@
           </div>
           <div class="ready-box-content">
             <span class="ready-box-kicker">Бокс №13 · 25 шт. · <mark>750 г</mark></span>
-            <h3><span>Профитроли</span></h3>
+            <h3><span>Большой бокс профитролей</span></h3>
             <p>Пять вкусов в одном боксе:</p>
             <ul>
               <li>с творожным сыром и лососем — 5 шт.;</li>
@@ -419,6 +436,104 @@
           </div>
         </article>
         <article class="ready-box">
+          <div class="ready-box-gallery ready-box-gallery-cover" data-gallery aria-label="Фотографии пирога с курицей, сыром фета и томатами черри">
+            <div class="ready-box-gallery-track">
+              <picture><img src="assets/boxes/chicken-feta-cherry-pie-whole.jpg" alt="Цельный пирог с курицей, сыром фета и томатами черри" loading="lazy"></picture>
+              <picture><img src="assets/boxes/chicken-feta-cherry-pie-cut.jpg" alt="Пирог с курицей, сыром фета и томатами черри в разрезе" loading="lazy"></picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №16 · 1 пирог · <span class="ready-box-weight">1 кг</span></span>
+            <h3><span>Пирог с курицей, сыром фета и томатами черри</span></h3>
+            <p class="ready-box-note">Вес одного пирога — 1 кг.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>45 BYN</strong><span>Цена за пирог</span></div><div class="ready-box-action" data-control="box-chicken-pie"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery ready-box-gallery-cover" data-gallery aria-label="Фотографии пирога с капустой и грибами">
+            <div class="ready-box-gallery-track">
+              <picture><img src="assets/boxes/cabbage-mushroom-pie-whole.jpg" alt="Цельный пирог с капустой и грибами" loading="lazy"></picture>
+              <picture><img src="assets/boxes/cabbage-mushroom-pie-cut.jpg" alt="Пирог с капустой и грибами в разрезе" loading="lazy"></picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №17 · 1 пирог · <span class="ready-box-weight">1 кг</span></span>
+            <h3><span>Пирог с капустой и грибами</span></h3>
+            <p class="ready-box-note">Вес одного пирога — 1 кг.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>40 BYN</strong><span>Цена за пирог</span></div><div class="ready-box-action" data-control="box-cabbage-pie"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
+          <img class="ready-box-cover-image" src="assets/boxes/bruschetta-box-salmon-shrimp.png" alt="Бокс из двадцати брускетт с лососем и креветкой" loading="lazy">
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №18 · 20 шт.</span>
+            <h3><span>Брускетты с лососем и креветкой</span></h3>
+            <p>Два вкуса в одном боксе:</p>
+            <ul>
+              <li>с лососем и крем-сыром — 10 шт.;</li>
+              <li>с креветкой и муссом из авокадо — 10 шт.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="ready-box">
+          <img class="ready-box-cover-image" src="assets/boxes/bruschetta-box-four-flavors.png" alt="Бокс из двадцати брускетт с лососем, креветкой, ростбифом и тартаром из говядины" loading="lazy">
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №19 · 20 шт.</span>
+            <h3><span>Ассорти брускетт с рыбой и мясом</span></h3>
+            <p>Четыре вкуса в одном боксе:</p>
+            <ul>
+              <li>с лососем и крем-сыром — 5 шт.;</li>
+              <li>с креветкой и муссом из авокадо — 5 шт.;</li>
+              <li>с ростбифом и вялеными томатами — 5 шт.;</li>
+              <li>с тартаром из говядины — 5 шт.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="ready-box">
+          <img class="ready-box-cover-image" src="assets/boxes/bruschetta-box-meat-flavors.png" alt="Бокс из двадцати мясных брускетт четырёх вкусов" loading="lazy">
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №20 · 20 шт.</span>
+            <h3><span>Ассорти мясных брускетт</span></h3>
+            <p>Четыре вкуса в одном боксе:</p>
+            <ul>
+              <li>с ростбифом и вялеными томатами — 5 шт.;</li>
+              <li>с риетом из утки и вишнёвым конфитюром — 5 шт.;</li>
+              <li>с жареным куриным бедром, сельдереем, виноградом и беконом — 5 шт.;</li>
+              <li>с тартаром из сыровяленой колбасы — 5 шт.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="ready-box">
+          <div class="ready-box-gallery ready-box-gallery-cover" data-gallery aria-label="Фотографии малого бокса профитролей">
+            <div class="ready-box-gallery-track">
+              <picture><img src="assets/boxes/profiteroles-mini-box-overview.jpg" alt="Малый бокс профитролей с четырьмя видами закусок, вид сверху" loading="lazy"></picture>
+              <picture><img src="assets/boxes/profiteroles-mini-box-detail.jpg" alt="Профитроль с ростбифом и вялеными томатами крупным планом" loading="lazy"></picture>
+            </div>
+            <button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button>
+            <button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>
+            <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
+          </div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">Бокс №21 · 16 шт. · <span class="ready-box-weight">480 г</span></span>
+            <h3><span>Малый бокс профитролей</span></h3>
+            <p>Четыре вкуса в одном боксе:</p>
+            <ul>
+              <li>с пате из утки и перепелиным яйцом — 4 шт.;</li>
+              <li>тартарный дуэт с сыровяленой колбасой — 4 шт.;</li>
+              <li>с ростбифом и вялеными томатами — 4 шт.;</li>
+              <li>с ветчиной, сыром и грибами — 4 шт.</li>
+            </ul>
+            <p class="ready-box-note">Общий вес бокса — 480 г.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>45 BYN</strong><span>Цена за бокс</span></div><div class="ready-box-action" data-control="box-profiteroles-mini"></div></div>
+          </div>
+        </article>
+        <article class="ready-box">
           <div class="ready-box-gallery ready-box-gallery-portrait" data-gallery aria-label="Фотографии бокса с шоколадными пирожными">
             <div class="ready-box-gallery-track">
               <picture><img src="assets/boxes/chocolate-cakes-overview.jpg?v=3" alt="Бокс с равномерно уложенными шоколадными пирожными" loading="lazy"></picture>
@@ -429,7 +544,7 @@
             <div class="gallery-dots" aria-hidden="true"><span class="active"></span><span></span></div>
           </div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №16 · 18 шт. · <span class="ready-box-weight">2 160 г</span></span>
+            <span class="ready-box-kicker">Бокс №22 · 18 шт. · <span class="ready-box-weight">2 160 г</span></span>
             <h3><span>Шоколадные пирожные</span></h3>
             <p>Шоколадное пирожное с заварным кремом, солёной карамелью, шоколадной глазурью и фундуком.</p>
             <p class="ready-box-note">В боксе 18 штук по 120 г.</p>
@@ -439,7 +554,7 @@
         <article class="ready-box">
           <img class="ready-box-cover-image" src="assets/desserts/basque-cheesecake.jpg" alt="Цельный басский чизкейк без украшений на деревянном столе" loading="lazy">
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Бокс №17 · 1 чизкейк · <span class="ready-box-weight">900 г</span></span>
+            <span class="ready-box-kicker">Бокс №23 · 1 чизкейк · <span class="ready-box-weight">900 г</span></span>
             <h3><span>Басский чизкейк</span></h3>
             <p class="ready-box-note">Вес одного чизкейка — 900 г.</p>
             <div class="ready-box-order"><div class="ready-box-price"><strong>70 BYN</strong><span>Цена за чизкейк</span></div><div class="ready-box-action" data-control="box-basque-cheesecake"></div></div>
@@ -448,7 +563,7 @@
       </div>
     </section>
 
-    <section class="container constructor-heading" id="constructor"><span class="eyebrow">Ваш выбор</span><h2>Соберите свой набор</h2><p>Добавляйте разные закуски. У каждой позиции указан минимальный заказ и шаг количества.</p></section>
+    <section class="container constructor-heading" id="constructor"><span class="eyebrow">Закуски для фуршета</span><h2>Соберите набор закусок в Минске</h2><p>Добавляйте брускетты, тарталетки, салаты, рулетики и десерты. У каждой позиции указан минимальный заказ и шаг количества.</p></section>
 
     <nav class="category-nav">
       <div class="container">
@@ -457,6 +572,30 @@
     </nav>
 
     <div class="container" id="catalog"></div>
+
+    <section class="container how-it-works" id="how-it-works" aria-label="Как заказать кейтеринг">
+      <div class="how-panel">
+        <div class="section-heading how-heading"><div><span class="eyebrow">Как это работает</span><h2>Заказать кейтеринг — три простых шага</h2></div></div>
+        <ol class="steps">
+          <li class="step"><span class="step-num">01</span><div class="step-text"><strong>Выберите</strong><span>Готовый фуршетный бокс или свой набор закусок</span></div></li>
+          <li class="step"><span class="step-num">02</span><div class="step-text"><strong>Оформите заявку</strong><span>Укажите имя, телефон, дату и способ получения</span></div></li>
+          <li class="step"><span class="step-num">03</span><div class="step-text"><strong>Мы всё подтвердим</strong><span>Администратор свяжется с вами и согласует детали заказа</span></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="container faq-section" id="faq">
+      <div class="section-heading faq-heading"><div><span class="eyebrow">Полезная информация</span><h2>Частые вопросы о заказе</h2></div></div>
+      <div class="faq-list">
+        <details><summary>Можно ли заказать блюдо не из меню или изменить состав?</summary><p>Да, мы можем обсудить индивидуальный состав или приготовить блюдо по вашему референсу. Позвоните нам по номеру <a href="tel:+375295704749">+375 29 570-47-49</a> и при необходимости отправьте фотографии примеров — администратор предложит возможные варианты.</p></details>
+        <details><summary>Можно ли заказать посуду для мероприятия?</summary><p>Да, предоставление посуды возможно. Позвоните по номеру <a href="tel:+375295704749">+375 29 570-47-49</a>, чтобы обсудить количество, формат мероприятия и остальные детали.</p></details>
+        <details><summary>Есть ли доставка и сколько она стоит?</summary><p>Мы доставляем заказы по Минску и можем обсудить доставку за его пределы. Стоимость и удобное время зависят от адреса и объёма заказа — администратор рассчитает их после получения заявки.</p></details>
+        <details><summary>За сколько дней лучше оформить заказ?</summary><p>Желательно оформить заказ за 2–3 дня, а для крупных мероприятий — как можно раньше. Срочные заказы тоже возможны: позвоните нам, и мы проверим, что успеем приготовить к нужному времени.</p></details>
+        <details><summary>Как можно оплатить заказ?</summary><p>После оформления заявки с вами свяжется администратор и согласует удобный способ оплаты. Возможен наличный и безналичный расчёт.</p></details>
+        <details><summary>Работаете ли вы с юридическими лицами?</summary><p>Да, мы принимаем заказы от компаний и организаций. Условия, документы и способ расчёта согласуются с администратором.</p></details>
+        <details><summary>Как получить скидку именинника?</summary><p>Скидка 10% действует 5 дней до и 5 дней после дня рождения. Сообщите администратору о празднике при подтверждении заказа.</p></details>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -509,6 +648,12 @@
             <div class="field" id="fieldAddress" hidden><label for="address">Адрес или район доставки</label><input type="text" id="address" autocomplete="street-address" /><div class="field-error">Укажите адрес или район</div></div>
             <div class="field"><label for="comment">Комментарий</label><textarea id="comment" rows="3" placeholder="Что важно учесть?"></textarea></div>
             <div class="field"><label for="tgNick">Ник в Telegram <span class="optional">необязательно</span></label><input type="text" id="tgNick" placeholder="@username" autocomplete="off" /></div>
+            <div class="field field-checkbox" id="fieldBirthday">
+              <label class="checkbox-birthday">
+                <input type="checkbox" id="birthdayDiscount" />
+                <span class="checkbox-birthday-text"><strong>🎂 У меня день рождения</strong><small>Скидка 10% на закуски — действует 5 дней до и 5 дней после</small></span>
+              </label>
+            </div>
           </form>
           <p class="form-note">Это заявка, а не подтверждённый заказ. Администратор свяжется с вами, уточнит доступность и итоговую стоимость.</p>
         </div>
@@ -537,6 +682,6 @@
   </div>
 
   <script src="js/data.js?v=20260923-desserts"></script>
-  <script src="js/app.js?v=20260923-desserts"></script>
+  <script src="js/app.js?v=20260924-birthday-gift"></script>
 </body>
 </html>

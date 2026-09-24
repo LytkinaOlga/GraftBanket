@@ -29,6 +29,14 @@ module.exports = async function handler(req, res) {
       seen.add(row.id); subtotal += lineTotal(item, qty);
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
+    const GIFT_THRESHOLD = 200;
+    const GIFT_ITEM_ID = 'box-profiteroles-mini';
+    const BIRTHDAY_DISCOUNT_RATE = 0.10;
+    const birthdayDiscount = Boolean(body.birthdayDiscount);
+    const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
+    const giftItem = catalog[GIFT_ITEM_ID];
+    const giftApplied = subtotal >= GIFT_THRESHOLD && Boolean(giftItem);
+    const discountedSubtotal = subtotal - discount;
     const delivery = method === 'pickup' ? 0 : method === 'minsk' ? (subtotal >= 500 ? 0 : 20) : null;
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();
     const methodLabel = { pickup: 'Самовывоз', minsk: 'Доставка в пределах МКАД', other: 'Другое место, согласовать' }[method];
@@ -37,9 +45,12 @@ module.exports = async function handler(req, res) {
       nick ? 'Telegram: ' + nick : '', 'Дата заказа: ' + date,
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
       comment ? 'Комментарий: ' + comment : '', 'Источник: ' + clean(body.source, 80),
-      '', 'Состав:', ...lines, '', 'Товары: ' + money(subtotal),
+      '', 'Состав:', ...lines,
+      giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
+      '', 'Товары: ' + money(subtotal),
+      birthdayDiscount ? 'Скидка (день рождения, −10%): −' + money(discount) : '',
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
-      'Предварительный итог: ' + (delivery === null ? money(subtotal) + ' + доставка' : money(subtotal + delivery))
+      'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))
     ].filter(x => x !== '').join('\n');
     const results = await Promise.all(chats.map(async (chatId, index) => {
       try {
