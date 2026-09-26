@@ -354,9 +354,20 @@
       var revenue = Math.round((subtotal() - discountAmount() + (fee || 0)) * 100) / 100;
       var purchaseProducts = Object.keys(cart).map(function (id) { return ecommerceProduct(byId[id], cart[id]); });
       pushEcommerce('purchase', purchaseProducts, { id: result.orderId || (payload.eventDate + '-' + Date.now()), revenue: revenue });
+      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'order_submit_success', { order_price: revenue });
       cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
     } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
     finally { button.disabled = false; button.textContent = 'Отправить заявку'; }
+  });
+  document.querySelectorAll('a[href^="tel:"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'phone_click');
+    });
+  });
+  document.querySelectorAll('a[href*="t.me"],a[href*="instagram.com"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'social_click', { destination: link.href });
+    });
   });
   renderCatalog(); render(); updateMethod();
 })();

@@ -598,6 +598,25 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
 }
 
+.seo-services { padding-top: 72px; padding-bottom: 28px; }
+.seo-services-intro { max-width: 760px; margin: -12px 0 30px; color: var(--text-muted); font-size: 18px; line-height: 1.65; }
+.seo-services-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.seo-services-grid a { min-height: 150px; padding: 24px; border: 1px solid var(--border); color: var(--text); text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+.seo-services-grid a:hover { transform: translateY(-3px); background: var(--accent); border-color: var(--accent); }
+.seo-services-grid strong { font-size: 22px; line-height: 1.15; }
+.seo-services-grid span { color: var(--text-muted); line-height: 1.45; }
+.seo-services-grid a:hover span { color: var(--text); }
+
+@media (max-width: 900px) {
+  .seo-services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .seo-services { padding-top: 48px; }
+  .seo-services-grid { grid-template-columns: 1fr; }
+  .seo-services-grid a { min-height: 128px; }
+}
+
 /* Overlay (cart / checkout) */
 .overlay {
   position: fixed;
