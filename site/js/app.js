@@ -189,6 +189,7 @@
     window.setTimeout(function () { $('dishSearchInput').focus(); }, 0);
   }
   function closeSearch() {
+    if ($('searchPanel').hidden) return;
     $('searchPanel').hidden = true;
     $('dishSearchInput').value = '';
     document.body.style.overflow = '';
