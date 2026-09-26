@@ -160,6 +160,54 @@
     $('menuToggle').setAttribute('aria-expanded', String(willOpen));
     $('menuToggle').setAttribute('aria-label', willOpen ? 'Закрыть меню' : 'Открыть меню');
   }
+  function normalizeSearch(value) {
+    return String(value || '').toLocaleLowerCase('ru-RU').replace(/ё/g, 'е').replace(/[ьъ]/g, '').trim();
+  }
+  function searchCategory(item) {
+    if (item.type === 'ready-box') return 'Готовый бокс';
+    var category = CATEGORIES.find(function (entry) { return entry.id === item.category; });
+    return category ? category.title : 'Позиция меню';
+  }
+  function renderSearchResults(value) {
+    var query = normalizeSearch(value);
+    if (!query) {
+      $('searchResults').innerHTML = '<div class="search-empty">Введите название блюда или ингредиента</div>';
+      return;
+    }
+    var matches = products.filter(function (item) { return normalizeSearch(item.name).indexOf(query) !== -1; }).sort(function (a, b) {
+      return Number(normalizeSearch(b.name).startsWith(query)) - Number(normalizeSearch(a.name).startsWith(query));
+    }).slice(0, 12);
+    $('searchResults').innerHTML = matches.length ? matches.map(function (item) {
+      return '<button class="search-result" type="button" data-search-result="' + esc(item.id) + '"><img src="' + item.img + '" alt=""><span class="search-result-copy"><span class="search-result-name">' + esc(item.name) + '</span><span class="search-result-category">' + esc(searchCategory(item)) + '</span></span><span class="search-result-arrow">↗</span></button>';
+    }).join('') : '<div class="search-empty">Ничего не найдено. Попробуйте другое название.</div>';
+  }
+  function openSearch() {
+    closeMenu();
+    $('searchPanel').hidden = false;
+    document.body.style.overflow = 'hidden';
+    renderSearchResults('');
+    window.setTimeout(function () { $('dishSearchInput').focus(); }, 0);
+  }
+  function closeSearch() {
+    $('searchPanel').hidden = true;
+    $('dishSearchInput').value = '';
+    document.body.style.overflow = '';
+  }
+  function goToSearchResult(id) {
+    var control = Array.prototype.find.call(document.querySelectorAll('[data-control]'), function (item) {
+      return item.getAttribute('data-control') === id;
+    });
+    var target = control && control.closest('.ready-box,.card');
+    closeSearch();
+    if (!target) return;
+    window.setTimeout(function () {
+      target.scrollIntoView({ behavior:'smooth', block:'center' });
+      target.classList.remove('search-highlight');
+      void target.offsetWidth;
+      target.classList.add('search-highlight');
+      window.setTimeout(function () { target.classList.remove('search-highlight'); }, 1700);
+    }, 40);
+  }
   function updateMethod() { $('fieldAddress').hidden = $('fulfillment').value === 'pickup'; renderSummary(); }
   function fieldValid(id, ok) { $(id).classList.toggle('invalid', !ok); return ok; }
   function validate() {
@@ -244,6 +292,13 @@
     startPromoRotation();
   }
   $('cartOpenBtn').addEventListener('click', function () { show('viewCart'); open(); });
+  $('searchOpenBtn').addEventListener('click', openSearch);
+  $('dishSearchInput').addEventListener('input', function () { renderSearchResults(this.value); });
+  $('searchResults').addEventListener('click', function (event) {
+    var result = event.target.closest('[data-search-result]');
+    if (result) goToSearchResult(result.dataset.searchResult);
+  });
+  document.querySelectorAll('[data-close-search]').forEach(function (button) { button.addEventListener('click', closeSearch); });
   $('menuToggle').addEventListener('click', toggleMenu);
   $('mobileMenu').querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
   var siteHeader = document.querySelector('.site-header');
@@ -269,7 +324,7 @@
     toggleScrollTopBtn();
     scrollTopBtn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
   }
-  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeMenu(); });
+  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') { closeMenu(); closeSearch(); } });
   document.querySelectorAll('[data-close-overlay]').forEach(function (el) { el.addEventListener('click', close); });
   $('toCheckoutBtn').addEventListener('click', function () { if (lineCount()) { show('viewCheckout'); updateMethod(); } });
   $('backToCartBtn').addEventListener('click', function () { show('viewCart'); });
