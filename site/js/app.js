@@ -63,6 +63,7 @@
   }
   function control(id) {
     var item = byId[id], qty = cart[id] || 0;
+    if (!item) return '';
     if (item.available === false) return '<button class="add-btn" type="button" disabled>Цена уточняется</button>';
     if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">Добавить</button>';
     return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
