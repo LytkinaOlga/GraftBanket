@@ -246,7 +246,22 @@
   $('cartOpenBtn').addEventListener('click', function () { show('viewCart'); open(); });
   $('menuToggle').addEventListener('click', toggleMenu);
   $('mobileMenu').querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
-  window.addEventListener('resize', function () { if (window.innerWidth > 680) closeMenu(); });
+  var siteHeader = document.querySelector('.site-header');
+  var lastScrollY = window.scrollY;
+  function updateMobileHeader() {
+    if (window.innerWidth > 680) {
+      siteHeader.classList.remove('is-hidden');
+      lastScrollY = window.scrollY;
+      return;
+    }
+    var currentScrollY = Math.max(window.scrollY, 0);
+    var menuOpen = !$('mobileMenu').hidden;
+    if (currentScrollY < 12 || menuOpen || currentScrollY < lastScrollY - 7) siteHeader.classList.remove('is-hidden');
+    else if (currentScrollY > lastScrollY + 7 && currentScrollY > 78) siteHeader.classList.add('is-hidden');
+    lastScrollY = currentScrollY;
+  }
+  window.addEventListener('scroll', updateMobileHeader, { passive: true });
+  window.addEventListener('resize', function () { if (window.innerWidth > 680) closeMenu(); updateMobileHeader(); });
   var scrollTopBtn = $('scrollTopBtn');
   if (scrollTopBtn) {
     function toggleScrollTopBtn() { scrollTopBtn.classList.toggle('visible', window.scrollY > 500); }
