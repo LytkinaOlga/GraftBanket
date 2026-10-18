@@ -148,10 +148,11 @@ ITEMS.push(
   { id: "box-mini-tartlets", type: "ready-box", name: "Мини-тарталетки", weight: "Бокс №15 · 64 шт. · 1 280 г", price: 130, img: "assets/boxes/mini-tartlets-box.jpg?v=3", minQty: 1, qtyStep: 1 },
   { id: "box-canapes", type: "ready-box", name: "Канапе", weight: "Бокс №16 · 21 шт. · 630 г", price: 65, img: "assets/boxes/canapes-overview.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-bruschetta-salmon-shrimp", type: "ready-box", name: "Брускетты с лососем и креветкой", weight: "Бокс №17 · 20 шт. · 800 г", price: 90, img: "assets/boxes/bruschetta-salmon-shrimp-overview-20261014.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-chicken-pie", type: "ready-box", name: "Пирог с курицей, сыром фета и томатами черри", weight: "Бокс №18 · 1 пирог · 1 кг", price: 45, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-cabbage-pie", type: "ready-box", name: "Пирог с капустой и грибами", weight: "Бокс №19 · 1 пирог · 1 кг", price: 40, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №20 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
-  { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №21 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
+  { id: "box-sparkling", type: "ready-box", name: "Бокс к игристому", weight: "Бокс №18 · 900 г", price: 140, img: "assets/boxes/sparkling-box-overview.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-chicken-pie", type: "ready-box", name: "Пирог с курицей, сыром фета и томатами черри", weight: "Бокс №19 · 1 пирог · 1 кг", price: 45, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-cabbage-pie", type: "ready-box", name: "Пирог с капустой и грибами", weight: "Бокс №20 · 1 пирог · 1 кг", price: 40, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-chocolate-cakes", type: "ready-box", name: "Шоколадные пирожные", weight: "Бокс №21 · 18 шт. · 2 160 г", price: 108, img: "assets/boxes/chocolate-cakes-overview.jpg?v=3", minQty: 1, qtyStep: 1 },
+  { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №22 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
 );
 
 ITEMS.forEach(function (item) {
