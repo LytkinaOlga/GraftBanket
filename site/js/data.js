@@ -66,9 +66,9 @@ const ITEMS = [
   { id: "t4", category: "tartlets", name: "Запечённая тарталетка со снежным крабом и соусом терияки", weight: "60 г", price: 4.00, img: "assets/tartlets/tartlet-snow-crab-teriyaki.jpg" },
 
   // Солёные наполеоны
-  { id: "napoleon-duck", category: "napoleons", name: "Наполеон с утиным паштетом и клюквенным конфитюром", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/napoleons/duck-cranberry-box.png?v=20260926-natural" },
-  { id: "napoleon-chicken", category: "napoleons", name: "Наполеон с курицей и грибами", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/napoleons/chicken-mushroom-box.png?v=20260926-natural" },
-  { id: "napoleon-tuna", category: "napoleons", name: "Наполеон с тунцом и сыром", weight: "1 шт. ≈ 40 г", price: 55 / 18, img: "assets/napoleons/tuna-cheese-box.png?v=20260926-natural" },
+  { id: "napoleon-duck", category: "napoleons", name: "Наполеон с утиным паштетом и клюквенным конфитюром", weight: "1 шт. ≈ 40 г", price: 65 / 18, img: "assets/napoleons/duck-cranberry-box.png?v=20260926-natural" },
+  { id: "napoleon-chicken", category: "napoleons", name: "Наполеон с курицей и грибами", weight: "1 шт. ≈ 40 г", price: 65 / 18, img: "assets/napoleons/chicken-mushroom-box.png?v=20260926-natural" },
+  { id: "napoleon-tuna", category: "napoleons", name: "Наполеон с тунцом и сыром", weight: "1 шт. ≈ 40 г", price: 65 / 18, img: "assets/napoleons/tuna-cheese-box.png?v=20260926-natural" },
 
   // Мини сэндвичи
   { id: "s1", category: "sandwiches", name: "Мини сэндвич с ростбифом", weight: "45 г", price: 3.80, composition: "Хлеб, ростбиф, руккола, соус", description: "Сытный и аккуратный мини-формат.", img: placeholderImg("🥩", "#E3F2FD") },
