@@ -981,3 +981,10 @@ a { color: inherit; text-decoration: none; }
 .ready-box-price-meta { display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
 .ready-box-old-price { color:var(--text-muted); font-size:16px; line-height:1; text-decoration:line-through; text-decoration-thickness:1.5px; white-space:nowrap; }
 .ready-box-price .ready-box-saving { display:inline-block; padding:3px 7px; background:var(--text); color:#fff; font-size:12px; font-weight:700; line-height:1.2; white-space:nowrap; }
+@media (max-width: 680px) {
+  .ready-box-order { gap:10px; }
+  .ready-box-price { gap:8px; }
+  .ready-box-price strong { min-width:0; padding:9px 10px; font-size:22px; }
+  .ready-box-old-price { font-size:14px; }
+  .ready-box-action .add-btn { padding:11px 16px; }
+}

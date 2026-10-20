@@ -1,6 +1,8 @@
 (function () {
   'use strict';
   var KEY = 'draftbanket_cart_v2';
+  // Root-relative image paths so the cart and search also work on inner pages.
+  ITEMS.forEach(function (item) { if (item.img && item.img.indexOf('assets/') === 0) item.img = '/' + item.img; });
   var hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
   var products = ITEMS.filter(function (item) {
     return item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category));
@@ -95,6 +97,7 @@
     return '<div class="card-price">' + shortMoney(lineTotal(item, qty)) + ' / ' + qty + ' ' + itemUnit(item, qty) + '</div><small>' + shortMoney(item.price) + ' за 1 ' + singleUnit + '</small>';
   }
   function renderCatalog() {
+    if (!$('catalog')) return;
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
     $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
@@ -201,7 +204,11 @@
     });
     var target = control && control.closest('.ready-box,.card');
     closeSearch();
-    if (!target) return;
+    if (!target) {
+      var item = byId[id];
+      if (item) window.location.href = '/#' + (item.type === 'ready-box' ? id : 'cat-' + item.category);
+      return;
+    }
     window.setTimeout(function () {
       target.scrollIntoView({ behavior:'smooth', block:'center' });
       target.classList.remove('search-highlight');

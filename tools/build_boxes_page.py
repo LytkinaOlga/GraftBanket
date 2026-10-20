@@ -7,6 +7,7 @@ Run after any change to ready boxes in site/index.html:
 The script also makes sure every box card on the home page has an id
 (box-<id>), so "Заказать" links from the SEO page land on the right card.
 """
+import hashlib
 import html
 import json
 import re
@@ -72,6 +73,25 @@ def box_data(article):
     return {"id": cid, "name": name, "price": price, "images": images, "description": description.strip()}
 
 
+def home_shell():
+    """Header, search, footer, cart overlay and scripts taken from the home page."""
+    page = (SITE / "index.html").read_text(encoding="utf-8")
+    def between(start, end):
+        i = page.index(start)
+        return page[i:page.index(end, i)]
+    metrika = between('<script>window.dataLayer', '<meta charset')
+    header = between('  <header class="site-header">', '    <nav class="category-nav">')
+    bottom = between('  <footer class="site-footer">', '  <script src="js/data.js')
+    scripts = between('  <script src="js/data.js', '</body>')
+    styles = re.search(r'<link rel="stylesheet" href="(css/styles\.css\?v=[^"]+)"', page).group(1)
+    def absolutize(fragment):
+        fragment = re.sub(r'href="#', 'href="/#', fragment)
+        fragment = re.sub(r'(src|href)="(assets|js|css)/', r'\1="/\2/', fragment)
+        return fragment
+    header = absolutize(header).replace('href="/#top"', 'href="/"')
+    return metrika, header, absolutize(bottom), absolutize(scripts), '/' + styles
+
+
 def to_seo_card(article, first):
     cid = control_id(article)
     card = article.split('\n', 1)
@@ -81,8 +101,6 @@ def to_seo_card(article, first):
     card = re.sub(r'(<img[^>]+src=")(?!/|https?:)', r'\1/', card)
     if first:
         card = card.replace(' loading="lazy"', ' fetchpriority="high"', 1)
-    button = f'<div class="ready-box-action"><a class="add-btn" href="/#{cid}">Заказать</a></div>'
-    card = re.sub(r'<div class="ready-box-action" data-control="[^"]+"></div>', button, card)
     card = card.replace('<h3>', '<h2 class="ready-box-title">', 1).replace('</h3>', '</h2>', 1)
     return card
 
@@ -90,14 +108,14 @@ def to_seo_card(article, first):
 def build():
     articles = ensure_home_ids()
     boxes = [box_data(a) for a in articles]
-    cards = ''.join(to_seo_card(a, i == 0) for i, a in enumerate(articles))
+    cards = ''.join(to_seo_card(a, False) for i, a in enumerate(articles))
     count = len(boxes)
     min_price = min(b["price"] for b in boxes)
     title = "Готовые фуршетные боксы в Минске — цены и составы | Draft Catering"
     description = (f"{count} готовых фуршетных боксов Draft Catering: брускетты, канапе, тарталетки, "
                    f"наполеоны, салаты, пироги и десерты. Состав, вес и цены от {min_price} BYN, доставка по Минску.")
     url = BASE + PAGE_PATH
-    og_image = boxes[0]["images"][0]
+    og_image = BASE + "/assets/boxes/boxes-page-hero.jpg"
     graph = [
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE + "/"},
@@ -118,23 +136,21 @@ def build():
              for i, b in enumerate(boxes)]},
     ]
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(',', ':'))
+    css_version = hashlib.md5((SITE / 'css' / 'boxes-page.css').read_bytes()).hexdigest()[:8]
+    metrika, header, bottom, scripts, styles_css = home_shell()
     e = html.escape
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<script>(function(m,e,t,r,i,k,a){{m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){{if(document.scripts[j].src===r){{return;}}}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=113018653','ym');ym(113018653,'init',{{ssr:true,webvisor:true,clickmap:true,referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true}});</script>
-<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="preload" as="image" href="{og_image.replace(BASE, '')}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={date.today():%Y%m%d}">
+{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="preload" as="image" href="/assets/boxes/boxes-page-hero.jpg"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}">
 <script type="application/ld+json">{ld}</script></head><body>
-<noscript><div><img src="https://mc.yandex.ru/watch/113018653" style="position:absolute;left:-9999px" alt=""></div></noscript>
-<header class="topbar"><div class="wrap"><a class="logo" href="/"><img src="/assets/draft-catering-logo.webp" alt="Draft Catering" width="180" height="180"></a><div class="top-contact"><a href="/">Всё меню</a><a href="tel:+375295704749">+375 29 570-47-49</a></div></div></header>
+{header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Готовые фуршетные боксы в Минске</nav>
-<section class="section boxes-intro"><div class="wrap"><span class="eyebrow">Готовые решения</span><h1>Готовые фуршетные боксы в Минске</h1><p class="lead">{count} готовых боксов с закусками, салатами, пирогами и десертами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Чтобы заказать, нажмите «Заказать» — бокс откроется в меню на главной странице, где его можно положить в корзину.</p></div></section>
-<section class="boxes-list" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
+<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>ГОТОВЫЕ РЕШЕНИЯ · МИНСК</span></div><h1>Готовые <span>фуршетные боксы</span> в Минске</h1><p>{count} готовых боксов с закусками, салатами, пирогами и десертами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Добавляйте боксы в корзину прямо здесь — она общая для всего сайта.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><small>01</small><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a><a class="secondary-link" href="/#constructor"><small>02</small><strong>Собрать свой набор</strong><span aria-hidden="true">↗</span></a></div></div><div class="boxes-hero-visual"><img src="/assets/boxes/boxes-page-hero.jpg" alt="Фуршетные боксы Draft Catering: профитроли, тарталетки и закуски с икрой, креветками и ростбифом" width="900" height="1600" fetchpriority="high" decoding="async"></div></div></section>
+<section class="boxes-list" id="boxes" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
 <section class="section facts"><div class="wrap"><div class="facts-grid"><div class="fact"><strong>{count} готовых боксов</strong><span>Составы, вес и актуальные цены — на этой странице и в основном меню.</span></div><div class="fact"><strong>От 2–3 дней</strong><span>Рекомендуемый срок оформления заказа; срочные заказы уточняются.</span></div><div class="fact"><strong>Доставка по Минску</strong><span>В пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</span></div></div></div></section>
 <section class="section"><div class="wrap text-grid"><h2>Как оформить заказ</h2><p>Все наборы собраны так, чтобы закуски было удобно подать без дополнительной сервировки. Можно выбрать готовый бокс или собрать собственный набор из отдельных позиций в <a href="/#constructor">меню</a>.</p><p>Оставьте заявку на сайте или позвоните по номеру <a href="tel:+375295704749">+375 29 570-47-49</a>. Администратор свяжется с вами, подтвердит состав, дату, способ получения и итоговую стоимость.</p><p><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</p><p><strong>Доставка:</strong> по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно. Подробнее — на странице <a href="/dostavka-i-oplata/">«Доставка и оплата»</a>.</p></div></section>
 <section class="section facts"><div class="wrap"><h2>Другие категории и услуги</h2><div class="links"><a href="/furshet-na-zakaz/">Фуршет на заказ</a><a href="/dostavka-zakusok/">Доставка закусок</a><a href="/brusketty-na-zakaz/">Брускетты</a><a href="/tartaletki-na-zakaz/">Тарталетки</a><a href="/kanape-na-zakaz/">Канапе</a><a href="/keytering-dlya-ofisa/">Для офиса и корпоратива</a><a href="/keytering-na-den-rozhdeniya/">На день рождения</a><a href="/o-nas/">О нас</a><a href="/dostavka-i-oplata/">Доставка и оплата</a></div></div></section></main>
-<footer class="footer"><div class="wrap"><span>Draft Catering · Минск</span><span>ул. Нововиленская, 51 · +375 29 570-47-49</span></div></footer>
-<script>document.addEventListener('click',function(e){{var b=e.target.closest('[data-gallery-prev],[data-gallery-next]');if(!b)return;var t=b.closest('[data-gallery]').querySelector('.ready-box-gallery-track');t.scrollBy({{left:t.clientWidth*(b.hasAttribute('data-gallery-next')?1:-1),behavior:'smooth'}});}});document.querySelectorAll('[data-gallery]').forEach(function(g){{var t=g.querySelector('.ready-box-gallery-track'),d=g.querySelectorAll('.gallery-dots span');t.addEventListener('scroll',function(){{var a=Math.round(t.scrollLeft/Math.max(t.clientWidth,1));d.forEach(function(x,i){{x.classList.toggle('active',i===a);}});}},{{passive:true}});}});</script>
-</body></html>
+{bottom}{scripts}</body></html>
 '''
     out = SITE / PAGE_PATH.strip('/') / "index.html"
     out.write_text(page, encoding="utf-8")
