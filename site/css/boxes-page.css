@@ -40,3 +40,14 @@
   .boxes-hero-visual { height:420px; margin-left:-22px; margin-right:-22px; }
   .boxes-list { scroll-margin-top:90px; }
 }
+
+/* Text-only first screen: full-width copy, single button */
+.boxes-hero-layout { display:block; }
+.boxes-hero-copy { padding:40px 0 48px; }
+.boxes-hero p { max-width:none; }
+.boxes-hero-actions { grid-template-columns:minmax(0,420px); }
+.boxes-hero .primary-link { grid-template-columns:1fr 20px; }
+@media (max-width:680px) {
+  .boxes-hero-copy { padding:22px 0 28px; }
+  .boxes-hero-actions { grid-template-columns:1fr; }
+}
