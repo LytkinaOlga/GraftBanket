@@ -976,3 +976,8 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 680px) {
   .scroll-top-btn { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); width: 40px; height: 40px; }
 }
+
+/* Discounted ready boxes: struck-through original price and saving in BYN */
+.ready-box-price-meta { display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
+.ready-box-old-price { color:var(--text-muted); font-size:16px; line-height:1; text-decoration:line-through; text-decoration-thickness:1.5px; white-space:nowrap; }
+.ready-box-price .ready-box-saving { display:inline-block; padding:3px 7px; background:var(--text); color:#fff; font-size:12px; font-weight:700; line-height:1.2; white-space:nowrap; }
