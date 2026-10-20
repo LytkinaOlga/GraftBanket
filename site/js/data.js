@@ -139,7 +139,7 @@ ITEMS.push(
   { id: "box-salmon-crab", type: "ready-box", name: "Бокс «Фуршетный»", weight: "Бокс №6 · 44 шт. + рулет · 1 490 г", price: 180, img: "assets/boxes/salmon-crab-appetizing-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-crostini", type: "ready-box", name: "Кростини к крепким напиткам", weight: "Бокс №7 · 20 шт. · 1 100 г", price: 65, img: "assets/boxes/crostini-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-baked-tartlets", type: "ready-box", name: "Запечённые тарталетки", weight: "Бокс №8 · 16 шт. · 960 г", price: 65, img: "assets/boxes/baked-tartlets-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
-  { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №9 · 18 шт. · 720 г", price: 55, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
+  { id: "box-napoleons", type: "ready-box", name: "Солёные «Наполеоны»", weight: "Бокс №9 · 18 шт. · 720 г", price: 65, img: "assets/boxes/napoleons-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-caesar", type: "ready-box", name: "«Цезарь» с курицей", weight: "Бокс №10 · 9 шт. · 1 170 г", price: 81, img: "assets/boxes/caesar-outdoor-box-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-caesar-shrimp", type: "ready-box", name: "«Цезарь» с креветками", weight: "Бокс №11 · 9 шт. · 1 170 г", price: 99, img: "assets/boxes/caesar-shrimp-mobile.jpg", minQty: 1, qtyStep: 1 },
   { id: "box-greek", type: "ready-box", name: "Греческий салат", weight: "Бокс №12 · 9 шт. · 1 170 г", price: 72, img: "assets/boxes/greek-overview-mobile.jpg", minQty: 1, qtyStep: 1 },
