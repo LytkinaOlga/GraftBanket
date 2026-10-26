@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/:page(brusketty-na-zakaz|detskiy-keytering|dostavka-i-oplata|dostavka-zakusok|furshet-na-10-chelovek|furshet-na-20-chelovek|furshet-na-30-chelovek|furshet-na-zakaz|gotovye-furshetnye-boksy|kanape-na-zakaz|keytering-dlya-ofisa|keytering-na-den-rozhdeniya|keytering-na-korporativ|keytering-na-svadbu|novogodniy-furshet|o-nas|tartaletki-na-zakaz)/index.html",
+      "destination": "/:page/",
+      "permanent": true
+    },
+    {
+      "source": "/:page(brusketty-na-zakaz|detskiy-keytering|dostavka-i-oplata|dostavka-zakusok|furshet-na-10-chelovek|furshet-na-20-chelovek|furshet-na-30-chelovek|furshet-na-zakaz|gotovye-furshetnye-boksy|kanape-na-zakaz|keytering-dlya-ofisa|keytering-na-den-rozhdeniya|keytering-na-korporativ|keytering-na-svadbu|novogodniy-furshet|o-nas|tartaletki-na-zakaz)",
+      "destination": "/:page/",
+      "permanent": true
+    }
+  ]
+}
