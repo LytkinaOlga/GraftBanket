@@ -151,7 +151,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-<link rel="stylesheet" href="css/styles.css?v=20261026-time-payment" />
+<link rel="stylesheet" href="css/styles.css?v=20261026-optional" />
 </head>
 <body>
 
@@ -957,9 +957,9 @@
             <div class="field" id="fieldMethod"><label for="fulfillment">Как получите заказ</label><select id="fulfillment"><option value="pickup">Самовывоз — Минск, Нововиленская 51</option><option value="minsk">Доставка в пределах МКАД</option><option value="other">Другое место — обсудить с администратором</option></select></div>
             <div class="field" id="fieldAddress" hidden><label for="address">Адрес или район доставки</label><input type="text" id="address" autocomplete="street-address" /><div class="field-error">Укажите адрес или район</div></div>
             <div class="field" id="fieldPayment"><span class="field-label">Способ оплаты</span><div class="payment-options" role="radiogroup" aria-label="Способ оплаты"><label class="payment-option"><input type="radio" name="payment" value="cash" /><span>💵 Наличными</span></label><label class="payment-option"><input type="radio" name="payment" value="card" /><span>💳 Картой</span></label></div><div class="field-error">Выберите способ оплаты</div></div>
-            <div class="field" id="fieldGuests"><label for="guests">На сколько человек <span class="optional">необязательно</span></label><input type="number" id="guests" min="1" max="1000" step="1" inputmode="numeric" placeholder="Например, 15" /><div class="field-error">Укажите число от 1 до 1000</div></div>
+            <div class="field" id="fieldGuests"><label for="guests">На сколько человек <span class="optional">(необязательно)</span></label><input type="number" id="guests" min="1" max="1000" step="1" inputmode="numeric" placeholder="Например, 15" /><div class="field-error">Укажите число от 1 до 1000</div></div>
             <div class="field"><label for="comment">Комментарий</label><textarea id="comment" rows="3" placeholder="Что важно учесть?"></textarea></div>
-            <div class="field"><label for="tgNick">Ник в Telegram <span class="optional">необязательно</span></label><input type="text" id="tgNick" placeholder="@username" autocomplete="off" /></div>
+            <div class="field"><label for="tgNick">Ник в Telegram <span class="optional">(необязательно)</span></label><input type="text" id="tgNick" placeholder="@username" autocomplete="off" /></div>
             <div class="field field-checkbox" id="fieldBirthday">
               <label class="checkbox-birthday">
                 <input type="checkbox" id="birthdayDiscount" />

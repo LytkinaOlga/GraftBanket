@@ -1017,3 +1017,4 @@ a { color: inherit; text-decoration: none; }
 .field .payment-option:has(input:checked) { border-color:var(--text); box-shadow:inset 0 0 0 1px var(--text); }
 .field .payment-option input[type="radio"] { width:18px; height:18px; padding:0; margin:0; border:0; flex:0 0 auto; accent-color:var(--text); }
 .field.invalid .payment-option { border-color:#b91c1c; }
+.field label .optional { margin-left:4px; color:var(--text-muted); font-weight:400; }
