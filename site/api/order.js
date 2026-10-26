@@ -15,10 +15,12 @@ module.exports = async function handler(req, res) {
     if (!body || JSON.stringify(body).length > 12000) return res.status(400).json({ error: 'Invalid payload' });
     const name = clean(body.name, 80), phone = clean(body.phone, 40);
     const date = clean(body.eventDate, 10);
+    const time = clean(body.eventTime, 5);
+    const payment = clean(body.payment, 8);
     const method = clean(body.fulfillment, 12), address = clean(body.address, 200);
     const comment = clean(body.comment, 500), nick = clean(body.telegramNick, 80);
     const digits = phone.replace(/\D/g, '');
-    if (name.length < 2 || digits.length < 10 || digits.length > 15 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !['pickup', 'minsk', 'other'].includes(method) || (method !== 'pickup' && address.length < 3)) return res.status(400).json({ error: 'Invalid contact details' });
+    if (name.length < 2 || digits.length < 10 || digits.length > 15 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time) || !['cash', 'card'].includes(payment) || !['pickup', 'minsk', 'other'].includes(method) || (method !== 'pickup' && address.length < 3)) return res.status(400).json({ error: 'Invalid contact details' });
     if (date < new Date().toISOString().slice(0, 10)) return res.status(400).json({ error: 'Date is in the past' });
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
@@ -43,8 +45,10 @@ module.exports = async function handler(req, res) {
     const methodLabel = { pickup: 'Самовывоз', minsk: 'Доставка в пределах МКАД', other: 'Другое место, согласовать' }[method];
     const message = [
       '🆕 Заявка ' + orderId, 'Имя: ' + name, 'Телефон: ' + phone,
-      nick ? 'Telegram: ' + nick : '', 'Дата заказа: ' + date,
+      nick ? 'Telegram: ' + nick : '', 'Дата: ' + date.split('-').reverse().join('.'),
+      (method === 'pickup' ? 'Время самовывоза: ' : 'Время доставки: ') + time,
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
+      'Оплата: ' + (payment === 'cash' ? 'наличными' : 'картой'),
       comment ? 'Комментарий: ' + comment : '', 'Источник: ' + clean(body.source, 80),
       '', 'Состав:', ...lines,
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',

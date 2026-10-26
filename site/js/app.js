@@ -226,7 +226,13 @@
       window.setTimeout(function () { target.classList.remove('search-highlight'); }, 1700);
     }, 40);
   }
-  function updateMethod() { $('fieldAddress').hidden = $('fulfillment').value === 'pickup'; renderSummary(); }
+  function updateMethod() {
+    var pickup = $('fulfillment').value === 'pickup';
+    $('fieldAddress').hidden = pickup;
+    $('eventTimeLabel').textContent = pickup ? 'Время самовывоза' : 'Время доставки';
+    renderSummary();
+  }
+  function paymentMethod() { var picked = document.querySelector('input[name="payment"]:checked'); return picked ? picked.value : ''; }
   function fieldValid(id, ok) { $(id).classList.toggle('invalid', !ok); return ok; }
   function validate() {
     var name = fieldValid('fieldName', $('customerName').value.trim().length >= 2);
@@ -234,8 +240,13 @@
     var phone = fieldValid('fieldPhone', digits.length >= 10 && digits.length <= 15);
     var day = $('eventDate').value;
     var date = fieldValid('fieldDate', !!day && day >= new Date().toISOString().slice(0, 10));
+    var now = new Date(), today = now.toISOString().slice(0, 10);
+    var nowTime = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    var timeValue = $('eventTime').value;
+    var time = fieldValid('fieldTime', /^\d{2}:\d{2}$/.test(timeValue) && !(day === today && timeValue <= nowTime));
     var address = fieldValid('fieldAddress', $('fulfillment').value === 'pickup' || $('address').value.trim().length >= 3);
-    return name && phone && date && address;
+    var payment = fieldValid('fieldPayment', !!paymentMethod());
+    return name && phone && date && time && address && payment;
   }
   document.addEventListener('click', function (event) {
     if (event.target.closest('[data-telegram-placeholder]')) {
@@ -356,7 +367,7 @@
     var button = this;
     var payload = {
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
-      eventDate: $('eventDate').value,
+      eventDate: $('eventDate').value, eventTime: $('eventTime').value, payment: paymentMethod(),
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
       birthdayDiscount: discountApplied(), birthday: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),

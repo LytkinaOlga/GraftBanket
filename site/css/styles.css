@@ -1009,3 +1009,11 @@ a { color: inherit; text-decoration: none; }
 .birthday-option strong { display:block; font-size:13.5px; font-weight:700; }
 .birthday-option small { display:block; margin-top:2px; color:var(--text-muted); font-size:12px; }
 .birthday-hint { margin:8px 0 0; color:var(--text-muted); font-size:12px; line-height:1.4; }
+
+/* Order time and payment method */
+.field-label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; }
+.payment-options { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.field .payment-option { display:flex; align-items:center; gap:9px; margin:0; padding:11px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--card-bg); font-size:14px; font-weight:600; cursor:pointer; }
+.field .payment-option:has(input:checked) { border-color:var(--text); box-shadow:inset 0 0 0 1px var(--text); }
+.field .payment-option input[type="radio"] { width:18px; height:18px; padding:0; margin:0; border:0; flex:0 0 auto; accent-color:var(--text); }
+.field.invalid .payment-option { border-color:#b91c1c; }
