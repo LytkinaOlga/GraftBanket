@@ -34,10 +34,14 @@
   var BIRTHDAY_DISCOUNT_RATE = 0.10;
   var GIFT_ITEM_ID = 'box-profiteroles-mini';
   function giftItem() { return byId[GIFT_ITEM_ID]; }
-  // Promos don't stack: the gift box only shows when the birthday discount is not selected.
-  function giftEligible() { return subtotal() >= GIFT_THRESHOLD && !!giftItem() && !birthdayChecked(); }
+  // Promos don't stack. Everyone gets the gift box from 200 BYN; a birthday customer
+  // chooses between that gift and the 10% discount (below 200 BYN only the discount applies).
+  function giftAvailable() { return subtotal() >= GIFT_THRESHOLD && !!giftItem(); }
   function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
-  function discountAmount() { return birthdayChecked() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
+  function birthdayPerk() { var picked = document.querySelector('input[name="birthdayPerk"]:checked'); return picked ? picked.value : 'discount'; }
+  function discountApplied() { return birthdayChecked() && (!giftAvailable() || birthdayPerk() === 'discount'); }
+  function giftEligible() { return giftAvailable() && !discountApplied(); }
+  function discountAmount() { return discountApplied() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
   function delivery() {
     var method = $('fulfillment').value;
     if (method === 'pickup') return 0;
@@ -133,8 +137,13 @@
     var sub = subtotal();
     var discount = discountAmount();
     var afterDiscount = sub - discount;
-    var promoNote = $('promoNote');
-    if (promoNote) promoNote.hidden = sub < GIFT_THRESHOLD;
+    var choice = $('birthdayChoice'), hint = $('birthdayHint');
+    if (choice) {
+      choice.hidden = !(birthdayChecked() && giftAvailable());
+      hint.hidden = !(birthdayChecked() && !giftAvailable());
+      $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(sub * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
+      $('birthdayGiftValue').textContent = '16 профитролей · стоимость ' + money(giftItem() ? giftItem().price : 0);
+    }
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
     if (discount > 0) html += '<div class="summary-discount">Скидка ко дню рождения (−10%): <strong>−' + money(discount) + '</strong></div>';
     html += '<div>Доставка: <strong>' + (fee === null ? 'уточнит администратор' : money(fee)) + '</strong></div>';
@@ -340,6 +349,7 @@
   $('closeSuccessBtn').addEventListener('click', function () { close(); show('viewCart'); });
   $('fulfillment').addEventListener('change', updateMethod);
   $('birthdayDiscount').addEventListener('change', render);
+  document.querySelectorAll('input[name="birthdayPerk"]').forEach(function (radio) { radio.addEventListener('change', render); });
   $('eventDate').min = new Date().toISOString().slice(0, 10);
   $('submitOrderBtn').addEventListener('click', async function () {
     if (!lineCount() || !validate()) return;
@@ -348,7 +358,7 @@
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
       eventDate: $('eventDate').value,
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
-      birthdayDiscount: birthdayChecked(),
+      birthdayDiscount: discountApplied(), birthday: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
       source: new URLSearchParams(location.search).get('utm_source') || 'site'
     };

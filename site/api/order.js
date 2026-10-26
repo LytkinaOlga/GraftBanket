@@ -50,6 +50,7 @@ module.exports = async function handler(req, res) {
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
       '', 'Товары: ' + money(subtotal),
       birthdayDiscount ? 'Скидка (день рождения, −10%): −' + money(discount) : '',
+      Boolean(body.birthday) && !birthdayDiscount && giftApplied ? '🎂 Именинник: выбрал подарок вместо скидки 10%' : '',
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
       'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))
     ].filter(x => x !== '').join('\n');

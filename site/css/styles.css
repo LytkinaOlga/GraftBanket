@@ -995,3 +995,17 @@ a { color: inherit; text-decoration: none; }
 @media (max-width:680px) { .promo-no-stack { font-size:11.5px; margin-top:8px; } }
 .cart-gift-note { display:inline-flex; align-items:center; gap:5px; align-self:flex-start; margin-top:6px; padding:3px 8px; background:var(--text); color:#fff; font-size:11px; font-weight:700; line-height:1.3; }
 .cart-gift-note::before { content:"!"; display:grid; place-items:center; width:13px; height:13px; flex:0 0 auto; border-radius:50%; background:var(--accent); color:var(--text); font-size:10px; font-weight:900; }
+
+/* Birthday: checkbox + choice between 10% discount and the gift box */
+.field .checkbox-birthday { display:flex; margin-bottom:0; font-weight:400; }
+.field .checkbox-birthday input[type="checkbox"] { width:19px; height:19px; padding:0; margin:2px 0 0; border:0; flex:0 0 auto; }
+.birthday-choice { margin-top:10px; padding:12px; border:2px solid var(--accent); border-radius:var(--radius-md); background:#fffaf0; }
+.birthday-choice-title { margin:0 0 10px; font-size:13.5px; font-weight:800; }
+.birthday-choice-title span { display:block; margin-top:2px; color:var(--text-muted); font-size:12px; font-weight:600; }
+.field .birthday-option { display:flex; align-items:flex-start; gap:10px; margin:0; padding:11px 12px; border:1px solid var(--border); border-radius:var(--radius-md); background:#fff; font-weight:400; cursor:pointer; }
+.field .birthday-option + .birthday-option { margin-top:8px; }
+.field .birthday-option:has(input:checked) { border-color:var(--text); box-shadow:inset 0 0 0 1px var(--text); }
+.field .birthday-option input[type="radio"] { width:18px; height:18px; padding:0; margin:1px 0 0; border:0; flex:0 0 auto; accent-color:var(--text); }
+.birthday-option strong { display:block; font-size:13.5px; font-weight:700; }
+.birthday-option small { display:block; margin-top:2px; color:var(--text-muted); font-size:12px; }
+.birthday-hint { margin:8px 0 0; color:var(--text-muted); font-size:12px; line-height:1.4; }
