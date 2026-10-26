@@ -98,7 +98,7 @@ def to_seo_card(article, first):
     card[0] = re.sub(r' id="[^"]*"', '', card[0])
     card = '\n'.join(card)
     card = card.replace('<article class=', f'<article id="{cid}" class=', 1)
-    card = re.sub(r'(<img[^>]+src=")(?!/|https?:)', r'\1/', card)
+    card = re.sub(r'((?:src|srcset)=")(?!/|https?:|data:)', r'\1/', card)
     if first:
         card = card.replace(' loading="lazy"', ' fetchpriority="high"', 1)
     card = card.replace('<h3>', '<h2 class="ready-box-title">', 1).replace('</h3>', '</h2>', 1)
