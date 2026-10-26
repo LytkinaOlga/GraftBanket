@@ -72,6 +72,25 @@ def box_data(article):
     description = kicker + ': ' + ('; '.join(items) if items else ' '.join(notes))
     return {"id": cid, "name": name, "price": price, "images": images, "description": description.strip()}
 
+FAQ = [
+    ("Как заказать готовый бокс?",
+     "Нажмите «Добавить» на карточке бокса — он попадёт в корзину. Корзина общая для всего сайта, поэтому можно добавить боксы здесь и отдельные закуски из <a href=\"/#constructor\">меню</a>. Затем оформите заявку: дата, время, способ получения и оплаты. Администратор свяжется с вами и подтвердит заказ."),
+    ("Можно ли заменить начинки или изменить состав бокса?",
+     "Да, можно обсудить индивидуальный состав или приготовить блюдо по вашему референсу. Позвоните по номеру <a href=\"tel:+375295704749\">+375 29 570-47-49</a> или напишите пожелания в комментарии к заявке — администратор предложит варианты."),
+    ("Сколько боксов нужно на мою компанию?",
+     "На каждой карточке указаны количество штук и общий вес бокса — по ним удобно прикинуть объём. Готовые подборки есть на страницах <a href=\"/furshet-na-10-chelovek/\">фуршет на 10 человек</a>, <a href=\"/furshet-na-20-chelovek/\">на 20</a> и <a href=\"/furshet-na-30-chelovek/\">на 30 человек</a>. Если сомневаетесь — позвоните, подскажем по количеству."),
+    ("За сколько дней нужно оформить заказ? Можно ли срочно?",
+     "Желательно оформить заказ за 2–3 дня, а для крупных мероприятий — как можно раньше. Срочные заказы тоже возможны: позвоните нам, и мы проверим, что успеем приготовить к нужному времени."),
+    ("Есть ли доставка и сколько она стоит?",
+     "Самовывоз по адресу Минск, Нововиленская, 51 — бесплатно. Доставка по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно. Доставку за пределы МКАД администратор рассчитает отдельно."),
+    ("Как оплатить заказ?",
+     "Наличными или картой — способ оплаты выбирается в форме заявки. Для компаний доступен безналичный расчёт, условия и документы согласует администратор."),
+    ("Какие есть акции и суммируются ли они?",
+     "При заказе от 200 BYN дарим малый бокс профитролей. Именинникам — скидка 10% за 5 дней до и 5 дней после дня рождения: отметьте «У меня день рождения» в заявке. Акции не суммируются — при заказе от 200 BYN имениннику предложим выбрать скидку или подарок."),
+    ("Как узнать состав, если есть аллергия?",
+     "Основные ингредиенты указаны на карточке каждого бокса. Если у кого-то из гостей аллергия или особые предпочтения, напишите об этом в комментарии к заявке или позвоните — администратор уточнит состав."),
+]
+
 
 def home_shell():
     """Header, search, footer, cart overlay and scripts taken from the home page."""
@@ -135,6 +154,10 @@ def build():
                             "seller": {"@id": BASE + "/#business"}}}}
              for i, b in enumerate(boxes)]},
     ]
+    graph.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": text(a)}} for q, a in FAQ]})
+    faq_html = '<section class="section faq-page" id="faq"><div class="wrap"><h2>Частые вопросы о готовых боксах</h2><div class="faq-page-list">' + ''.join(
+        f'<details><summary>{html.escape(q)}</summary><p>{a}</p></details>' for q, a in FAQ) + '</div></div></section>'
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(',', ':'))
     css_version = hashlib.md5((SITE / 'css' / 'boxes-page.css').read_bytes()).hexdigest()[:8]
     metrika, header, bottom, scripts, styles_css = home_shell()
@@ -147,6 +170,7 @@ def build():
 <section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>ГОТОВЫЕ РЕШЕНИЯ · МИНСК</span></div><h1>Готовые <span>фуршетные боксы</span> в Минске</h1><p>{count} готовых боксов с закусками, салатами, пирогами и десертами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Добавляйте боксы в корзину прямо здесь — она общая для всего сайта.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
 <section class="boxes-list" id="boxes" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
+{faq_html}
 <section class="section facts"><div class="wrap"><div class="facts-grid"><div class="fact"><strong>{count} готовых боксов</strong><span>Составы, вес и актуальные цены — на этой странице и в основном меню.</span></div><div class="fact"><strong>От 2–3 дней</strong><span>Рекомендуемый срок оформления заказа; срочные заказы уточняются.</span></div><div class="fact"><strong>Доставка по Минску</strong><span>В пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</span></div></div></div></section>
 <section class="section"><div class="wrap text-grid"><h2>Как оформить заказ</h2><p>Все наборы собраны так, чтобы закуски было удобно подать без дополнительной сервировки. Можно выбрать готовый бокс или собрать собственный набор из отдельных позиций в <a href="/#constructor">меню</a>.</p><p>Оставьте заявку на сайте или позвоните по номеру <a href="tel:+375295704749">+375 29 570-47-49</a>. Администратор свяжется с вами, подтвердит состав, дату, способ получения и итоговую стоимость.</p><p><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</p><p><strong>Доставка:</strong> по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно. Подробнее — на странице <a href="/dostavka-i-oplata/">«Доставка и оплата»</a>.</p></div></section>
 <section class="section facts"><div class="wrap"><h2>Другие категории и услуги</h2><div class="links"><a href="/furshet-na-zakaz/">Фуршет на заказ</a><a href="/dostavka-zakusok/">Доставка закусок</a><a href="/brusketty-na-zakaz/">Брускетты</a><a href="/tartaletki-na-zakaz/">Тарталетки</a><a href="/kanape-na-zakaz/">Канапе</a><a href="/keytering-dlya-ofisa/">Для офиса и корпоратива</a><a href="/keytering-na-den-rozhdeniya/">На день рождения</a><a href="/o-nas/">О нас</a><a href="/dostavka-i-oplata/">Доставка и оплата</a></div></div></section></main>
