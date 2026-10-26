@@ -246,7 +246,9 @@
     var time = fieldValid('fieldTime', /^\d{2}:\d{2}$/.test(timeValue) && !(day === today && timeValue <= nowTime));
     var address = fieldValid('fieldAddress', $('fulfillment').value === 'pickup' || $('address').value.trim().length >= 3);
     var payment = fieldValid('fieldPayment', !!paymentMethod());
-    return name && phone && date && time && address && payment;
+    var guestsValue = $('guests').value.trim();
+    var guests = fieldValid('fieldGuests', guestsValue === '' || (/^\d+$/.test(guestsValue) && +guestsValue >= 1 && +guestsValue <= 1000));
+    return name && phone && date && time && address && payment && guests;
   }
   document.addEventListener('click', function (event) {
     if (event.target.closest('[data-telegram-placeholder]')) {
@@ -367,7 +369,7 @@
     var button = this;
     var payload = {
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
-      eventDate: $('eventDate').value, eventTime: $('eventTime').value, payment: paymentMethod(),
+      eventDate: $('eventDate').value, eventTime: $('eventTime').value, payment: paymentMethod(), guests: $('guests').value.trim() ? +$('guests').value.trim() : null,
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
       birthdayDiscount: discountApplied(), birthday: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
@@ -382,7 +384,7 @@
       var revenue = Math.round((subtotal() - discountAmount() + (fee || 0)) * 100) / 100;
       var purchaseProducts = Object.keys(cart).map(function (id) { return ecommerceProduct(byId[id], cart[id]); });
       pushEcommerce('purchase', purchaseProducts, { id: result.orderId || (payload.eventDate + '-' + Date.now()), revenue: revenue });
-      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'order_submit_success', { order_price: revenue });
+      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'order_submit_success', payload.guests ? { order_price: revenue, guests: payload.guests } : { order_price: revenue });
       cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
     } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
     finally { button.disabled = false; button.textContent = 'Отправить заявку'; }

@@ -17,6 +17,7 @@ module.exports = async function handler(req, res) {
     const date = clean(body.eventDate, 10);
     const time = clean(body.eventTime, 5);
     const payment = clean(body.payment, 8);
+    const guests = Number.isInteger(body.guests) && body.guests >= 1 && body.guests <= 1000 ? body.guests : null;
     const method = clean(body.fulfillment, 12), address = clean(body.address, 200);
     const comment = clean(body.comment, 500), nick = clean(body.telegramNick, 80);
     const digits = phone.replace(/\D/g, '');
@@ -49,6 +50,7 @@ module.exports = async function handler(req, res) {
       (method === 'pickup' ? 'Время самовывоза: ' : 'Время доставки: ') + time,
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
       'Оплата: ' + (payment === 'cash' ? 'наличными' : 'картой'),
+      guests ? 'Гостей: ' + guests : '',
       comment ? 'Комментарий: ' + comment : '', 'Источник: ' + clean(body.source, 80),
       '', 'Состав:', ...lines,
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
