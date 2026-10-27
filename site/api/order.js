@@ -1,6 +1,6 @@
 const { ITEMS } = require('../js/data.js');
 const hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
-const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category))).map(item => [item.id, item]));
+const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box' || item.type === 'set' || (item.type === 'snack' && !hiddenCategories.has(item.category))).map(item => [item.id, item]));
 const lineTotal = (item, qty) => item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty;
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
@@ -25,11 +25,13 @@ module.exports = async function handler(req, res) {
     if (date < new Date().toISOString().slice(0, 10)) return res.status(400).json({ error: 'Date is in the past' });
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
-    let subtotal = 0;
+    let subtotal = 0, giftSubtotal = 0;
     const lines = body.items.map(row => {
       const item = catalog[row.id], qty = row.quantity;
       if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
       seen.add(row.id); subtotal += lineTotal(item, qty);
+      // Sets are already discounted, so they don't count towards the gift threshold.
+      if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
     const GIFT_THRESHOLD = 200;
@@ -39,7 +41,7 @@ module.exports = async function handler(req, res) {
     const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
     const giftItem = catalog[GIFT_ITEM_ID];
     // Promos don't stack: no gift box when the birthday discount is applied.
-    const giftApplied = subtotal >= GIFT_THRESHOLD && Boolean(giftItem) && !birthdayDiscount;
+    const giftApplied = giftSubtotal >= GIFT_THRESHOLD && Boolean(giftItem) && !birthdayDiscount;
     const discountedSubtotal = subtotal - discount;
     const delivery = method === 'pickup' ? 0 : method === 'minsk' ? (subtotal >= 500 ? 0 : 20) : null;
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();

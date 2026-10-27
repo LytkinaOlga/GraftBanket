@@ -5,7 +5,7 @@
   ITEMS.forEach(function (item) { if (item.img && item.img.indexOf('assets/') === 0) item.img = '/' + item.img; });
   var hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
   var products = ITEMS.filter(function (item) {
-    return item.type === 'ready-box' || (item.type === 'snack' && !hiddenCategories.has(item.category));
+    return item.type === 'ready-box' || item.type === 'set' || (item.type === 'snack' && !hiddenCategories.has(item.category));
   });
   var byId = Object.fromEntries(products.map(function (item) { return [item.id, item]; }));
   var cart = loadCart();
@@ -36,7 +36,9 @@
   function giftItem() { return byId[GIFT_ITEM_ID]; }
   // Promos don't stack. Everyone gets the gift box from 200 BYN; a birthday customer
   // chooses between that gift and the 10% discount (below 200 BYN only the discount applies).
-  function giftAvailable() { return subtotal() >= GIFT_THRESHOLD && !!giftItem(); }
+  // Sets are already discounted, so they don't count towards the gift threshold.
+  function giftSubtotal() { return Object.keys(cart).reduce(function (sum, id) { return byId[id].type === 'set' ? sum : sum + lineTotal(byId[id], cart[id]); }, 0); }
+  function giftAvailable() { return giftSubtotal() >= GIFT_THRESHOLD && !!giftItem(); }
   function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
   function birthdayPerk() { var picked = document.querySelector('input[name="birthdayPerk"]:checked'); return picked ? picked.value : 'discount'; }
   function discountApplied() { return birthdayChecked() && (!giftAvailable() || birthdayPerk() === 'discount'); }
@@ -178,6 +180,7 @@
   }
   function searchCategory(item) {
     if (item.type === 'ready-box') return 'Готовый бокс';
+    if (item.type === 'set') return 'Набор на 10 человек';
     var category = CATEGORIES.find(function (entry) { return entry.id === item.category; });
     return category ? category.title : 'Позиция меню';
   }
@@ -215,7 +218,7 @@
     closeSearch();
     if (!target) {
       var item = byId[id];
-      if (item) window.location.href = '/#' + (item.type === 'ready-box' ? id : 'cat-' + item.category);
+      if (item) window.location.href = item.url || '/#' + (item.type === 'ready-box' ? id : 'cat-' + item.category);
       return;
     }
     window.setTimeout(function () {

@@ -158,6 +158,14 @@ ITEMS.push(
   { id: "box-basque-cheesecake", type: "ready-box", name: "Басский чизкейк", weight: "Бокс №25 · 1 чизкейк · 900 г", price: 70, img: "assets/desserts/basque-cheesecake.jpg", minQty: 1, qtyStep: 1 }
 );
 
+// Наборы на 10 человек (страница /furshet-na-10-chelovek/, собирается tools/build_furshet10_page.py).
+// oldPrice — сумма боксов набора по ценам сайта.
+ITEMS.push(
+  { id: "set10-sparkling", type: "set", name: "Набор №1 «Фуршет к игристому» на 10 человек", weight: "5 боксов · 3 770 г", price: 380, oldPrice: 405, img: "assets/boxes/sparkling-box-cover.jpg", url: "/furshet-na-10-chelovek/#set-1", minQty: 1, qtyStep: 1 },
+  { id: "set10-big", type: "set", name: "Набор №2 «Большой фуршет с пирогом и круассанами» на 10 человек", weight: "7 боксов · 5 670 г", price: 540, oldPrice: 570, img: "assets/boxes/croissants-appetizing-mobile.jpg", url: "/furshet-na-10-chelovek/#set-2", minQty: 1, qtyStep: 1 },
+  { id: "set10-dessert", type: "set", name: "Набор №3 «Закуски, пирог и десерт» на 10 человек", weight: "4 бокса · 4 280 г", price: 310, oldPrice: 330, img: "assets/boxes/bruschetta-profiterole-roll-cover.jpg", url: "/furshet-na-10-chelovek/#set-3", minQty: 1, qtyStep: 1 }
+);
+
 ITEMS.forEach(function (item) {
   if (!item.type) item.type = item.category === "sets" ? "legacy-placeholder" : "snack";
   if (item.type === "snack") {
