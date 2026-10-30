@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
       if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
-    const GIFT_THRESHOLD = 200;
+    const GIFT_THRESHOLD = 300;
     const GIFT_ITEM_ID = 'box-profiteroles-mini';
     const BIRTHDAY_DISCOUNT_RATE = 0.10;
     const birthdayDiscount = Boolean(body.birthdayDiscount);
