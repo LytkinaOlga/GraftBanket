@@ -92,6 +92,85 @@ FAQ = [
 ]
 
 
+MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+PREVIEW_CHARS = 100
+PREVIEW_CUT = 70
+
+
+def reviews_html(wrap_class):
+    """Client reviews carousel from tools/reviews.json (texts verbatim, see SEO/otzyvy).
+
+    Shared by the home page and this page: css/reviews.css, js/reviews.js, images in assets/reviews/.
+    """
+    reviews = json.loads((Path(__file__).with_name("reviews.json")).read_text(encoding="utf-8"))
+    if not reviews:
+        return ''
+    def paragraphs(parts):
+        return ''.join('<p>' + html.escape(p).replace('\n', '<br>') + '</p>' for p in parts)
+    def arrow(d):
+        return ('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+                f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{d}"/></svg>')
+    total = len(reviews)
+    cards, dots = [], []
+    for n, r in enumerate(reviews, 1):
+        d = date.fromisoformat(r["date"])
+        human = f'{d.day} {MONTHS[d.month - 1]} {d.year}'
+        full = ' '.join(r["text"])
+        if len(full) > PREVIEW_CHARS:
+            cut = full[:PREVIEW_CUT].rsplit(' ', 1)[0].rstrip(',.;:!—- ')
+            body = (f'<p class="review-preview">{html.escape(cut)}… '
+                    '<button class="review-more" type="button" data-review-more>Читать полностью</button></p>'
+                    f'<div class="review-full-text" hidden>{paragraphs(r["text"])}</div>')
+        else:
+            body = paragraphs(r["text"])
+        img = f'/assets/reviews/review-{r["id"]}'
+        cards.append(
+            f'<li class="review-card" id="review-{r["id"]}" role="group" aria-roledescription="отзыв" aria-label="{n} из {total}">'
+            '<span class="review-quote" aria-hidden="true">“</span>'
+            f'<p class="review-date">{html.escape(r["date_label"])}: <time datetime="{r["date"]}">{human}</time></p>'
+            f'<div class="review-text">{body}</div>'
+            f'<a class="review-shot" href="{img}.jpg" data-review-shot aria-label="Увеличить скриншот отзыва ({human})">'
+            f'<img src="{img}-thumb.jpg" srcset="{img}-thumb.jpg 400w, {img}.jpg 900w" sizes="(max-width:680px) 80vw, 400px" '
+            f'alt="Скриншот переписки с отзывом, {human}" loading="lazy" decoding="async" width="400" height="240"></a></li>')
+        dots.append(f'<button class="reviews-dot" type="button" data-review-dot="{n - 1}" aria-label="Отзыв {n} из {total}"></button>')
+    return (f'<section class="reviews" id="reviews" aria-labelledby="reviews-title" aria-roledescription="карусель" data-reviews><div class="{wrap_class}">'
+            '<div class="reviews-head"><div><span class="eyebrow">Ваши впечатления</span><h2 id="reviews-title">Отзывы наших клиентов</h2></div>'
+            '<div class="reviews-arrows"><button class="reviews-arrow reviews-prev" type="button" aria-label="Предыдущий отзыв">' + arrow('M19 12H5m6-6-6 6 6 6') + '</button>'
+            '<button class="reviews-arrow reviews-next" type="button" aria-label="Следующий отзыв">' + arrow('M5 12h14m-6-6 6 6-6 6') + '</button></div></div>'
+            '<ul class="reviews-track" tabindex="0" aria-label="Отзывы, листайте стрелками">' + ''.join(cards) + '</ul>'
+            '<div class="reviews-progress">' + ''.join(dots) + '</div>'
+            f'<p class="reviews-count" aria-live="polite">1 / {total}</p></div></section>'
+            '<dialog class="review-lightbox" aria-label="Скриншот отзыва"><form method="dialog">'
+            '<button class="review-lightbox-close" aria-label="Закрыть">×</button></form><img alt=""></dialog>'
+            '<dialog class="review-popup" aria-labelledby="review-popup-date"><form method="dialog">'
+            '<button class="review-popup-close" aria-label="Закрыть">×</button></form>'
+            '<p class="review-date" id="review-popup-date"></p><div class="review-popup-text"></div></dialog>')
+
+def asset_version(rel):
+    return hashlib.md5((SITE / rel).read_bytes()).hexdigest()[:8]
+
+
+def sync_home_reviews():
+    """Put the same reviews block on the home page, between "Как это работает" and "Меню и услуги"."""
+    path = SITE / "index.html"
+    page = path.read_text(encoding="utf-8")
+    block = '    <!-- reviews:start (tools/build_boxes_page.py) -->\n    ' + reviews_html("container") + '\n    <!-- reviews:end -->\n'
+    if '<!-- reviews:start' in page:
+        page = re.sub(r'    <!-- reviews:start.*?<!-- reviews:end -->\n', lambda m: block, page, flags=re.S)
+    else:
+        anchor = '    <section class="container seo-services"'
+        assert page.count(anchor) == 1
+        page = page.replace(anchor, block + '\n' + anchor)
+    css = f'<link rel="stylesheet" href="css/reviews.css?v={asset_version("css/reviews.css")}" />'
+    page = re.sub(r'<link rel="stylesheet" href="css/reviews\.css\?v=[^"]*" />', css, page)
+    if css not in page:
+        page = page.replace('<link rel="stylesheet" href="css/styles.css', css + '\n<link rel="stylesheet" href="css/styles.css', 1)
+    js = f'<script src="js/reviews.js?v={asset_version("js/reviews.js")}" defer></script>'
+    page = re.sub(r'<script src="js/reviews\.js\?v=[^"]*" defer></script>', js, page)
+    if js not in page:
+        page = page.replace('</body>', '  ' + js + '\n</body>', 1)
+    path.write_text(page, encoding="utf-8")
+
 def home_shell():
     """Header, search, footer, cart overlay and scripts taken from the home page."""
     page = (SITE / "index.html").read_text(encoding="utf-8")
@@ -125,6 +204,7 @@ def to_seo_card(article, first):
 
 
 def build():
+    sync_home_reviews()
     articles = ensure_home_ids()
     boxes = [box_data(a) for a in articles]
     cards = ''.join(to_seo_card(a, False) for i, a in enumerate(articles))
@@ -161,11 +241,11 @@ def build():
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(',', ':'))
     css_version = hashlib.md5((SITE / 'css' / 'boxes-page.css').read_bytes()).hexdigest()[:8]
     metrika, header, bottom, scripts, styles_css = home_shell()
-    # The page has its own FAQ section, so keep the header link on this page.
-    header = header.replace('href="/#faq"', 'href="#faq"')
+    # The page has its own FAQ and reviews sections, so keep these header links on this page.
+    header = header.replace('href="/#faq"', 'href="#faq"').replace('href="/#reviews"', 'href="#reviews"')
     e = html.escape
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}">
+{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}">
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Готовые фуршетные боксы в Минске</nav>
@@ -173,6 +253,7 @@ def build():
 <section class="boxes-guide" aria-labelledby="guide-10-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-10-title">Выбираете угощение на 10 человек?</h2><p>Посмотрите предложения для компании из 10 гостей — так проще подобрать боксы для встречи, дня рождения или праздника в офисе.</p><a class="secondary-link" href="/furshet-na-10-chelovek/"><strong>Посмотреть предложения на 10 человек</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа"><li><strong>Предзаказ:</strong> желательно за 2–3 дня. Срочный заказ — по согласованию.</li><li><strong>Доставка по Минску:</strong> в пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</li><li><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</li><li class="boxes-terms-more"><a href="/dostavka-i-oplata/">Доставка и оплата</a></li></ul></div></section>
 <section class="boxes-list" id="boxes" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
+{reviews_html('wrap')}
 {faq_html}
 <section class="section facts"><div class="wrap"><div class="facts-grid"><div class="fact"><strong>{count} готовых боксов</strong><span>Составы, вес и актуальные цены — на этой странице и в основном меню.</span></div><div class="fact"><strong>От 2–3 дней</strong><span>Рекомендуемый срок оформления заказа; срочные заказы уточняются.</span></div><div class="fact"><strong>Доставка по Минску</strong><span>В пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</span></div></div></div></section>
 <section class="section"><div class="wrap text-grid"><h2>Как оформить заказ</h2><p>Все наборы собраны так, чтобы закуски было удобно подать без дополнительной сервировки. Можно выбрать готовый бокс или собрать собственный набор из отдельных позиций в <a href="/#constructor">меню</a>.</p><p>Оставьте заявку на сайте или позвоните по номеру <a href="tel:+375295704749">+375 29 570-47-49</a>. Администратор свяжется с вами, подтвердит состав, дату, способ получения и итоговую стоимость.</p><p><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</p><p><strong>Доставка:</strong> по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно. Подробнее — на странице <a href="/dostavka-i-oplata/">«Доставка и оплата»</a>.</p></div></section>
