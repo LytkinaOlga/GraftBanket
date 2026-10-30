@@ -76,11 +76,15 @@ FAQ = [
     ("Как заказать готовый бокс?",
      "Нажмите «Добавить» на карточке бокса — он попадёт в корзину. Затем оформите заявку: дата, время, способ получения и оплаты. Администратор свяжется с вами и подтвердит заказ."),
     ("Можно ли заменить начинки или изменить состав бокса?",
-     "Да, можно обсудить индивидуальный состав или приготовить блюдо по вашему референсу. Позвоните по номеру <a href=\"tel:+375295704749\">+375 29 570-47-49</a> или напишите пожелания в комментарии к заявке — администратор предложит варианты."),
+     "Да, можно обсудить индивидуальный состав или приготовить блюдо по вашему референсу. Позвоните по номеру <a href=\"tel:+375295704749\">+375 29 570-47-49</a> или напишите пожелания в комментарии к заявке — администратор предложит варианты. Если нужно учесть аллергены, тоже предупредите заранее: администратор расскажет о составе и согласует возможные замены."),
     ("За сколько дней нужно оформить заказ? Можно ли срочно?",
      "Желательно оформить заказ за 2–3 дня, а для крупных мероприятий — как можно раньше. Срочные заказы тоже возможны: позвоните нам, и мы проверим, что успеем приготовить к нужному времени."),
     ("Есть ли доставка и сколько она стоит?",
      "Самовывоз по адресу Минск, Нововиленская, 51 — бесплатно. Доставка по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно. Доставку за пределы МКАД администратор рассчитает отдельно."),
+    ("Есть ли минимальная сумма заказа?",
+     "Нет, минимальной суммы нет — можно заказать даже одну позицию. Условия получения те же: самовывоз бесплатно, доставка по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно."),
+    ("Когда можно оставить заявку?",
+     "Заявку на сайте можно оставить круглосуточно. Администратор работает каждый день с 10:00 до 22:00 и свяжется с вами в это время."),
     ("Как оплатить заказ?",
      "Наличными или картой — способ оплаты выбирается в форме заявки. Для компаний доступен безналичный расчёт, условия и документы согласует администратор."),
     ("Какие есть акции и суммируются ли они?",
@@ -127,8 +131,8 @@ def build():
     count = len(boxes)
     min_price = min(b["price"] for b in boxes)
     title = "Готовые фуршетные боксы в Минске — цены и составы | Draft Catering"
-    description = (f"{count} готовых фуршетных боксов Draft Catering: брускетты, канапе, тарталетки, "
-                   f"наполеоны, салаты, пироги и десерты. Состав, вес и цены от {min_price} BYN, доставка по Минску.")
+    description = (f"Готовые фуршетные боксы в Минске: {count} вариантов с составом, весом и ценами. "
+                   "Закуски для офиса и праздника. Доставка и самовывоз. Заказ в Draft Catering.")
     url = BASE + PAGE_PATH
     og_image = BASE + "/assets/boxes/boxes-page-hero.jpg"
     graph = [
@@ -157,6 +161,8 @@ def build():
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(',', ':'))
     css_version = hashlib.md5((SITE / 'css' / 'boxes-page.css').read_bytes()).hexdigest()[:8]
     metrika, header, bottom, scripts, styles_css = home_shell()
+    # The page has its own FAQ section, so keep the header link on this page.
+    header = header.replace('href="/#faq"', 'href="#faq"')
     e = html.escape
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 {metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}">
@@ -164,6 +170,7 @@ def build():
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Готовые фуршетные боксы в Минске</nav>
 <section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>ГОТОВЫЕ РЕШЕНИЯ · МИНСК</span></div><h1>Готовые <span>фуршетные боксы</span> в Минске</h1><p>{count} готовых боксов с закусками, салатами, пирогами и десертами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Добавляйте боксы в корзину прямо здесь — она общая для всего сайта.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
+<section class="boxes-guide" aria-labelledby="guide-10-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-10-title">Выбираете угощение на 10 человек?</h2><p>Посмотрите предложения для компании из 10 гостей — так проще подобрать боксы для встречи, дня рождения или праздника в офисе.</p><a class="secondary-link" href="/furshet-na-10-chelovek/"><strong>Посмотреть предложения на 10 человек</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа"><li><strong>Предзаказ:</strong> желательно за 2–3 дня. Срочный заказ — по согласованию.</li><li><strong>Доставка по Минску:</strong> в пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</li><li><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</li><li class="boxes-terms-more"><a href="/dostavka-i-oplata/">Доставка и оплата</a></li></ul></div></section>
 <section class="boxes-list" id="boxes" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
 {faq_html}

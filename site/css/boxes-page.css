@@ -51,3 +51,29 @@
   .boxes-hero-copy { padding:22px 0 28px; }
   .boxes-hero-actions { grid-template-columns:1fr; }
 }
+
+/* "10 guests" path and short order terms between the first screen and the catalog */
+.boxes-hero:has(+ .boxes-guide) { padding-bottom:0; }
+.boxes-guide { padding:0 0 40px; }
+.boxes-guide-layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:20px; }
+.boxes-guide-offer { padding:22px 24px; background:#f7f5f0; }
+.boxes-guide h2 { margin:0 0 8px; font-size:22px; line-height:1.2; letter-spacing:-.03em; font-weight:800; }
+.boxes-guide-offer p { margin:0 0 16px; color:var(--text-muted); font-size:15px; line-height:1.5; }
+.boxes-guide .secondary-link { grid-template-columns:1fr 20px; min-height:50px; background:var(--bg); }
+.boxes-terms { align-self:center; margin:0; padding:0; list-style:none; font-size:14px; line-height:1.45; }
+.boxes-terms li { padding:8px 0; border-bottom:1px dashed var(--border); }
+.boxes-terms li.boxes-terms-more { border-bottom:0; }
+.boxes-terms-more a { color:var(--text-muted); font-size:13px; }
+.boxes-guide a:focus-visible { outline:2px solid var(--text); outline-offset:3px; }
+.faq-page { scroll-margin-top:110px; }
+@media (max-width:680px) {
+  .boxes-hero:has(+ .boxes-guide) { padding-bottom:0; }
+  .boxes-guide { padding-bottom:30px; }
+  .boxes-guide-layout { grid-template-columns:1fr; gap:14px; }
+  .boxes-guide-offer { padding:18px 18px 20px; margin:0 -6px; }
+  .boxes-guide h2 { font-size:20px; }
+  .boxes-guide-offer p { font-size:14px; }
+  .boxes-terms { font-size:13px; }
+  .boxes-terms li { padding:6px 0; }
+  .faq-page { scroll-margin-top:90px; }
+}
