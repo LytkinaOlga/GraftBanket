@@ -20,3 +20,49 @@
   .set-tile figcaption { font-size:10px; padding:4px 6px 3px; }
   .set-items li { font-size:15px; }
 }
+
+/* Compact comparison of the three sets, above the detailed cards */
+.sets-compare { padding:48px 0 56px; background:#f8f7f4; }
+.sets-compare h2 { margin:0; text-align:center; font-size:clamp(32px,4.4vw,60px); line-height:1.05; font-weight:800; letter-spacing:-.045em; }
+.compare-lead { margin:12px 0 34px; text-align:center; color:var(--text-muted); font-size:clamp(16px,1.6vw,22px); }
+.compare-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.compare-card { display:flex; flex-direction:column; padding:30px 26px 24px; background:var(--bg); border:1px solid #ebe8e1; border-radius:14px; }
+.compare-card::before { content:""; width:56px; height:5px; margin-bottom:24px; border-radius:3px; background:var(--accent); }
+.compare-card h3 { margin:0; font-size:22px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+.compare-tagline { margin:8px 0 22px; color:var(--text-muted); font-size:15px; }
+.compare-price { margin:0; display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 12px; }
+.compare-price strong { font-size:clamp(36px,3.6vw,48px); line-height:1; font-weight:800; letter-spacing:-.04em; white-space:nowrap; }
+.compare-price span { color:var(--text-muted); font-size:16px; }
+.compare-per { margin:10px 0 20px; color:var(--text-muted); font-size:16px; }
+.compare-row { margin:0; padding:14px 0; border-top:1px solid #e6e3dc; font-size:16px; }
+.compare-delivery { margin-bottom:20px; color:var(--text-muted); font-size:15px; }
+.compare-delivery strong { color:var(--text); font-weight:400; white-space:nowrap; }
+.compare-link { display:flex; justify-content:center; align-items:center; gap:8px; min-height:52px; margin-top:auto; padding:0 18px; border-radius:999px; background:var(--text); color:#fff; font-size:15px; font-weight:600; text-decoration:none; }
+.compare-link:hover { background:#000; }
+.compare-link:focus-visible { outline:2px solid var(--text); outline-offset:3px; }
+.compare-terms { margin:32px 0 0; padding-top:22px; border-top:1px solid #e6e3dc; text-align:center; font-size:14px; }
+.compare-note { margin:8px 0 0; text-align:center; color:var(--text-muted); font-size:12px; }
+.set-box { scroll-margin-top:calc(var(--header-h, 96px) + 18px); }
+/* Narrow screens: swipe between the cards, the next one peeks in */
+@media (max-width:900px) {
+  .compare-grid { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; margin:0 -22px; padding:0 22px 4px; scroll-padding-inline:22px; }
+  .compare-grid::-webkit-scrollbar { display:none; }
+  .compare-card { flex:0 0 min(84%,420px); scroll-snap-align:start; }
+}
+@media (max-width:680px) {
+  .sets-compare { padding:36px 0 40px; }
+  .compare-lead { margin-bottom:24px; }
+  .compare-card { padding:24px 20px 20px; }
+  .compare-card::before { margin-bottom:18px; }
+  .compare-tagline { margin-bottom:16px; }
+  .compare-per { margin-bottom:14px; }
+  .compare-row { padding:11px 0; font-size:15px; }
+}
+/* Line up titles, prices and rows across the cards even when a title wraps */
+@supports (grid-template-rows:subgrid) {
+  @media (min-width:901px) {
+    .compare-card { display:grid; grid-row:span 8; grid-template-rows:subgrid; row-gap:0; }
+    .compare-card h3 { align-self:start; }
+    .compare-link { margin-top:0; align-self:end; }
+  }
+}

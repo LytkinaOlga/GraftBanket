@@ -22,14 +22,17 @@ GUESTS = 10
 # "id" is the set's cart item in js/data.js; "boxes" are box ids from site/index.html,
 # a dict overrides the box's own name/weight/price.
 SETS = [
-    {"id": "set10-sparkling", "title": "Фуршет к игристому",
-     "lead": "Закуски к бокалу игристого: сыры и мясная нарезка, канапе, профитроли, брускетты и горячие тарталетки.",
+    {"id": "set10-sparkling", "short": "Классический фуршет", "tagline": "Лёгкий фуршет для встречи",
+     "title": "Классический фуршет",
+     "lead": "Сыры и мясная нарезка, канапе, профитроли, брускетты и горячие тарталетки — всё для встречи гостей.",
      "boxes": ["box-sparkling", "box-canapes", "box-profiteroles-mini", "box-bruschetta-salmon-shrimp", "box-baked-tartlets"]},
-    {"id": "set10-big", "title": "Большой фуршет с пирогом и круассанами",
-     "lead": "Всё из набора к игристому плюс сытный пирог с курицей и бокс мини-круассанов — для долгого вечера.",
+    {"id": "set10-big", "short": "С пирогом и круассанами", "tagline": "Сытный фуршет на весь вечер",
+     "title": "Большой фуршет с пирогом и круассанами",
+     "lead": "Всё из классического набора плюс сытный пирог с курицей и бокс мини-круассанов — для долгого вечера.",
      "boxes": ["box-sparkling", "box-canapes", "box-profiteroles-mini", "box-bruschetta-salmon-shrimp", "box-baked-tartlets",
                "box-chicken-pie", "box-croissants"]},
-    {"id": "set10-dessert", "title": "Закуски, пирог и десерт",
+    {"id": "set10-dessert", "short": "Закуски, пирог и десерт", "tagline": "Закуски и десерт в одном наборе",
+     "title": "Закуски, пирог и десерт",
      "lead": "Брускетты, профитроли и шпинатный рулет, солёные «Наполеоны», пирог с курицей и шоколадные пирожные на десерт.",
      "boxes": ["box-bruschetta-profiterole-roll", "box-napoleons-big", "box-chicken-pie",
                {"id": "box-chocolate-cakes", "name": "Шоколадные пирожные", "weight": 1000, "price": 55}]},
@@ -121,6 +124,35 @@ def plural(n):
     return 'бокс' if n % 10 == 1 and n % 100 != 11 else 'бокса' if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14 else 'боксов'
 
 
+FREE_DELIVERY_FROM = 500  # BYN, delivery within МКАД (see /dostavka-i-oplata/)
+DELIVERY_PRICE = 20
+
+
+def compare_html(sets):
+    """Compact comparison of the sets above the detailed cards."""
+    e = html.escape
+    cols = []
+    for n, s in enumerate(sets, 1):
+        delivery = 'бесплатно' if s["price"] >= FREE_DELIVERY_FROM else f'<strong>+{DELIVERY_PRICE} BYN</strong>'
+        per_person = s["price"] / GUESTS
+        per_person = f'{per_person:.0f}' if per_person == int(per_person) else f'{per_person:.2f}'.replace('.', ',')
+        count = len(s["items"])
+        cols.append(
+            f'<article class="compare-card"><h3>{e(s["short"])}</h3><p class="compare-tagline">{e(s["tagline"])}</p>'
+            f'<p class="compare-price"><strong>{s["price"]} BYN</strong> <span>за набор</span></p>'
+            f'<p class="compare-per">{per_person} BYN на человека</p>'
+            f'<p class="compare-row">{grams(s["weight"])} · {count} {plural(count)}</p>'
+            f'<p class="compare-row compare-delivery">Доставка в пределах МКАД {delivery}</p>'
+            f'<a class="compare-link" href="#set-{n}">Посмотреть состав <span aria-hidden="true">→</span></a></article>')
+    return ('<section class="sets-compare" aria-labelledby="compare-title"><div class="wrap">'
+            '<h2 id="compare-title">Какой набор выбрать?</h2>'
+            f'<p class="compare-lead">Сравните три варианта для компании из {GUESTS} человек</p>'
+            '<div class="compare-grid">' + ''.join(cols) + '</div>'
+            '<p class="compare-terms">Предзаказ желательно за 2–3 дня · Самовывоз: Нововиленская, 51</p>'
+            f'<p class="compare-note">Цена на человека — при заказе на {GUESTS} гостей, без доставки. Условия указаны для одного набора без дополнительных скидок.</p>'
+            '</div></section>\n')
+
+
 def build():
     sets = resolve(SETS)
     url = BASE + PAGE_PATH
@@ -161,7 +193,7 @@ def build():
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Фуршет на 10 человек в Минске</nav>
 <section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>КАМЕРНЫЙ ПРАЗДНИК · МИНСК</span></div><h1>Фуршет <span>на 10 человек</span> в Минске</h1><p>{len(sets)} готовых набора из наших боксов для домашнего праздника, встречи друзей или небольшой команды. У каждого набора указан состав, общий вес и сколько приходится на одного гостя. Цена набора ниже, чем при заказе тех же боксов по отдельности.</p><div class="boxes-hero-actions"><a class="primary-link" href="#sets"><strong>Смотреть наборы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
-<section class="boxes-list" id="sets" aria-label="Наборы на 10 человек"><div class="wrap"><div class="ready-grid">
+{compare_html(sets)}<section class="boxes-list" id="sets" aria-label="Наборы на 10 человек"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
 {faq_html}
 <section class="section facts"><div class="wrap"><div class="facts-grid"><div class="fact"><strong>{GUESTS} гостей</strong><span>Вес каждого набора рассчитан на компанию из {GUESTS} человек.</span></div><div class="fact"><strong>От 2–3 дней</strong><span>Рекомендуемый срок оформления заказа; срочные заказы уточняются.</span></div><div class="fact"><strong>Доставка по Минску</strong><span>В пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</span></div></div></div></section>
