@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
       const item = catalog[row.id], qty = row.quantity;
       if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
       seen.add(row.id); subtotal += lineTotal(item, qty);
-      // Sets are already discounted, so they don't count towards the gift threshold or the birthday discount.
+      // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
       if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     const GIFT_ITEM_ID = 'box-profiteroles-mini';
     const BIRTHDAY_DISCOUNT_RATE = 0.10;
     const birthdayDiscount = Boolean(body.birthdayDiscount);
-    const discount = birthdayDiscount ? Math.round(giftSubtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
+    const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
     const giftItem = catalog[GIFT_ITEM_ID];
     // Promos don't stack: no gift box when the birthday discount is applied.
     const giftApplied = giftSubtotal >= GIFT_THRESHOLD && Boolean(giftItem) && !birthdayDiscount;
@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
       '', 'Состав:', ...lines,
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
       '', 'Товары: ' + money(subtotal),
-      discount > 0 ? 'Скидка (день рождения, −10%' + (giftSubtotal < subtotal ? ', без наборов на 10 человек' : '') + '): −' + money(discount) : '',
+      birthdayDiscount ? 'Скидка (день рождения, −10%): −' + money(discount) : '',
       Boolean(body.birthday) && !birthdayDiscount && giftApplied ? '🎂 Именинник: выбрал подарок вместо скидки 10%' : '',
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
       'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))
