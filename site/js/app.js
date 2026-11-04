@@ -69,11 +69,11 @@
     if (next < item.minQty) delete cart[id]; else cart[id] = next;
     saveCart(); render();
   }
-  function control(id) {
+  function control(id, label) {
     var item = byId[id], qty = cart[id] || 0;
     if (!item) return '';
     if (item.available === false) return '<button class="add-btn" type="button" disabled>Цена уточняется</button>';
-    if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">Добавить</button>';
+    if (!qty) return '<button class="add-btn" data-action="plus" data-id="' + id + '">' + esc(label || 'Добавить') + '</button>';
     return '<div class="qty-stepper"><button data-action="minus" data-id="' + id + '" aria-label="Уменьшить">−</button><span>' + qty + '</span><button data-action="plus" data-id="' + id + '" aria-label="Увеличить">+</button></div>';
   }
   function itemUnit(item, qty) {
@@ -154,7 +154,7 @@
     $('checkoutSummary').innerHTML = html;
   }
   function render() {
-    document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control); });
+    document.querySelectorAll('[data-control]').forEach(function (el) { el.innerHTML = control(el.dataset.control, el.dataset.addLabel); });
     document.querySelectorAll('[data-price-summary]').forEach(function (el) {
       var item = byId[el.dataset.priceSummary];
       if (item) el.innerHTML = priceSummary(item);

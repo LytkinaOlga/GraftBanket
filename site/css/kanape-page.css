@@ -1,0 +1,84 @@
+/* /kanape-na-zakaz/ — canapé box first, other snacks as a separate block (markup: tools/build_kanape_page.py). */
+.kanape-hero { padding:28px 0 48px; }
+.kanape-hero-layout { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:48px; align-items:center; }
+.kanape-hero h1 { margin:0 0 20px; font-size:clamp(42px,5vw,76px); line-height:.99; font-weight:800; letter-spacing:-.06em; }
+.kanape-hero h1 span { background:linear-gradient(transparent 62%,var(--accent) 62%); }
+.kanape-hero-copy > p { margin:0; color:var(--text-muted); font-size:17px; line-height:1.55; max-width:560px; }
+.kanape-price { margin:28px 0 22px; }
+.kanape-facts { margin:0 0 6px; font-size:17px; font-weight:700; }
+.kanape-amount { margin:0; }
+.kanape-amount strong { display:block; font-size:clamp(44px,4.4vw,60px); line-height:1; font-weight:800; letter-spacing:-.045em; }
+.kanape-amount span { display:block; margin-top:6px; color:var(--text-muted); font-size:16px; }
+.kanape-actions { display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px; }
+.kanape-add .add-btn { min-height:56px; padding:14px 34px; border-radius:999px; background:var(--accent); color:var(--text); font-size:17px; font-weight:800; }
+.kanape-add .add-btn:hover { background:#ebbd3a; }
+.kanape-add .qty-stepper { min-height:54px; }
+.kanape-secondary { display:inline-flex; align-items:center; gap:8px; min-height:56px; font-weight:700; text-decoration:none; }
+.kanape-secondary:hover { color:var(--text-muted); }
+.kanape-terms { margin-top:20px !important; font-size:14px !important; }
+.kanape-hero-photo { position:relative; aspect-ratio:1; overflow:hidden; border-radius:14px; background:#ece9e2; }
+.kanape-hero-photo img { display:block; width:100%; height:100%; object-fit:cover; }
+
+.kanape-inside { background:#f8f7f4; }
+.kanape-inside h2, .other-snacks h2, .kanape-guests h2 { margin:0 0 12px; font-size:clamp(30px,3.6vw,48px); line-height:1.05; font-weight:800; letter-spacing:-.045em; }
+.kanape-kinds { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:26px 0 0; padding:0; list-style:none; }
+.kanape-kinds li { display:flex; justify-content:space-between; gap:12px; padding:18px 20px; background:var(--bg); border:1px solid #ebe8e1; border-radius:12px; font-size:17px; font-weight:700; }
+.kanape-kinds li span { flex:0 0 auto; color:var(--text-muted); font-weight:500; }
+.kanape-total { margin:16px 0 26px; color:var(--text-muted); font-size:15px; }
+.kanape-photos { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.kanape-photos figure { margin:0; aspect-ratio:4 / 3; overflow:hidden; border-radius:12px; background:#ece9e2; }
+.kanape-photos img { display:block; width:100%; height:100%; object-fit:cover; }
+
+.snack-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:28px; }
+.snack-card { display:flex; flex-direction:column; overflow:hidden; background:var(--bg); border:1px solid #ebe8e1; border-radius:14px; }
+.snack-card picture { position:relative; display:block; aspect-ratio:4 / 3; overflow:hidden; background:#ece9e2; }
+.snack-card img { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; }
+.snack-card-body { display:flex; flex-direction:column; flex:1; padding:20px 20px 22px; }
+.snack-card h3 { margin:0; font-size:20px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+.snack-card-facts { margin:6px 0 10px; color:var(--text-muted); font-size:14px; }
+.snack-card-items { margin:0 0 16px; font-size:14px; line-height:1.5; }
+.snack-card-price { margin:auto 0 14px; color:var(--text-muted); font-size:14px; }
+.snack-card-price strong { color:var(--text); font-size:24px; font-weight:800; letter-spacing:-.02em; }
+.snack-card-link { display:flex; justify-content:center; align-items:center; gap:8px; min-height:48px; border:1.5px solid var(--text); border-radius:999px; font-size:15px; font-weight:700; text-decoration:none; }
+.snack-card-link:hover { background:var(--text); color:#fff; }
+.other-snacks-all { margin:26px 0 0; }
+.other-snacks-all .primary-link { display:inline-grid; grid-template-columns:auto 20px; min-width:min(100%,320px); }
+
+.kanape-guests { padding-top:10px; padding-bottom:20px; }
+.kanape-guests-box { display:flex; align-items:center; justify-content:space-between; gap:24px 40px; padding:32px; background:var(--accent-soft, #fff6d9); border-radius:14px; }
+.kanape-guests-box p { margin:0; max-width:680px; color:#3f4447; font-size:16px; line-height:1.55; }
+.kanape-guests-link { flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; min-height:52px; padding:0 26px; border-radius:999px; background:var(--text); color:#fff; font-weight:700; text-decoration:none; }
+
+.kanape-secondary:focus-visible, .snack-card-link:focus-visible, .kanape-guests-link:focus-visible { outline:2px solid var(--text); outline-offset:3px; }
+
+@media (max-width:900px) {
+  .kanape-hero-layout { grid-template-columns:1fr; gap:26px; }
+  .kanape-hero-photo { max-width:520px; }
+  .kanape-kinds { grid-template-columns:1fr; gap:8px; }
+  .snack-grid { grid-template-columns:1fr; gap:12px; }
+  .snack-card { flex-direction:row; }
+  .snack-card picture { flex:0 0 38%; aspect-ratio:auto; }
+  .kanape-guests-box { flex-direction:column; align-items:flex-start; }
+}
+@media (max-width:680px) {
+  .kanape-hero { padding:16px 0 36px; }
+  .kanape-hero h1 { font-size:clamp(38px,10.6vw,52px); }
+  .kanape-hero-copy > p { font-size:15px; }
+  .kanape-price { margin:22px 0 18px; }
+  .kanape-facts { font-size:15px; }
+  .kanape-amount strong { font-size:44px; }
+  .kanape-add, .kanape-add .add-btn, .kanape-add .qty-stepper { width:100%; }
+  .kanape-hero-photo { border-radius:10px; }
+  .kanape-photos { grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .kanape-photos figure { border-radius:8px; }
+  .snack-card picture { flex-basis:34%; }
+  .snack-card-body { padding:14px 14px 16px; }
+  .snack-card h3 { font-size:17px; }
+  .snack-card-items { display:none; }
+  .snack-card-price { margin-bottom:10px; }
+  .snack-card-price strong { font-size:20px; }
+  .snack-card-link { display:inline; min-height:0; border:0; border-radius:0; font-size:14px; text-decoration:underline; text-underline-offset:3px; }
+  .snack-card-link:hover { background:none; color:inherit; }
+  .kanape-guests-box { padding:22px 20px; }
+  .kanape-guests-link { width:100%; justify-content:center; }
+}
