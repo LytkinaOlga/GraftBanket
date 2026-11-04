@@ -36,14 +36,14 @@
   function giftItem() { return byId[GIFT_ITEM_ID]; }
   // Promos don't stack. Everyone gets the gift box from 300 BYN; a birthday customer
   // chooses between that gift and the 10% discount (below 300 BYN only the discount applies).
-  // Sets are already discounted, so they don't count towards the gift threshold.
+  // Sets are already discounted, so they don't count towards the gift threshold or the birthday discount.
   function giftSubtotal() { return Object.keys(cart).reduce(function (sum, id) { return byId[id].type === 'set' ? sum : sum + lineTotal(byId[id], cart[id]); }, 0); }
   function giftAvailable() { return giftSubtotal() >= GIFT_THRESHOLD && !!giftItem(); }
   function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
   function birthdayPerk() { var picked = document.querySelector('input[name="birthdayPerk"]:checked'); return picked ? picked.value : 'discount'; }
   function discountApplied() { return birthdayChecked() && (!giftAvailable() || birthdayPerk() === 'discount'); }
   function giftEligible() { return giftAvailable() && !discountApplied(); }
-  function discountAmount() { return discountApplied() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
+  function discountAmount() { return discountApplied() ? Math.round(giftSubtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
   function delivery() {
     var method = $('fulfillment').value;
     if (method === 'pickup') return 0;
@@ -143,7 +143,10 @@
     if (choice) {
       choice.hidden = !(birthdayChecked() && giftAvailable());
       hint.hidden = !(birthdayChecked() && !giftAvailable());
-      $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(sub * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
+      var promoBase = giftSubtotal();
+      hint.textContent = promoBase === 0 && sub > 0 ? 'Скидка 10% не распространяется на наборы на 10 человек.'
+        : 'Скидка 10% применена' + (promoBase < sub ? ' (кроме наборов на 10 человек)' : '') + '. При заказе от ' + GIFT_THRESHOLD + ' BYN вместо неё можно выбрать бокс профитролей в подарок.';
+      $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(promoBase * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
       $('birthdayGiftValue').textContent = '16 профитролей · стоимость ' + money(giftItem() ? giftItem().price : 0);
     }
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
