@@ -84,7 +84,7 @@ FAQ = [
     ("Есть ли минимальная сумма заказа?",
      "Нет, минимальной суммы нет — можно заказать даже одну позицию. Условия получения те же: самовывоз бесплатно, доставка по Минску в пределах МКАД — 20 BYN, при заказе от 500 BYN — бесплатно."),
     ("Когда можно оставить заявку?",
-     "Заявку на сайте можно оставить круглосуточно. Администратор работает каждый день с 10:00 до 22:00 и свяжется с вами в это время."),
+     "Заявку на сайте можно оставить круглосуточно. Администраторы работают каждый день с 10:00 до 23:00 и свяжутся с вами в это время."),
     ("Как оплатить заказ?",
      "Наличными или картой — способ оплаты выбирается в форме заявки. Для компаний доступен безналичный расчёт, условия и документы согласует администратор."),
     ("Какие есть акции и суммируются ли они?",
@@ -178,7 +178,7 @@ def home_shell():
         i = page.index(start)
         return page[i:page.index(end, i)]
     metrika = between('<script>window.dataLayer', '<meta charset')
-    header = between('  <header class="site-header">', '    <nav class="category-nav">')
+    header = between('  <div class="hours-bar">', '    <nav class="category-nav">')
     bottom = between('  <footer class="site-footer">', '  <script src="js/data.js')
     scripts = between('  <script src="js/data.js', '</body>')
     styles = re.search(r'<link rel="stylesheet" href="(css/styles\.css\?v=[^"]+)"', page).group(1)
@@ -245,7 +245,7 @@ def build():
     header = header.replace('href="/#faq"', 'href="#faq"').replace('href="/#reviews"', 'href="#reviews"')
     e = html.escape
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20260926"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}">
+{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}">
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Готовые фуршетные боксы в Минске</nav>
