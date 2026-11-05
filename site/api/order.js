@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
       seen.add(row.id); subtotal += lineTotal(item, qty);
       // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
       if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
-      copyItems.push({ id: item.id, title: item.name, qty, total: lineTotal(item, qty), image: imageUrl(item) });
+      copyItems.push({ id: item.id, title: item.name, qty, pack: item.bundlePrice ? item.minQty : 1, total: lineTotal(item, qty), image: imageUrl(item) });
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
     const GIFT_THRESHOLD = 300;
