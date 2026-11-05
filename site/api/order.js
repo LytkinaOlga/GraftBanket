@@ -7,6 +7,40 @@ const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit)
 const SITE_URL = 'https://www.draftcatering.by/';
 const imageUrl = item => item && item.img ? SITE_URL + String(item.img).replace(/^\/+/, '') : null;
 
+// Photos of the ordered items, sent as a reply to the order card (like Slivki orders in the bot).
+// Caption: "Name × qty"; pack-priced items by pack; the gift is marked. Up to 10 photos per album.
+function orderPhotos(copyItems, gift) {
+  const list = copyItems.filter(i => i.image).map(i => ({
+    image: i.image,
+    caption: i.pack > 1 && i.qty % i.pack === 0 ? i.title + ' (упаковка ' + i.pack + ' шт.) × ' + (i.qty / i.pack) : i.title + ' × ' + i.qty
+  }));
+  const giftImage = imageUrl(gift);
+  if (gift && giftImage) list.push({ image: giftImage, caption: '🎁 ' + gift.name + ' — подарок' });
+  return list;
+}
+
+// Photos are extra: any failure is only logged, the order itself was already delivered.
+async function sendOrderPhotos(token, chatId, replyTo, photos) {
+  if (!photos.length) return;
+  const replyParameters = { message_id: replyTo, allow_sending_without_reply: true };
+  for (let i = 0; i < photos.length; i += 10) {
+    const chunk = photos.slice(i, i + 10);
+    const single = chunk.length === 1;
+    const body = single
+      ? { chat_id: chatId, photo: chunk[0].image, caption: chunk[0].caption, reply_parameters: replyParameters }
+      : { chat_id: chatId, media: chunk.map(p => ({ type: 'photo', media: p.image, caption: p.caption })), reply_parameters: replyParameters };
+    try {
+      const response = await fetch('https://api.telegram.org/bot' + token + (single ? '/sendPhoto' : '/sendMediaGroup'), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(8000)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) console.error('Order photos failed: ' + (result.description || 'HTTP ' + response.status));
+    } catch (error) {
+      console.error('Order photos failed:', error.message);
+    }
+  }
+}
+
 // Copy of the order for the shared orders database (calendar and the 10:00 summary in the admin bot).
 // Telegram delivery stays the main path: if the copy fails, admins still get the order plus a warning.
 // Disabled until ORDERS_API_URL and ORDERS_API_SECRET are set on Vercel.
@@ -96,19 +130,23 @@ module.exports = async function handler(req, res) {
         const response = await fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text }) });
         const result = await response.json();
         if (!response.ok || !result.ok) console.error('Telegram delivery failed for administrator ' + (index + 1) + ': ' + (result.description || 'HTTP ' + response.status));
-        return Boolean(response.ok && result.ok);
+        // message_id of the order card: photos are sent as a reply to it
+        return response.ok && result.ok ? (result.result && result.result.message_id) || true : false;
       } catch (error) {
         console.error('Telegram delivery failed for administrator ' + (index + 1) + ':', error);
         return false;
       }
     }));
+    const photos = orderPhotos(copyItems, giftApplied ? giftItem : null);
+    const sendPhotos = cards => Promise.all(chats.map((chatId, index) =>
+      typeof cards[index] === 'number' ? sendOrderPhotos(token, chatId, cards[index], photos) : null));
     const copy = copyOrder({
       order_id: orderId, name, phone, telegram: nick, date, time, method, address, payment, guests, comment,
       source: clean(body.source, 80), items: copyItems, subtotal, discount, birthday: birthdayDiscount,
       gift: giftApplied ? { title: giftItem.name, image: imageUrl(giftItem) } : null,
       delivery, total: delivery === null ? discountedSubtotal : discountedSubtotal + delivery
     });
-    const [results, copied] = await Promise.all([send(message), copy]);
+    const [results, copied] = await Promise.all([send(message).then(async cards => { await sendPhotos(cards); return cards; }), copy]);
     if (!results.some(Boolean)) return res.status(502).json({ error: 'Telegram delivery failed' });
     if (copied === false) await send('⚠️ Заявка ' + orderId + ' не сохранилась в календарь (база недоступна). Сама заявка выше — обработайте её как обычно.');
     return res.status(200).json({ ok: true, orderId });
