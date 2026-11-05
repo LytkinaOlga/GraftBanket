@@ -4,6 +4,33 @@ const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box
 const lineTotal = (item, qty) => item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty;
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
+const SITE_URL = 'https://www.draftcatering.by/';
+const imageUrl = item => item && item.img ? SITE_URL + String(item.img).replace(/^\/+/, '') : null;
+
+// Copy of the order for the shared orders database (calendar and the 10:00 summary in the admin bot).
+// Telegram delivery stays the main path: if the copy fails, admins still get the order plus a warning.
+// Disabled until ORDERS_API_URL and ORDERS_API_SECRET are set on Vercel.
+async function copyOrder(payload) {
+  const url = process.env.ORDERS_API_URL, secret = process.env.ORDERS_API_SECRET;
+  if (!url || !secret) return null;
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Orders-Secret': secret },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(6000)
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result || !result.ok) {
+      console.error('Order copy failed: ' + ((result && (result.field || result.error)) || 'HTTP ' + response.status));
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Order copy failed:', error.message);
+    return false;
+  }
+}
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -26,12 +53,14 @@ module.exports = async function handler(req, res) {
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
     let subtotal = 0, giftSubtotal = 0;
+    const copyItems = [];
     const lines = body.items.map(row => {
       const item = catalog[row.id], qty = row.quantity;
       if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
       seen.add(row.id); subtotal += lineTotal(item, qty);
       // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
       if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
+      copyItems.push({ id: item.id, title: item.name, qty, total: lineTotal(item, qty), image: imageUrl(item) });
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
     const GIFT_THRESHOLD = 300;
@@ -47,7 +76,7 @@ module.exports = async function handler(req, res) {
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();
     const methodLabel = { pickup: 'Самовывоз', minsk: 'Доставка в пределах МКАД', other: 'Другое место, согласовать' }[method];
     const message = [
-      '🆕 Заявка ' + orderId, 'Имя: ' + name, 'Телефон: ' + phone,
+      '🌐 Сайт · 🆕 Заявка ' + orderId, 'Имя: ' + name, 'Телефон: ' + phone,
       nick ? 'Telegram: ' + nick : '', 'Дата: ' + date.split('-').reverse().join('.'),
       (method === 'pickup' ? 'Время самовывоза: ' : 'Время доставки: ') + time,
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
@@ -62,9 +91,9 @@ module.exports = async function handler(req, res) {
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
       'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))
     ].filter(x => x !== '').join('\n');
-    const results = await Promise.all(chats.map(async (chatId, index) => {
+    const send = text => Promise.all(chats.map(async (chatId, index) => {
       try {
-        const response = await fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text: message }) });
+        const response = await fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text }) });
         const result = await response.json();
         if (!response.ok || !result.ok) console.error('Telegram delivery failed for administrator ' + (index + 1) + ': ' + (result.description || 'HTTP ' + response.status));
         return Boolean(response.ok && result.ok);
@@ -73,7 +102,15 @@ module.exports = async function handler(req, res) {
         return false;
       }
     }));
+    const copy = copyOrder({
+      order_id: orderId, name, phone, telegram: nick, date, time, method, address, payment, guests, comment,
+      source: clean(body.source, 80), items: copyItems, subtotal, discount, birthday: birthdayDiscount,
+      gift: giftApplied ? { title: giftItem.name, image: imageUrl(giftItem) } : null,
+      delivery, total: delivery === null ? discountedSubtotal : discountedSubtotal + delivery
+    });
+    const [results, copied] = await Promise.all([send(message), copy]);
     if (!results.some(Boolean)) return res.status(502).json({ error: 'Telegram delivery failed' });
+    if (copied === false) await send('⚠️ Заявка ' + orderId + ' не сохранилась в календарь (база недоступна). Сама заявка выше — обработайте её как обычно.');
     return res.status(200).json({ ok: true, orderId });
   } catch (error) {
     if (error.message === 'Invalid item or quantity') return res.status(400).json({ error: error.message });
