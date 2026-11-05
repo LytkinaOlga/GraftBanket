@@ -143,7 +143,7 @@ module.exports = async function handler(req, res) {
     const copy = copyOrder({
       order_id: orderId, name, phone, telegram: nick, date, time, method, address, payment, guests, comment,
       source: clean(body.source, 80), items: copyItems, subtotal, discount, birthday: birthdayDiscount,
-      gift: giftApplied ? { title: giftItem.name, image: imageUrl(giftItem) } : null,
+      gift: giftApplied ? { id: giftItem.id, title: giftItem.name, image: imageUrl(giftItem) } : null,
       delivery, total: delivery === null ? discountedSubtotal : discountedSubtotal + delivery
     });
     const [results, copied] = await Promise.all([send(message).then(async cards => { await sendPhotos(cards); return cards; }), copy]);
