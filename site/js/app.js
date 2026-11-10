@@ -30,12 +30,12 @@
   function lineTotal(item, qty) { return item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty; }
   function subtotal() { return Object.keys(cart).reduce(function (sum, id) { return sum + lineTotal(byId[id], cart[id]); }, 0); }
   function lineCount() { return Object.keys(cart).length; }
-  var GIFT_THRESHOLD = 300;
+  var GIFT_THRESHOLD = 200;
   var BIRTHDAY_DISCOUNT_RATE = 0.10;
-  var GIFT_ITEM_ID = 'box-profiteroles-mini';
+  var GIFT_ITEM_ID = 'br1'; // шпинатный рулет (с 10.11.2026; до этого — малый бокс профитролей от 300 BYN)
   function giftItem() { return byId[GIFT_ITEM_ID]; }
-  // Promos don't stack. Everyone gets the gift box from 300 BYN; a birthday customer
-  // chooses between that gift and the 10% discount (below 300 BYN only the discount applies).
+  // Promos don't stack. Everyone gets the gift (spinach roll) from 200 BYN; a birthday customer
+  // chooses between that gift and the 10% discount (below 200 BYN only the discount applies).
   // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
   function giftSubtotal() { return Object.keys(cart).reduce(function (sum, id) { return byId[id].type === 'set' ? sum : sum + lineTotal(byId[id], cart[id]); }, 0); }
   function giftAvailable() { return giftSubtotal() >= GIFT_THRESHOLD && !!giftItem(); }
@@ -144,7 +144,7 @@
       choice.hidden = !(birthdayChecked() && giftAvailable());
       hint.hidden = !(birthdayChecked() && !giftAvailable());
       $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(sub * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
-      $('birthdayGiftValue').textContent = '16 профитролей · стоимость ' + money(giftItem() ? giftItem().price : 0);
+      $('birthdayGiftValue').textContent = (giftItem() ? giftItem().weight + ' · ' : '') + 'стоимость ' + money(giftItem() ? giftItem().price : 0);
     }
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
     if (discount > 0) html += '<div class="summary-discount">Скидка ко дню рождения (−10%): <strong>−' + money(discount) + '</strong></div>';

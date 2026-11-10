@@ -97,8 +97,8 @@ module.exports = async function handler(req, res) {
       copyItems.push({ id: item.id, title: item.name, qty, pack: item.bundlePrice ? item.minQty : 1, total: lineTotal(item, qty), image: imageUrl(item) });
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
-    const GIFT_THRESHOLD = 300;
-    const GIFT_ITEM_ID = 'box-profiteroles-mini';
+    const GIFT_THRESHOLD = 200;
+    const GIFT_ITEM_ID = 'br1'; // spinach roll (from 10.11.2026; before: small profiterole box from 300 BYN)
     const BIRTHDAY_DISCOUNT_RATE = 0.10;
     const birthdayDiscount = Boolean(body.birthdayDiscount);
     const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
