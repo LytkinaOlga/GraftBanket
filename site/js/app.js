@@ -387,6 +387,7 @@
       var revenue = Math.round((subtotal() - discountAmount() + (fee || 0)) * 100) / 100;
       var purchaseProducts = Object.keys(cart).map(function (id) { return ecommerceProduct(byId[id], cart[id]); });
       pushEcommerce('purchase', purchaseProducts, { id: result.orderId || (payload.eventDate + '-' + Date.now()), revenue: revenue });
+      if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { value: Math.round((subtotal() - discountAmount()) * 100) / 100, currency: 'BYN' });
       if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'order_submit_success', payload.guests ? { order_price: revenue, guests: payload.guests } : { order_price: revenue });
       cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
     } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
