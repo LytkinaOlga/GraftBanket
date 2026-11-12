@@ -48,7 +48,7 @@ PAGES = [
         "boxes": ["box-sparkling", "box-salmon-crab", "box-canapes", "box-bruschetta-salmon-shrimp", "box-mini-tartlets",
                   "box-baked-tartlets", "box-napoleons", "box-assorted-rolls", "box-three-rolls", "box-crostini",
                   "box-profiteroles", "box-chocolate-cakes", "box-basque-cheesecake"],
-        "list_name": "Боксы для новогоднего фуршета", "faq_title": "Вопросы о новогоднем фуршете",
+        "list_name": "Боксы для новогоднего фуршета", "for": "к новогоднему столу", "faq_title": "Вопросы о новогоднем фуршете",
         "faq": [
             ("Когда заказывать новогодний фуршет?",
              "Обычно заказ оформляют за 2–3 дня, но даты перед Новым годом востребованы, поэтому лучше оставить заявку как можно раньше. "
@@ -80,7 +80,7 @@ PAGES = [
         "boxes": ["box-salmon-crab", "box-sparkling", "box-croissant-bruschetta-canape", "box-bruschetta-salmon-shrimp", "box-mini-tartlets",
                   "box-napoleons-big", "box-assorted-rolls", "box-croissants", "box-caesar", "box-chicken-pie",
                   "box-profiteroles", "box-chocolate-cakes"],
-        "list_name": "Боксы для корпоративного фуршета", "faq_title": "Вопросы о корпоративном фуршете",
+        "list_name": "Боксы для корпоративного фуршета", "for": "для корпоратива", "faq_title": "Вопросы о корпоративном фуршете",
         "faq": [
             ("Работаете ли вы с юридическими лицами и по безналичному расчёту?",
              f"Да. Принимаем заказы от компаний и организаций, оплата по безналичному расчёту. Реквизиты и необходимые документы согласуются с администратором при подтверждении заказа — напишите об этом в комментарии к заявке или позвоните по номеру {PHONE}."),
@@ -111,7 +111,7 @@ PAGES = [
         "boxes": ["box-bruschetta-profiterole-roll", "box-sparkling", "box-canapes", "box-bruschetta-salmon-shrimp", "box-baked-tartlets",
                   "box-napoleons", "box-ham-rolls", "box-three-rolls", "box-crostini", "box-greek",
                   "box-basque-cheesecake", "box-chocolate-cakes", "box-profiteroles-mini"],
-        "list_name": "Боксы для дня рождения", "faq_title": "Вопросы о заказе на день рождения",
+        "list_name": "Боксы для дня рождения", "for": "для дня рождения", "faq_title": "Вопросы о заказе на день рождения",
         "faq": [
             ("Как получить скидку 10% имениннику?",
              "Скидка действует за 5 дней до и 5 дней после дня рождения. При оформлении заявки отметьте «У меня день рождения» — скидка посчитается автоматически. "),
@@ -130,12 +130,14 @@ PAGES = [
 ]
 
 
-def build_page(cfg, articles, shell):
+def build_page(cfg, articles, shell, total):
     missing = [i for i in cfg["boxes"] if i not in articles]
     assert not missing, f'{cfg["path"]}: boxes not on the home page: {missing}'
     chosen = [articles[i] for i in cfg["boxes"]]
     boxes = [box_data(a) for a in chosen]
     cards = ''.join(to_seo_card(a, False) for a in chosen)
+    # Home page numbering («Бокс №10») jumps in a selection — drop it here.
+    cards = re.sub(r'Бокс №\d+ · ', '', cards)
     min_price = min(b["price"] for b in boxes)
     url = BASE + cfg["path"]
     title = cfg["title"]
@@ -173,14 +175,14 @@ def build_page(cfg, articles, shell):
     guide_href, guide_label = cfg["guide_link"]
 
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104b"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}">
+{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104b"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}"><link rel="stylesheet" href="/css/occasion-pages.css?v={asset_version('css/occasion-pages.css')}">
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → {e(cfg["crumb"])}</nav>
-<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>{e(cfg["overline"])}</span></div><h1>{cfg["h1"]}</h1><p>{e(cfg["intro"])}</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
+<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>{e(cfg["overline"])}</span></div><h1>{cfg["h1"]}</h1><p>{e(cfg["intro"])}</p><p class="occasion-note">Ниже — подборка из <strong>{len(boxes)} боксов {e(cfg["for"])}</strong>. Всего у нас {total} готовых боксов, а в меню ещё отдельные закуски, салаты, пироги и десерты.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть подборку</strong><span aria-hidden="true">↓</span></a><a class="secondary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a></div></div></div></section>
 <section class="boxes-guide" aria-labelledby="guide-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-title">{e(cfg["guide_title"])}</h2><p>{e(cfg["guide_text"])}</p><a class="secondary-link" href="{guide_href}"><strong>{e(guide_label)}</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа">{terms}</ul></div></section>
 <section class="boxes-list" id="boxes" aria-label="{e(cfg["list_name"])}"><div class="wrap"><div class="ready-grid">
-{cards}</div><p class="other-snacks-all"><a class="primary-link" href="/gotovye-furshetnye-boksy/"><strong>Все готовые боксы</strong><span aria-hidden="true">→</span></a></p></div></section>
+{cards}</div><aside class="occasion-more" aria-labelledby="more-title"><div><h2 id="more-title">Это не всё меню</h2><p>Здесь {len(boxes)} боксов {e(cfg["for"])}. Ещё {total - len(boxes)} готовых боксов — на отдельной странице, а в меню можно собрать заказ из отдельных закусок, салатов, пирогов и десертов. Корзина общая: всё попадёт в одну заявку.</p></div><div class="occasion-more-actions"><a class="primary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a><a class="secondary-link" href="/#constructor"><strong>Всё меню</strong><span aria-hidden="true">→</span></a></div></aside></div></section>
 {reviews_html('wrap')}
 {faq_html}
 <section class="section"><div class="wrap text-grid"><h2>Как оформить заказ</h2><p>{cfg["howto"]}</p><p>Это заявка, а не автоматическое подтверждение: администратор свяжется с вами, подтвердит состав, дату, время и итоговую стоимость. Вопросы — по номеру {PHONE}.</p></div></section>
@@ -201,7 +203,7 @@ def build():
     articles = {control_id(a): a for a in ensure_home_ids()}
     shell = home_shell()
     for cfg in PAGES:
-        build_page(cfg, articles, shell)
+        build_page(cfg, articles, shell, len(articles))
 
 
 if __name__ == "__main__":
