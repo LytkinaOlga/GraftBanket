@@ -367,6 +367,23 @@
   $('birthdayDiscount').addEventListener('change', render);
   document.querySelectorAll('input[name="birthdayPerk"]').forEach(function (radio) { radio.addEventListener('change', render); });
   $('eventDate').min = new Date().toISOString().slice(0, 10);
+  // Метки рекламы: запоминаем при заходе по ссылке с utm_* (30 дней), чтобы источник дошёл до заявки,
+  // даже если клиент потом перешёл на другую страницу сайта.
+  var UTM_KEY = 'draftCateringUtm';
+  var urlUtm = (function () {
+    var q = new URLSearchParams(location.search), u = {};
+    ['source', 'medium', 'campaign', 'content'].forEach(function (k) { var v = q.get('utm_' + k); if (v) u[k] = v.slice(0, 120); });
+    return u;
+  })();
+  if (urlUtm.source) { try { localStorage.setItem(UTM_KEY, JSON.stringify({ utm: urlUtm, savedAt: Date.now() })); } catch (_) {} }
+  function currentUtm() {
+    if (urlUtm.source) return urlUtm;
+    try {
+      var saved = JSON.parse(localStorage.getItem(UTM_KEY) || 'null');
+      if (saved && saved.utm && Date.now() - saved.savedAt < 30 * 864e5) return saved.utm;
+    } catch (_) {}
+    return {};
+  }
   $('submitOrderBtn').addEventListener('click', async function () {
     if (!lineCount() || !validate()) return;
     var button = this;
@@ -376,7 +393,8 @@
       fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
       birthdayDiscount: discountApplied(), birthday: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
-      source: new URLSearchParams(location.search).get('utm_source') || 'site'
+      source: currentUtm().source || 'site',
+      utm: { medium: currentUtm().medium || '', campaign: currentUtm().campaign || '', content: currentUtm().content || '' }
     };
     button.disabled = true; button.textContent = 'Отправляем…';
     try {

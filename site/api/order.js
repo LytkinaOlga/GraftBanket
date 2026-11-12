@@ -5,6 +5,19 @@ const lineTotal = (item, qty) => item.bundlePrice ? item.bundlePrice * qty / ite
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
 const SITE_URL = 'https://www.draftcatering.by/';
+// Откуда пришёл клиент — по меткам utm (Instagram сам ставит link_in_bio на ссылку в шапке профиля).
+const channelLabel = (source, utm) => {
+  const src = String(source || '').toLowerCase(), medium = String(utm.medium || '').toLowerCase();
+  const campaign = String(utm.campaign || ''), content = String(utm.content || '').toLowerCase();
+  if (!src || src === 'site') return 'сайт, без метки';
+  if (src === 'ig' || src === 'instagram') {
+    if (medium === 'paid' || /^\d{6,}$/.test(campaign)) return 'реклама Instagram' + (campaign && !/^\d+$/.test(campaign) ? ' (' + campaign + ')' : '');
+    if (content === 'link_in_bio' || medium === 'bio') return 'ссылка в шапке Instagram';
+    if (medium === 'stories') return 'сторис Instagram';
+    return 'Instagram';
+  }
+  return [src, medium, campaign].filter(Boolean).join(' / ');
+};
 const imageUrl = item => item && item.img ? SITE_URL + String(item.img).replace(/^\/+/, '') : null;
 
 // Photos of the ordered items, sent as a reply to the order card (like Slivki orders in the bot).
@@ -108,6 +121,9 @@ module.exports = async function handler(req, res) {
     const discountedSubtotal = subtotal - discount;
     const delivery = method === 'pickup' ? 0 : method === 'minsk' ? (subtotal >= 500 ? 0 : 20) : null;
     const orderId = 'DB-' + Date.now().toString(36).toUpperCase();
+    const source = clean(body.source, 80);
+    const rawUtm = body.utm && typeof body.utm === 'object' ? body.utm : {};
+    const utm = { medium: clean(rawUtm.medium, 120), campaign: clean(rawUtm.campaign, 120), content: clean(rawUtm.content, 120) };
     const methodLabel = { pickup: 'Самовывоз', minsk: 'Доставка в пределах МКАД', other: 'Другое место, согласовать' }[method];
     const message = [
       '🌐 Сайт · 🆕 Заявка ' + orderId, 'Имя: ' + name, 'Телефон: ' + phone,
@@ -116,7 +132,7 @@ module.exports = async function handler(req, res) {
       'Получение: ' + methodLabel, address ? 'Адрес/район: ' + address : '',
       'Оплата: ' + (payment === 'cash' ? 'наличными' : 'картой'),
       guests ? 'Гостей: ' + guests : '',
-      comment ? 'Комментарий: ' + comment : '', 'Источник: ' + clean(body.source, 80),
+      comment ? 'Комментарий: ' + comment : '', 'Источник: ' + channelLabel(source, utm) + (source && source !== 'site' ? ' [' + [source, utm.medium, utm.campaign].filter(Boolean).join(' / ') + ']' : ''),
       '', 'Состав:', ...lines,
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
       '', 'Товары: ' + money(subtotal),
@@ -142,7 +158,7 @@ module.exports = async function handler(req, res) {
       typeof cards[index] === 'number' ? sendOrderPhotos(token, chatId, cards[index], photos) : null));
     const copy = copyOrder({
       order_id: orderId, name, phone, telegram: nick, date, time, method, address, payment, guests, comment,
-      source: clean(body.source, 80), items: copyItems, subtotal, discount, birthday: birthdayDiscount,
+      source, utm, channel: channelLabel(source, utm), items: copyItems, subtotal, discount, birthday: birthdayDiscount,
       gift: giftApplied ? { id: giftItem.id, title: giftItem.name, image: imageUrl(giftItem) } : null,
       delivery, total: delivery === null ? discountedSubtotal : discountedSubtotal + delivery
     });
