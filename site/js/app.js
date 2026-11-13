@@ -141,11 +141,31 @@
       var weight = item.weight ? '<div class="card-weight">Вес: ' + esc(item.weight) + '</div>' : '';
       return '<article class="card card-simple">' + cardPhoto(item) + '<div class="card-body"><div class="card-name">' + esc(item.name) + '</div>' + weight + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
   }
+  // Горячее — большие карточки в стиле готовых боксов (фото слева / сверху на телефоне, крупное название и цена).
+  function hotCard(item) {
+    var images = item.images && item.images.length ? item.images : [item.img];
+    var badge = item.badge ? '<span class="card-badge">' + esc(item.badge) + '</span>' : '';
+    var gallery = '<div class="ready-box-gallery ready-box-gallery-cover"' + (images.length > 1 ? ' data-gallery' : '') + ' aria-label="Фотографии: ' + esc(item.name) + '">' + badge + '<div class="ready-box-gallery-track">' +
+      images.map(function (src, i) { return '<picture><img src="' + assetUrl(src) + '" alt="' + esc(item.name) + (i ? ', фото ' + (i + 1) : '') + '" loading="lazy"></picture>'; }).join('') + '</div>' +
+      (images.length > 1 ? '<button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button><button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button><div class="gallery-dots" aria-hidden="true">' + images.map(function (_, i) { return '<span' + (i ? '' : ' class="active"') + '></span>'; }).join('') + '</div>' : '') + '</div>';
+    var unit = item.priceUnit || 'шт.';
+    var description = item.description ? '<p>' + esc(item.description) + '</p>' : '';
+    var composition = item.composition ? '<p class="ready-box-note">Состав: ' + esc(item.composition) + '</p>' : '';
+    var order = item.orderLabel ? '<p class="ready-box-note">' + esc(item.orderLabel) + '</p>' : '';
+    return '<article id="' + item.id + '" class="ready-box hot-box">' + gallery + '<div class="ready-box-content"><span class="ready-box-kicker">Горячее · <span class="ready-box-weight">' + esc(item.weight || '') + '</span></span>' +
+      '<h3><span>' + esc(item.name) + '</span></h3>' + description + composition + order +
+      '<div class="ready-box-order"><div class="ready-box-price"><strong>' + shortMoney(item.price) + '</strong><span>за 1 ' + esc(unit) + '</span></div><div class="ready-box-action" data-control="' + item.id + '"></div></div></div></article>';
+  }
+  var HOT_PAGE = '/goryachee-na-prazdnichnyy-stol/';
   function renderCatalog() {
     if (!$('catalog')) return;
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
     $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip' + (c.chip ? ' chip-new' : '') + '" href="#cat-' + c.id + '">' + esc(c.chip || c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
+      if (category.id === 'hot') {
+        return '<section class="category-section" id="cat-hot"><h2>' + esc(category.title) + '</h2><p class="hot-page-link"><a href="' + HOT_PAGE + '">Горячее на праздничный стол — отдельная страница <span aria-hidden="true">→</span></a></p><div class="ready-grid hot-grid">' +
+          products.filter(function (item) { return item.type === 'snack' && item.category === 'hot'; }).map(hotCard).join('') + '</div></section>';
+      }
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
         if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons', 'hot'].indexOf(item.category) !== -1) return simpleCard(item);
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
@@ -159,7 +179,7 @@
       var id = box.getAttribute('data-menu-category');
       var cat = CATEGORIES.filter(function (c) { return c.id === id; })[0];
       if (!cat) return;
-      var html = products.filter(function (item) { return item.type === 'snack' && item.category === id; }).map(simpleCard).join('');
+      var html = products.filter(function (item) { return item.type === 'snack' && item.category === id; }).map(id === 'hot' ? hotCard : simpleCard).join('');
       if (html) { box.innerHTML = html; initGalleryDots(box); }
     });
   }

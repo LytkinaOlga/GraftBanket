@@ -1037,8 +1037,11 @@ a { color: inherit; text-decoration: none; }
 .card-photo { position:relative; }
 .card-badge { position:absolute; top:10px; left:10px; z-index:3; padding:5px 10px; border-radius:999px; background:var(--text); color:#fff; font-size:12px; font-weight:800; letter-spacing:.02em; line-height:1; pointer-events:none; }
 .chip.chip-new { background:var(--accent); border-color:var(--accent); font-weight:800; }
-@media (max-width:680px) {
-  #cat-hot .grid, .grid[data-menu-category] { grid-template-columns:1fr; gap:18px; }
-  #cat-hot .card-name, .grid[data-menu-category] .card-name { font-size:19px; min-height:0; }
-  #cat-hot .card-badge, .grid[data-menu-category] .card-badge { font-size:13px; padding:6px 12px; }
-}
+/* Большие карточки горячего — как у готовых боксов */
+.hot-box::before { display:none; }
+.hot-box > .ready-box-gallery { aspect-ratio:4 / 3; }
+.hot-box .ready-box-gallery .card-badge, .hot-box .ready-box-gallery > .card-badge { font-size:13px; padding:7px 13px; top:14px; left:14px; }
+.hot-grid { margin-top:6px; }
+.hot-page-link { margin:-6px 0 12px; font-size:15px; }
+.hot-page-link a { font-weight:700; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:3px; text-underline-offset:3px; }
+.ready-box-gallery > .card-badge { position:absolute; z-index:3; }
