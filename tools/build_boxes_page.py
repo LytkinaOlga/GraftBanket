@@ -73,6 +73,9 @@ def box_data(article):
     return {"id": cid, "name": name, "price": price, "images": images, "description": description.strip()}
 
 FAQ = [
+    ("Фуршетный бокс, фудбокс и гастробокс — это одно и то же?",
+     "Да, это разные названия одного формата: готовый бокс с закусками, которые красиво разложены и сразу готовы к подаче. "
+     "У нас в каждом боксе указаны состав, количество, вес и цена — выберите бокс на этой странице или соберите набор из отдельных позиций в <a href=\"/#constructor\">меню</a>."),
     ("Как заказать готовый бокс?",
      "Нажмите «Добавить» на карточке бокса — он попадёт в корзину. Затем оформите заявку: дата, время, способ получения и оплаты. Администратор свяжется с вами и подтвердит заказ."),
     ("Можно ли заменить начинки или изменить состав бокса?",
@@ -210,9 +213,9 @@ def build():
     cards = ''.join(to_seo_card(a, False) for i, a in enumerate(articles))
     count = len(boxes)
     min_price = min(b["price"] for b in boxes)
-    title = "Готовые фуршетные боксы в Минске — цены и составы | Draft Catering"
-    description = (f"Готовые фуршетные боксы в Минске: {count} вариантов с составом, весом и ценами. "
-                   "Закуски для офиса и праздника. Доставка и самовывоз. Заказ в Draft Catering.")
+    title = "Готовые фуршетные боксы в Минске — фудбоксы, цены и составы | Draft Catering"
+    description = (f"Готовые фуршетные боксы (фудбоксы, гастробоксы) в Минске: {count} вариантов с составом, весом и ценами. "
+                   "Боксы с закусками для офиса и праздника. Доставка и самовывоз. Заказ в Draft Catering.")
     url = BASE + PAGE_PATH
     og_image = BASE + "/assets/boxes/boxes-page-hero.jpg"
     graph = [
@@ -249,7 +252,7 @@ def build():
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Готовые фуршетные боксы в Минске</nav>
-<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>ГОТОВЫЕ РЕШЕНИЯ · МИНСК</span></div><h1>Готовые <span>фуршетные боксы</span> в Минске</h1><p>{count} готовых боксов с закусками, салатами, пирогами и десертами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Добавляйте боксы в корзину прямо здесь — она общая для всего сайта.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
+<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>ГОТОВЫЕ РЕШЕНИЯ · МИНСК</span></div><h1>Готовые <span>фуршетные боксы</span> в Минске</h1><p>{count} готовых боксов с закусками, салатами, пирогами и десертами — их ещё называют фудбоксами или гастробоксами — для офиса, дня рождения или домашней встречи. У каждого бокса указаны состав, количество, вес и цена. Добавляйте боксы в корзину прямо здесь — она общая для всего сайта.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть боксы</strong><span aria-hidden="true">↓</span></a></div></div></div></section>
 <section class="boxes-guide" aria-labelledby="guide-10-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-10-title">Выбираете угощение на 10 человек?</h2><p>Посмотрите предложения для компании из 10 гостей — так проще подобрать боксы для встречи, дня рождения или праздника в офисе.</p><a class="secondary-link" href="/furshet-na-10-chelovek/"><strong>Посмотреть предложения на 10 человек</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа"><li><strong>Предзаказ:</strong> желательно за 2–3 дня. Срочный заказ — по согласованию.</li><li><strong>Доставка по Минску:</strong> в пределах МКАД — 20 BYN, от 500 BYN — бесплатно.</li><li><strong>Самовывоз:</strong> Минск, ул. Нововиленская, 51 — бесплатно.</li><li class="boxes-terms-more"><a href="/dostavka-i-oplata/">Доставка и оплата</a></li></ul></div></section>
 <section class="boxes-list" id="boxes" aria-label="Все готовые боксы"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
