@@ -90,6 +90,12 @@
       if (pieMod10 >= 2 && pieMod10 <= 4 && (pieMod100 < 12 || pieMod100 > 14)) return 'пирога';
       return 'пирогов';
     }
+    if (item.priceUnit === 'торт') {
+      var cakeTen = qty % 10, cakeHundred = qty % 100;
+      if (cakeTen === 1 && cakeHundred !== 11) return 'торт';
+      if (cakeTen >= 2 && cakeTen <= 4 && (cakeHundred < 12 || cakeHundred > 14)) return 'торта';
+      return 'тортов';
+    }
     if (item.priceUnit !== 'рулет') return 'шт.';
     var mod10 = qty % 10, mod100 = qty % 100;
     if (mod10 === 1 && mod100 !== 11) return 'рулет';

@@ -113,6 +113,9 @@ const ITEMS = [
   { id: "hot-chicken-pineapple", category: "hot", name: "Филе птицы в сыре с ананасом", weight: "250 г", price: 10.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-fillet-cheese-pineapple.jpg" },
   { id: "hot-french-meat", category: "hot", name: "Мясо по-французски (рулет в беконе)", weight: "1 кг", price: 80.00, priceUnit: "рулет", hideOrderLabel: true, img: "assets/hot/french-meat-bacon-roll-cut.jpg", images: ["assets/hot/french-meat-bacon-roll-cut.jpg", "assets/hot/french-meat-bacon-roll-whole.jpg"] },
   { id: "hot-chicken-cutlet", category: "hot", name: "Рубленая куриная котлета с сыром и сладким перцем", weight: "100 г", price: 6.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-cutlets-cheese-pepper.jpg" },
+  { id: "hot-chicken-roll", category: "hot", name: "Рулет из птицы с грибами и грецким орехом", weight: "1,2 кг", price: 65.00, priceUnit: "рулет", hideOrderLabel: true, img: "assets/hot/chicken-roll-mushrooms-walnut.jpg" },
+  { id: "hot-salmon-wellington", category: "hot", name: "Лосось Веллингтон", weight: "900 г", price: 90.00, hideOrderLabel: true, img: "assets/hot/salmon-wellington-slices.jpg", images: ["assets/hot/salmon-wellington-slices.jpg", "assets/hot/salmon-wellington-whole.jpg"] },
+  { id: "hot-liver-cake", category: "hot", name: "Печёночный торт", weight: "1,2 кг", price: 65.00, priceUnit: "торт", hideOrderLabel: true, img: "assets/hot/liver-cake.jpg", images: ["assets/hot/liver-cake.jpg", "assets/hot/liver-cake-side.jpg"] },
 
   // Десерты
   { id: "d1", category: "desserts", name: "Шоколадное пирожное", price: 55.00, priceUnit: "кг", orderLabel: "Заказ кратно 1 кг. Разрежем на нужное количество кусочков", img: "assets/boxes/chocolate-cakes-detail.jpg" },
