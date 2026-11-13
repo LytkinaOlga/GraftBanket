@@ -1042,6 +1042,4 @@ a { color: inherit; text-decoration: none; }
 .hot-box > .ready-box-gallery { aspect-ratio:4 / 3; }
 .hot-box .ready-box-gallery .card-badge, .hot-box .ready-box-gallery > .card-badge { font-size:13px; padding:7px 13px; top:14px; left:14px; }
 .hot-grid { margin-top:6px; }
-.hot-page-link { margin:-6px 0 12px; font-size:15px; }
-.hot-page-link a { font-weight:700; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:3px; text-underline-offset:3px; }
 .ready-box-gallery > .card-badge { position:absolute; z-index:3; }

@@ -156,14 +156,13 @@
       '<h3><span>' + esc(item.name) + '</span></h3>' + description + composition + order +
       '<div class="ready-box-order"><div class="ready-box-price"><strong>' + shortMoney(item.price) + '</strong><span>за 1 ' + esc(unit) + '</span></div><div class="ready-box-action" data-control="' + item.id + '"></div></div></div></article>';
   }
-  var HOT_PAGE = '/goryachee-na-prazdnichnyy-stol/';
   function renderCatalog() {
     if (!$('catalog')) return;
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
     $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip' + (c.chip ? ' chip-new' : '') + '" href="#cat-' + c.id + '">' + esc(c.chip || c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       if (category.id === 'hot') {
-        return '<section class="category-section" id="cat-hot"><h2>' + esc(category.title) + '</h2><p class="hot-page-link"><a href="' + HOT_PAGE + '">Горячее на праздничный стол — отдельная страница <span aria-hidden="true">→</span></a></p><div class="ready-grid hot-grid">' +
+        return '<section class="category-section" id="cat-hot"><h2>' + esc(category.title) + '</h2><div class="ready-grid hot-grid">' +
           products.filter(function (item) { return item.type === 'snack' && item.category === 'hot'; }).map(hotCard).join('') + '</div></section>';
       }
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
