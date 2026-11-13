@@ -109,11 +109,14 @@
     return '<div class="card-price">' + shortMoney(lineTotal(item, qty)) + ' / ' + qty + ' ' + itemUnit(item, qty) + '</div><small>' + shortMoney(item.price) + ' за 1 ' + singleUnit + '</small>';
   }
   // Фото карточки меню: одно фото или галерея, если у позиции несколько фото (item.images).
+  // Пути к фото в data.js относительные (assets/...) — на внутренних страницах делаем их от корня сайта.
+  function assetUrl(src) { return /^(\/|https?:|data:)/.test(src) ? src : '/' + src; }
   function cardPhoto(item) {
     var images = item.images && item.images.length > 1 ? item.images : null;
-    if (!images) return '<div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div>';
-    return '<div class="card-photo ready-box-gallery ready-box-gallery-cover" data-gallery aria-label="Фотографии: ' + esc(item.name) + '"><div class="ready-box-gallery-track">' +
-      images.map(function (src, i) { return '<picture><img src="' + src + '" alt="' + esc(item.name) + (i ? ', фото ' + (i + 1) : '') + '" loading="lazy"></picture>'; }).join('') +
+    var badge = item.badge ? '<span class="card-badge">' + esc(item.badge) + '</span>' : '';
+    if (!images) return '<div class="card-photo">' + badge + '<img src="' + assetUrl(item.img) + '" alt="' + esc(item.name) + '" loading="lazy"></div>';
+    return '<div class="card-photo ready-box-gallery ready-box-gallery-cover" data-gallery aria-label="Фотографии: ' + esc(item.name) + '">' + badge + '<div class="ready-box-gallery-track">' +
+      images.map(function (src, i) { return '<picture><img src="' + assetUrl(src) + '" alt="' + esc(item.name) + (i ? ', фото ' + (i + 1) : '') + '" loading="lazy"></picture>'; }).join('') +
       '</div><button class="gallery-arrow gallery-arrow-prev" type="button" data-gallery-prev aria-label="Предыдущее фото">←</button><button class="gallery-arrow gallery-arrow-next" type="button" data-gallery-next aria-label="Следующее фото">→</button>' +
       '<div class="gallery-dots" aria-hidden="true">' + images.map(function (_, i) { return '<span' + (i ? '' : ' class="active"') + '></span>'; }).join('') + '</div></div>';
   }
@@ -129,25 +132,36 @@
       }, { passive: true });
     });
   }
+  function simpleCard(item) {
+      var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
+      var orderText = item.orderLabel || (item.qtyStep === item.minQty
+        ? 'Заказ кратно ' + item.minQty + ' шт.'
+        : 'Минимум ' + item.minQty + ' шт., далее по ' + item.qtyStep + ' шт.');
+      var orderNote = item.hideOrderLabel ? '' : '<div class="quantity-rule">' + esc(orderText) + '</div>';
+      var weight = item.weight ? '<div class="card-weight">Вес: ' + esc(item.weight) + '</div>' : '';
+      return '<article class="card card-simple">' + cardPhoto(item) + '<div class="card-body"><div class="card-name">' + esc(item.name) + '</div>' + weight + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
+  }
   function renderCatalog() {
     if (!$('catalog')) return;
     var categories = CATEGORIES.filter(function (category) { return category.id !== 'sets' && !hiddenCategories.has(category.id); });
-    $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
+    $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip' + (c.chip ? ' chip-new' : '') + '" href="#cat-' + c.id + '">' + esc(c.chip || c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
-        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons', 'hot'].indexOf(item.category) !== -1) {
-          var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
-          var orderText = item.orderLabel || (item.qtyStep === item.minQty
-            ? 'Заказ кратно ' + item.minQty + ' шт.'
-            : 'Минимум ' + item.minQty + ' шт., далее по ' + item.qtyStep + ' шт.');
-          var orderNote = item.hideOrderLabel ? '' : '<div class="quantity-rule">' + esc(orderText) + '</div>';
-          var weight = item.weight ? '<div class="card-weight">Вес: ' + esc(item.weight) + '</div>' : '';
-          return '<article class="card card-simple">' + cardPhoto(item) + '<div class="card-body"><div class="card-name">' + esc(item.name) + '</div>' + weight + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
-        }
+        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons', 'hot'].indexOf(item.category) !== -1) return simpleCard(item);
         return '<article class="card"><div class="card-photo"><img src="' + item.img + '" alt="' + esc(item.name) + '" loading="lazy"></div><div class="card-body"><div class="card-name">' + esc(item.name) + '</div><div class="card-weight">' + esc(item.weight) + '</div><div class="card-desc">' + esc(item.description) + '</div><div class="card-composition">' + esc(item.composition) + '</div><div class="quantity-rule">От ' + item.minQty + ' шт., далее + ' + item.qtyStep + ' шт.</div><div class="card-footer"><div><div class="card-price">' + money(item.price) + ' / шт.</div><small>Минимум ' + money(item.price * item.minQty) + '</small></div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
       }).join('') + '</div></section>';
     }).join('');
     initGalleryDots($('catalog'));
+  }
+  // Карточки раздела меню на отдельной странице (например, /goryachee-na-prazdnichnyy-stol/): <div data-menu-category="hot">
+  function renderMenuBlocks() {
+    document.querySelectorAll('[data-menu-category]').forEach(function (box) {
+      var id = box.getAttribute('data-menu-category');
+      var cat = CATEGORIES.filter(function (c) { return c.id === id; })[0];
+      if (!cat) return;
+      var html = products.filter(function (item) { return item.type === 'snack' && item.category === id; }).map(simpleCard).join('');
+      if (html) { box.innerHTML = html; initGalleryDots(box); }
+    });
   }
   function renderCart() {
     var ids = Object.keys(cart);
@@ -442,5 +456,5 @@
       if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'social_click', { destination: link.href });
     });
   });
-  renderCatalog(); render(); updateMethod();
+  renderCatalog(); renderMenuBlocks(); render(); updateMethod();
 })();
