@@ -16,6 +16,7 @@ const CATEGORIES = [
   { id: "cheesecakes", title: "Чизкейки" },
   { id: "biscuit-rolls", title: "Закусочные рулеты" },
   { id: "pies", title: "Пироги" },
+  { id: "hot", title: "Горячее" },
   { id: "desserts", title: "Десерты" },
   { id: "sets", title: "Сеты" },
 ];
@@ -108,6 +109,11 @@ const ITEMS = [
   { id: "pie-chicken", category: "pies", name: "Пирог с курицей, сыром фета и томатами черри", weight: "1 кг", price: 45.00, priceUnit: "пирог", hideOrderLabel: true, img: "assets/boxes/chicken-feta-cherry-pie-whole.jpg" },
   { id: "pie-cabbage", category: "pies", name: "Пирог с капустой и грибами", weight: "1 кг", price: 40.00, priceUnit: "пирог", hideOrderLabel: true, img: "assets/boxes/cabbage-mushroom-pie-whole.jpg" },
 
+  // Горячее на праздничный стол (с 14.11.2026)
+  { id: "hot-chicken-pineapple", category: "hot", name: "Филе птицы в сыре с ананасом", weight: "250 г", price: 10.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-fillet-cheese-pineapple.jpg" },
+  { id: "hot-french-meat", category: "hot", name: "Мясо по-французски (рулет в беконе)", weight: "1 кг", price: 80.00, priceUnit: "рулет", hideOrderLabel: true, img: "assets/hot/french-meat-bacon-roll-cut.jpg" },
+  { id: "hot-chicken-cutlet", category: "hot", name: "Рубленая куриная котлета с сыром и сладким перцем", weight: "100 г", price: 6.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-cutlets-cheese-pepper.jpg" },
+
   // Десерты
   { id: "d1", category: "desserts", name: "Шоколадное пирожное", price: 55.00, priceUnit: "кг", orderLabel: "Заказ кратно 1 кг. Разрежем на нужное количество кусочков", img: "assets/boxes/chocolate-cakes-detail.jpg" },
   { id: "d2", category: "desserts", name: "Басский чизкейк", weight: "900 г", price: 70.00, priceUnit: "чизкейк", hideOrderLabel: true, img: "assets/desserts/basque-cheesecake.jpg" },
@@ -127,7 +133,7 @@ const DEMO_RULES = {
   tartlets: [4, 4], sandwiches: [6, 6], salads: [9, 9],
   burgers: [6, 6], quiches: [6, 6], cheesecakes: [4, 4],
   "biscuit-rolls": [1, 1], desserts: [1, 1],
-  napoleons: [18, 18], pies: [1, 1]
+  napoleons: [18, 18], pies: [1, 1], hot: [1, 1]
 };
 
 ITEMS.push(

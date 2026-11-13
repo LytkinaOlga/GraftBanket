@@ -108,7 +108,7 @@
     $('categoryNav').innerHTML = '<a class="chip" href="#ready-boxes">Готовые боксы</a>' + categories.map(function (c) { return '<a class="chip" href="#cat-' + c.id + '">' + esc(c.title) + '</a>'; }).join('');
     $('catalog').innerHTML = categories.map(function (category) {
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
-        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons'].indexOf(item.category) !== -1) {
+        if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons', 'hot'].indexOf(item.category) !== -1) {
           var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
           var orderText = item.orderLabel || (item.qtyStep === item.minQty
             ? 'Заказ кратно ' + item.minQty + ' шт.'
