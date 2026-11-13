@@ -258,6 +258,10 @@ a { color: inherit; text-decoration: none; }
 .gallery-dots { position:absolute; left:50%; bottom:14px; z-index:2; display:flex; gap:7px; padding:7px 9px; border-radius:999px; background:rgba(255,255,255,.88); transform:translateX(-50%); }
 .gallery-dots span { width:7px; height:7px; border-radius:50%; background:#aaa; transition:background .2s,transform .2s; }
 .gallery-dots span.active { background:var(--text); transform:scale(1.15); }
+.card-photo.ready-box-gallery .gallery-arrow { width:34px; height:34px; font-size:16px; }
+.card-photo.ready-box-gallery .gallery-arrow-prev { left:8px; }
+.card-photo.ready-box-gallery .gallery-arrow-next { right:8px; }
+.card-photo.ready-box-gallery .gallery-dots { bottom:8px; }
 .ready-box-content { display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; min-width:0; padding:20px 0; }
 .ready-box-kicker { color:var(--text); font-size:11px; font-weight:750; letter-spacing:.02em; text-transform:uppercase; }
 .ready-box-weight { display:inline-block; padding:4px 7px 3px; background:var(--accent); line-height:1; }

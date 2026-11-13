@@ -111,7 +111,7 @@ const ITEMS = [
 
   // Горячее на праздничный стол (с 14.11.2026)
   { id: "hot-chicken-pineapple", category: "hot", name: "Филе птицы в сыре с ананасом", weight: "250 г", price: 10.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-fillet-cheese-pineapple.jpg" },
-  { id: "hot-french-meat", category: "hot", name: "Мясо по-французски (рулет в беконе)", weight: "1 кг", price: 80.00, priceUnit: "рулет", hideOrderLabel: true, img: "assets/hot/french-meat-bacon-roll-cut.jpg" },
+  { id: "hot-french-meat", category: "hot", name: "Мясо по-французски (рулет в беконе)", weight: "1 кг", price: 80.00, priceUnit: "рулет", hideOrderLabel: true, img: "assets/hot/french-meat-bacon-roll-cut.jpg", images: ["assets/hot/french-meat-bacon-roll-cut.jpg", "assets/hot/french-meat-bacon-roll-whole.jpg"] },
   { id: "hot-chicken-cutlet", category: "hot", name: "Рубленая куриная котлета с сыром и сладким перцем", weight: "100 г", price: 6.00, orderLabel: "Заказ от 1 шт.", img: "assets/hot/chicken-cutlets-cheese-pepper.jpg" },
 
   // Десерты
