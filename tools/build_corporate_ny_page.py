@@ -41,6 +41,11 @@ SETS = [
 ]
 
 FAQ = [
+    ("Сколько стоит новогодний корпоратив в офисе?",
+     "Готовые наборы: на 10 человек — 380 BYN, на 15 — 629 BYN, на 20 — 952 BYN, на 30 — 1 424 BYN, то есть примерно 38–48 BYN на человека. "
+     "Наборы на 15, 20 и 30 человек — со скидкой 15–20% и бесплатной доставкой по Минску."),
+    ("Где провести новогодний корпоратив, если не в ресторане?",
+     "В своём офисе: не нужно бронировать зал и подстраиваться под меню ресторана. Мы привезём готовые фуршетные боксы к нужному времени — их можно сразу ставить на стол, а посуду и приборы дадим по запросу."),
     ("До какого числа можно заказать?",
      f"Новогодние заказы принимаем до {LAST_DAY}. Заказ на 20–30 человек лучше оформить заранее — в декабре даты быстро заканчиваются."),
     ("Можно поменять боксы в наборе или собрать свой?",
@@ -125,9 +130,16 @@ def build():
     sets = resolve()
     e = html.escape
     url = BASE + PAGE_PATH
-    title = "Новогодний корпоратив в офис — фуршетные наборы с доставкой в Минске | Draft Catering"
-    description = (f"Новогодний стол для офиса: готовые фуршетные наборы на 10, 15, 20 и 30 человек от {min(s['price'] for s in sets)} BYN, "
-                   f"горячее, посуда и приборы по запросу. Доставка по Минску, заказы до {LAST_DAY}.")
+    # Wordstat Минск 14.11: «новогодний корпоратив минск» 591 (в основном рестораны), «где провести новогодний корпоратив» 34+45,
+    # «заказать новогодний корпоратив» 16, «новогодний корпоратив минск цена» 21, «еда на корпоратив» 9; «…в офисе» — 2.
+    title = "Новогодний корпоратив в Минске — фуршет в офис, цены на 10–30 человек | Draft Catering"
+    per = min(s['price'] / s['guests'] for s in sets)
+    # Price answer is built from the current sets so it never drifts from js/data.js.
+    FAQ[0] = (FAQ[0][0], "Готовые наборы: " + ", ".join(f'на {s["guests"]} человек — {s["price"]:,} BYN'.replace(",", "\u00a0") for s in sets)
+              + f", то есть примерно {money(per)}–{money(max(s['price'] / s['guests'] for s in sets))} BYN на человека. "
+              "Чем больше набор, тем больше скидка; от 500 BYN доставка по Минску бесплатная.")
+    description = (f"Новогодний корпоратив в Минске недорого: еда на корпоратив в офис — фуршетные наборы на 10–30 человек от {money(per)} BYN на человека, "
+                   f"скидка до 20%. Доставка, заказы до {LAST_DAY}.")
     graph = [
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE + "/"},
@@ -160,7 +172,7 @@ def build():
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → Новогодний корпоратив в офис</nav>
-<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>НОВЫЙ ГОД · ДЛЯ ОФИСА · МИНСК</span></div><h1>Новогодний корпоратив <span>в офис</span></h1><p>Готовый праздничный стол для команды: фуршетные наборы на 10, 15, 20 и 30 человек — с весом на гостя и ценой на человека. Привезём к нужному времени, боксы можно сразу ставить на стол. Заказы принимаем до {LAST_DAY}.</p><div class="boxes-hero-actions"><a class="primary-link" href="#sets-compare"><strong>Выбрать набор</strong><span aria-hidden="true">↓</span></a><a class="secondary-link" href="tel:+375295704749"><strong>+375 29 570-47-49</strong><span aria-hidden="true">→</span></a></div></div></div></section>
+<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>НОВЫЙ ГОД · ДЛЯ ОФИСА · МИНСК</span></div><h1>Новогодний корпоратив <span>в офис</span> в Минске</h1><p>Где провести новогодний корпоратив? В своём офисе — а еду на корпоратив привезём мы. Готовый праздничный стол для команды: фуршетные наборы на 10, 15, 20 и 30 человек — с весом на гостя и ценой на человека. Привезём к нужному времени, боксы можно сразу ставить на стол. Заказы принимаем до {LAST_DAY}.</p><div class="boxes-hero-actions"><a class="primary-link" href="#sets-compare"><strong>Выбрать набор</strong><span aria-hidden="true">↓</span></a><a class="secondary-link" href="tel:+375295704749"><strong>+375 29 570-47-49</strong><span aria-hidden="true">→</span></a></div></div></div></section>
 <section class="boxes-guide" aria-labelledby="guide-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-title">Как это работает</h2><p>Выберите набор под число гостей, добавьте горячее или отдельные боксы и оформите заявку на сайте. Администратор перезвонит, подтвердит состав, время доставки и способ оплаты.</p></div><ul class="boxes-terms" aria-label="Условия заказа">{terms}</ul></div></section>
 {compare_html(sets)}<section class="boxes-list" id="sets" aria-label="Состав наборов"><div class="wrap"><div class="ready-grid">
 {cards}</div></div></section>
