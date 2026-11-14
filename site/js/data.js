@@ -175,6 +175,14 @@ ITEMS.push(
   { id: "set10-dessert", type: "set", name: "Набор №3 «Закуски, пирог и десерт» на 10 человек", weight: "4 бокса · 4 280 г", price: 310, oldPrice: 330, img: "assets/boxes/bruschetta-profiterole-roll-cover.jpg", url: "/furshet-na-10-chelovek/#set-3", minQty: 1, qtyStep: 1 }
 );
 
+// Новогодние наборы для офиса (страница /novogodniy-korporativ-v-ofis/, собирается tools/build_corporate_ny_page.py).
+// oldPrice — сумма боксов набора по ценам сайта.
+ITEMS.push(
+  { id: "setny-15", type: "set", name: "Новогодний набор на 15 человек", weight: "7 боксов · 6 770 г", price: 629, oldPrice: 740, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-15", minQty: 1, qtyStep: 1 },
+  { id: "setny-20", type: "set", name: "Новогодний набор на 20 человек", weight: "9 боксов · 10 380 г", price: 952, oldPrice: 1120, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-20", minQty: 1, qtyStep: 1 },
+  { id: "setny-30", type: "set", name: "Новогодний набор на 30 человек", weight: "18 боксов · 18 005 г", price: 1424, oldPrice: 1780, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-30", minQty: 1, qtyStep: 1 }
+);
+
 ITEMS.forEach(function (item) {
   if (!item.type) item.type = item.category === "sets" ? "legacy-placeholder" : "snack";
   if (item.type === "snack") {

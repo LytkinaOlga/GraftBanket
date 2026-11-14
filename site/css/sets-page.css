@@ -26,6 +26,12 @@
 .sets-compare h2 { margin:0; text-align:center; font-size:clamp(32px,4.4vw,60px); line-height:1.05; font-weight:800; letter-spacing:-.045em; }
 .compare-lead { margin:12px 0 34px; text-align:center; color:var(--text-muted); font-size:clamp(16px,1.6vw,22px); }
 .compare-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.compare-grid:has(> :nth-child(4)) { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@media (min-width:1180px) {
+  .compare-grid:has(> :nth-child(4)) { grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+  .compare-grid:has(> :nth-child(4)) .compare-card { padding:26px 18px 20px; }
+}
+.compare-link { white-space:nowrap; }
 .compare-card { display:flex; flex-direction:column; padding:30px 26px 24px; background:var(--bg); border:1px solid #ebe8e1; border-radius:14px; }
 .compare-card::before { content:""; width:56px; height:5px; margin-bottom:24px; border-radius:3px; background:var(--accent); }
 .compare-card h3 { margin:0; font-size:22px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
