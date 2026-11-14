@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build occasion pages with real boxes and the shared cart:
     /novogodniy-furshet/, /keytering-na-korporativ/, /keytering-na-den-rozhdeniya/, /furshet-v-ofis-na-den-rozhdeniya/,
-    /dostavka-zakusok/ (закуски на заказ), /furshet-na-zakaz/, /tartaletki-na-zakaz/
+    /dostavka-zakusok/ (закуски на заказ), /furshet-na-zakaz/, /tartaletki-na-zakaz/, /brusketty-na-zakaz/, /keytering-dlya-ofisa/
 
 Boxes (photos, composition, weight, price, "add to cart") are copied from the home page,
 like on /gotovye-furshetnye-boksy/, so run this after any change to the ready boxes:
@@ -124,7 +124,7 @@ PAGES = [
             FAQ_DELIVERY,
         ],
         "howto": "Добавьте боксы в корзину на этой странице или соберите набор из любимых закусок и десертов в <a href=\"/#constructor\">меню</a>. Не забудьте отметить «У меня день рождения», чтобы получить скидку.",
-        "links": [("/goryachee-na-prazdnichnyy-stol/", "Горячее на праздничный стол"), ("/furshet-v-ofis-na-den-rozhdeniya/", "В офис на день рождения"), ("/gotovye-furshetnye-boksy/", "Готовые боксы"), ("/furshet-na-10-chelovek/", "На 10 человек"), ("/detskiy-keytering/", "Детский кейтеринг"),
+        "links": [("/goryachee-na-prazdnichnyy-stol/", "Горячее на праздничный стол"), ("/furshet-v-ofis-na-den-rozhdeniya/", "В офис на день рождения"), ("/gotovye-furshetnye-boksy/", "Готовые боксы"), ("/furshet-na-10-chelovek/", "На 10 человек"),
                   ("/kanape-na-zakaz/", "Канапе"), ("/brusketty-na-zakaz/", "Брускетты"), ("/tartaletki-na-zakaz/", "Тарталетки"),
                   ("/novogodniy-furshet/", "Новогодний фуршет"), ("/keytering-dlya-ofisa/", "Для офиса"), ("/dostavka-i-oplata/", "Доставка и оплата")],
     },
@@ -261,6 +261,67 @@ PAGES = [
                   ("/gotovye-furshetnye-boksy/", "Готовые боксы"), ("/furshet-na-zakaz/", "Фуршет на заказ"), ("/keytering-dlya-ofisa/", "Для офиса и корпоратива"),
                   ("/keytering-na-den-rozhdeniya/", "На день рождения"), ("/dostavka-i-oplata/", "Доставка и оплата")],
     },
+    {
+        # Was a placeholder page; now the real bruschetta boxes with the shared cart.
+        "path": "/brusketty-na-zakaz/", "crumb": "Брускетты на заказ в Минске",
+        "title": "Брускетты на заказ в Минске — боксы с лососем, креветкой и ростбифом | Draft Catering",
+        "description": "Заказать брускетты в Минске: готовые боксы от {min} BYN и брускетты поштучно — с лососем, креветкой, ростбифом, утиным риетом, курицей и тартарами. Доставка по Минску и самовывоз.",
+        "overline": "ПОРЦИОННЫЕ ЗАКУСКИ · МИНСК", "h1": 'Брускетты <span>на заказ</span> в Минске',
+        "intro": "Брускетты — одна из самых удобных закусок для фуршета: их легко брать руками, они хорошо выглядят на столе и подходят и к игристому, и к крепким напиткам. Ниже — готовые боксы с брускеттами и брускетты поштучно: состав, вес и цена указаны на каждой карточке, добавить в корзину можно прямо здесь.",
+        "guide_title": "Нужны отдельные вкусы?", "guide_text": "Брускетты с разными начинками продаются и поштучно — они ниже на этой странице. Остальные закуски, салаты, горячее и десерты — в полном меню.",
+        "guide_link": ("/#constructor", "Полное меню"),
+        "terms": ['<li><strong>Готовые боксы:</strong> состав, вес и цена — на карточке.</li>',
+                  '<li><strong>Предзаказ:</strong> желательно за 2–3 дня.</li>',
+                  '<li><strong>Поштучно:</strong> брускетты разных вкусов — в <a href="/#constructor">полном меню</a>.</li>'],
+        "boxes": ["box-bruschetta-salmon-shrimp", "box-bruschetta-profiterole-roll", "box-croissant-bruschetta-canape"],
+        "pieces": ("bruschette", "Брускетты поштучно", "Соберите свой набор из отдельных брускетт — минимальное количество и шаг указаны на карточке. Всё попадёт в ту же корзину."),
+        "list_name": "Боксы с брускеттами", "for": "с брускеттами", "faq_title": "Вопросы о заказе брускетт",
+        "faq": [
+            ("Какие брускетты можно заказать?",
+             "Готовый бокс брускетт с лососем и креветкой, боксы, где брускетты сочетаются с профитролями, шпинатным рулетом, мини-круассанами и канапе, а также брускетты поштучно: с лососем, креветкой, ростбифом, утиным риетом, курицей, тартарами и другими начинками. Состав и вес — на карточках."),
+            ("Можно заказать брускетты поштучно?",
+             "Да, отдельные брускетты есть в <a href=\"/#constructor\">полном меню</a> — можно выбрать несколько вкусов или добавить их к готовому боксу."),
+            ("Можно заказать брускетты вместе с канапе и тарталетками?",
+             "Да. Корзина общая для всего сайта: добавьте боксы с брускеттами, <a href=\"/kanape-na-zakaz/\">канапе</a> или <a href=\"/tartaletki-na-zakaz/\">тарталетки</a> — всё попадёт в одну заявку."),
+            FAQ_GUESTS, FAQ_DELIVERY,
+        ],
+        "howto": "Добавьте боксы с брускеттами в корзину или выберите отдельные вкусы в <a href=\"/#constructor\">полном меню</a>, затем отправьте заявку.",
+        "links": [("/", "Полное меню"), ("/kanape-na-zakaz/", "Канапе"), ("/tartaletki-na-zakaz/", "Тарталетки"), ("/dostavka-zakusok/", "Закуски на заказ"),
+                  ("/gotovye-furshetnye-boksy/", "Готовые боксы"), ("/furshet-na-zakaz/", "Фуршет на заказ"), ("/novogodniy-korporativ-v-ofis/", "Новогодний корпоратив в офис"),
+                  ("/keytering-na-den-rozhdeniya/", "На день рождения"), ("/dostavka-i-oplata/", "Доставка и оплата")],
+    },
+    {
+        # Same boxes and terms as /keytering-na-korporativ/, wording for everyday office orders (own title/H1/intro, not a duplicate).
+        "path": "/keytering-dlya-ofisa/", "crumb": "Кейтеринг для офиса в Минске",
+        "title": "Кейтеринг для офиса в Минске — фуршетные боксы с доставкой в офис | Draft Catering",
+        "description": "Кейтеринг для офиса в Минске: {n} готовых фуршетных боксов от {min} BYN для встреч, переговоров и праздников команды. Безналичный расчёт для компаний, доставка в офис.",
+        "overline": "В ОФИС · МИНСК", "h1": 'Кейтеринг <span>для офиса</span> в Минске',
+        "intro": "Фуршетные боксы для офиса: на день рождения коллеги, деловую встречу, переговоры, презентацию или праздник команды. Закуски приезжают красиво разложенными — боксы можно сразу поставить в переговорной или на кухне. Цены и вес указаны заранее, поэтому бюджет легко посчитать до заявки.",
+        "guide_title": "Новогодний корпоратив в офисе?", "guide_text": "Готовые наборы на 10, 15, 20 и 30 человек с весом на гостя — скидка до 20%.",
+        "guide_link": ("/novogodniy-korporativ-v-ofis/", "Наборы для офиса"),
+        "terms": ['<li><strong>Для юридических лиц:</strong> безналичный расчёт, документы согласуются при подтверждении заказа.</li>',
+                  '<li><strong>Предзаказ:</strong> желательно за 2–3 дня; срочный заказ — по согласованию.</li>',
+                  '<li><strong>Посуда и приборы:</strong> по запросу, по согласованию.</li>'],
+        "boxes": ["box-salmon-crab", "box-sparkling", "box-croissant-bruschetta-canape", "box-bruschetta-salmon-shrimp", "box-mini-tartlets",
+                  "box-napoleons-big", "box-assorted-rolls", "box-croissants", "box-caesar", "box-chicken-pie",
+                  "box-profiteroles", "box-chocolate-cakes"],
+        "list_name": "Боксы для офиса", "for": "для офиса", "faq_title": "Вопросы о заказе в офис",
+        "faq": [
+            ("Работаете ли вы с юридическими лицами и по безналичному расчёту?",
+             f"Да. Принимаем заказы от компаний и организаций, оплата по безналичному расчёту. Реквизиты и необходимые документы согласуются с администратором при подтверждении заказа — напишите об этом в комментарии к заявке или позвоните по номеру {PHONE}."),
+            ("Что заказать в офис на день рождения коллеги?",
+             "Удобнее всего готовые боксы: их не нужно раскладывать, а вес и цена указаны заранее. Подборка под этот повод — на странице <a href=\"/furshet-v-ofis-na-den-rozhdeniya/\">«Фуршет в офис на день рождения»</a>."),
+            FAQ_GUESTS, FAQ_TABLEWARE,
+            ("За сколько дней оформить заказ?",
+             "Желательно за 2–3 дня; перед праздниками — раньше. Срочный заказ возможен по согласованию: администратор проверит, что мы успеем приготовить к нужному времени."),
+            FAQ_COMBINE, FAQ_DELIVERY,
+        ],
+        "howto": "Добавьте боксы в корзину на этой странице или соберите меню из отдельных позиций в <a href=\"/#constructor\">полном меню</a>. В заявке укажите число участников, дату, время, адрес офиса и что нужен безналичный расчёт.",
+        "links": [("/", "Полное меню"), ("/novogodniy-korporativ-v-ofis/", "Новогодний корпоратив в офис"), ("/keytering-na-korporativ/", "На корпоратив"),
+                  ("/furshet-v-ofis-na-den-rozhdeniya/", "В офис на день рождения"), ("/gotovye-furshetnye-boksy/", "Готовые боксы"),
+                  ("/furshet-na-10-chelovek/", "На 10 человек"), ("/furshet-na-20-chelovek/", "На 20 человек"), ("/furshet-na-30-chelovek/", "На 30 человек"),
+                  ("/goryachee-na-prazdnichnyy-stol/", "Горячее"), ("/kanape-na-zakaz/", "Канапе"), ("/dostavka-i-oplata/", "Доставка и оплата")],
+    },
 ]
 
 
@@ -308,6 +369,9 @@ def build_page(cfg, articles, shell, total):
     links = ''.join(f'<a href="{href}">{e(label)}</a>' for href, label in cfg["links"])
     guide_href, guide_label = cfg["guide_link"]
 
+    pieces = cfg.get("pieces")  # (menu category id, title, text): items sold one by one, rendered by js/app.js
+    pieces_html = (f'<section class="section" id="pieces" aria-labelledby="pieces-title"><div class="wrap"><h2 id="pieces-title">{e(pieces[1])}</h2>'
+                   f'<p class="occasion-note">{pieces[2]}</p><div class="grid" data-menu-category="{pieces[0]}"></div></div></section>\n') if pieces else ''
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 {metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104b"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}"><link rel="stylesheet" href="/css/occasion-pages.css?v={asset_version('css/occasion-pages.css')}">
 <script type="application/ld+json">{ld}</script></head><body>
@@ -317,7 +381,7 @@ def build_page(cfg, articles, shell, total):
 <section class="boxes-guide" aria-labelledby="guide-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-title">{e(cfg["guide_title"])}</h2><p>{e(cfg["guide_text"])}</p><a class="secondary-link" href="{guide_href}"><strong>{e(guide_label)}</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа">{terms}</ul></div></section>
 <section class="boxes-list" id="boxes" aria-label="{e(cfg["list_name"])}"><div class="wrap"><div class="ready-grid">
 {cards}</div><aside class="occasion-more" aria-labelledby="more-title"><div><h2 id="more-title">Это не всё меню</h2><p>Здесь {len(boxes)} боксов {e(cfg["for"])}. Ещё {total - len(boxes)} готовых боксов — на отдельной странице, а в меню можно собрать заказ из отдельных закусок, салатов, пирогов и десертов. Корзина общая: всё попадёт в одну заявку.</p></div><div class="occasion-more-actions"><a class="primary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a><a class="secondary-link" href="/#constructor"><strong>Всё меню</strong><span aria-hidden="true">→</span></a></div></aside></div></section>
-{reviews_html('wrap')}
+{pieces_html}{reviews_html('wrap')}
 {faq_html}
 <section class="section"><div class="wrap text-grid"><h2>Как оформить заказ</h2><p>{cfg["howto"]}</p><p>Это заявка, а не автоматическое подтверждение: администратор свяжется с вами, подтвердит состав, дату, время и итоговую стоимость. Вопросы — по номеру {PHONE}.</p></div></section>
 <section class="section facts"><div class="wrap"><h2>Другие категории и услуги</h2><div class="links">{links}</div></div></section></main>
