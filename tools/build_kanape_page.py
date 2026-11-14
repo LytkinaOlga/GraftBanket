@@ -12,7 +12,7 @@ import json
 import re
 from datetime import date
 
-from build_boxes_page import BASE, SITE, control_id, home_shell, split_articles, text
+from build_boxes_page import offer_terms, BASE, SITE, control_id, home_shell, split_articles, text
 
 PAGE_PATH = "/kanape-na-zakaz/"
 MAIN_BOX = "box-canapes"
@@ -101,7 +101,7 @@ def build():
         {"@type": "Product", "@id": url + "#box", "name": f"Бокс канапе — {count} шт.",
          "description": f'{box["pieces"]}, {box["weight"]}: ' + '; '.join(box["items"]),
          "image": [BASE + src for src, _ in box["photos"]], "brand": {"@type": "Brand", "name": "Draft Catering"},
-         "offers": {"@type": "Offer", "price": f'{box["price"]:.2f}', "priceCurrency": "BYN",
+         "offers": {"@type": "Offer", "price": f'{box["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(box["price"]),
                     "availability": "https://schema.org/InStock", "url": url + "#box",
                     "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}},
         {"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [

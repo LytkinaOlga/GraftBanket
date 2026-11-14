@@ -16,6 +16,23 @@ from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent / "site"
 BASE = "https://www.draftcatering.by"
+
+
+# Delivery and returns for Product/Offer markup (Google "Merchant listings": shippingDetails, hasMerchantReturnPolicy).
+# Same terms as /dostavka-i-oplata/: Minsk within МКАД 20 BYN, free from 500 BYN; food is not returnable.
+def offer_terms(price):
+    return {
+        "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {"@type": "MonetaryAmount", "value": "0.00" if price >= 500 else "20.00", "currency": "BYN"},
+            "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "BY", "addressRegion": "Минск"},
+            "deliveryTime": {"@type": "ShippingDeliveryTime",
+                             "handlingTime": {"@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY"},
+                             "transitTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 0, "unitCode": "DAY"}},
+        },
+        "hasMerchantReturnPolicy": {"@type": "MerchantReturnPolicy", "applicableCountry": "BY",
+                                    "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"},
+    }
 PAGE_PATH = "/gotovye-furshetnye-boksy/"
 END = '        </article>\n'
 
@@ -231,7 +248,7 @@ def build():
              {"@type": "ListItem", "position": i + 1, "item": {
                  "@type": "Product", "@id": url + "#" + b["id"], "name": b["name"], "description": b["description"],
                  "image": b["images"], "brand": {"@type": "Brand", "name": "Draft Catering"},
-                 "offers": {"@type": "Offer", "price": f'{b["price"]:.2f}', "priceCurrency": "BYN",
+                 "offers": {"@type": "Offer", "price": f'{b["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(b["price"]),
                             "availability": "https://schema.org/InStock", "url": url + "#" + b["id"],
                             "areaServed": {"@type": "City", "name": "Минск"},
                             "seller": {"@id": BASE + "/#business"}}}}

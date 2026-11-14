@@ -14,7 +14,7 @@ import json
 import re
 from datetime import date
 
-from build_boxes_page import (BASE, SITE, asset_version, box_data, control_id, ensure_home_ids,
+from build_boxes_page import (offer_terms, BASE, SITE, asset_version, box_data, control_id, ensure_home_ids,
                               home_shell, reviews_html, text, to_seo_card)
 
 PHONE = '<a href="tel:+375295704749">+375 29 570-47-49</a>'
@@ -355,7 +355,7 @@ def build_page(cfg, articles, shell, total):
              {"@type": "ListItem", "position": i + 1, "item": {
                  "@type": "Product", "@id": BASE + "/gotovye-furshetnye-boksy/#" + b["id"], "name": b["name"],
                  "description": b["description"], "image": b["images"], "brand": {"@type": "Brand", "name": "Draft Catering"},
-                 "offers": {"@type": "Offer", "price": f'{b["price"]:.2f}', "priceCurrency": "BYN",
+                 "offers": {"@type": "Offer", "price": f'{b["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(b["price"]),
                             "availability": "https://schema.org/InStock", "url": url + "#" + b["id"],
                             "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}}}
              for i, b in enumerate(boxes)]},

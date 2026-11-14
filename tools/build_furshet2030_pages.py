@@ -12,7 +12,7 @@ import json
 import re
 from datetime import date
 
-from build_boxes_page import BASE, SITE, asset_version, home_shell, reviews_html, text
+from build_boxes_page import offer_terms, BASE, SITE, asset_version, home_shell, reviews_html, text
 from build_corporate_ny_page import PHONE, money, resolve, set_card
 from build_furshet10_page import grams
 
@@ -66,7 +66,7 @@ def build_page(cfg, s):
         {"@type": "Product", "@id": url + "#set", "name": cfg["card_title"],
          "description": f'{s["weight"]} г, {s["per_guest"]} г на гостя: ' + '; '.join(i["name"] for i in s["rows"]),
          "image": [BASE + i["img"] for i in s["items"]], "brand": {"@type": "Brand", "name": "Draft Catering"},
-         "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN", "availability": "https://schema.org/InStock",
+         "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(s["price"]), "availability": "https://schema.org/InStock",
                     "url": url + "#set", "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}},
         {"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": text(a)}} for q, a in faq]},

@@ -14,7 +14,7 @@ import json
 import re
 from datetime import date
 
-from build_boxes_page import BASE, FAQ as BOXES_FAQ, SITE, control_id, home_shell, split_articles, text
+from build_boxes_page import offer_terms, BASE, FAQ as BOXES_FAQ, SITE, control_id, home_shell, split_articles, text
 
 PAGE_PATH = "/furshet-na-10-chelovek/"
 GUESTS = 10
@@ -177,7 +177,7 @@ def build():
                  "@type": "Product", "@id": f"{url}#set-{n}", "name": f'Набор №{n} «{s["title"]}» на {GUESTS} человек',
                  "description": f'{s["weight"]} г, {s["per_guest"]} г на гостя: ' + '; '.join(i["name"] for i in s["items"]),
                  "image": [BASE + i["img"] for i in s["items"]], "brand": {"@type": "Brand", "name": "Draft Catering"},
-                 "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN",
+                 "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(s["price"]),
                             "availability": "https://schema.org/InStock", "url": f"{url}#set-{n}",
                             "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}}}
              for n, s in enumerate(sets, 1)]},

@@ -13,7 +13,7 @@ import re
 import subprocess
 from datetime import date
 
-from build_boxes_page import BASE, SITE, asset_version, home_shell, reviews_html, text
+from build_boxes_page import offer_terms, BASE, SITE, asset_version, home_shell, reviews_html, text
 from build_occasion_pages import BIRTHDAY, FAQ_DELIVERY, GIFT, NO_STACK, PHONE, TERM_DELIVERY, TERM_MORE
 
 PAGE_PATH = "/goryachee-na-prazdnichnyy-stol/"
@@ -60,7 +60,7 @@ def build():
              {"@type": "ListItem", "position": n + 1, "item": {
                  "@type": "Product", "@id": url + "#" + i["id"], "name": i["name"], "description": f'{i["name"]}, {i["weight"]}',
                  "image": [BASE + "/" + src for src in i["images"]], "brand": {"@type": "Brand", "name": "Draft Catering"},
-                 "offers": {"@type": "Offer", "price": f'{i["price"]:.2f}', "priceCurrency": "BYN", "availability": "https://schema.org/InStock",
+                 "offers": {"@type": "Offer", "price": f'{i["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(i["price"]), "availability": "https://schema.org/InStock",
                             "url": url + "#" + i["id"], "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}}}
              for n, i in enumerate(items)]},
         {"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [

@@ -13,7 +13,7 @@ import json
 import re
 from datetime import date
 
-from build_boxes_page import BASE, SITE, asset_version, home_shell, reviews_html, text
+from build_boxes_page import offer_terms, BASE, SITE, asset_version, home_shell, reviews_html, text
 from build_furshet10_page import DELIVERY_PRICE, FREE_DELIVERY_FROM, cart_prices, grams, home_boxes, plural
 
 PAGE_PATH = "/novogodniy-korporativ-v-ofis/"
@@ -150,7 +150,7 @@ def build():
                  "@type": "Product", "@id": f'{url}#{s["anchor"]}', "name": f'Новогодний набор на {s["guests"]} человек',
                  "description": f'{s["weight"]} г, {s["per_guest"]} г на гостя: ' + '; '.join(i["name"] for i in s["items"]),
                  "image": [BASE + i["img"] for i in s["items"]], "brand": {"@type": "Brand", "name": "Draft Catering"},
-                 "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN", "availability": "https://schema.org/InStock",
+                 "offers": {"@type": "Offer", "price": f'{s["price"]:.2f}', "priceCurrency": "BYN", **offer_terms(s["price"]), "availability": "https://schema.org/InStock",
                             "url": f'{url}#{s["anchor"]}', "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}}}
              for n, s in enumerate(sets, 1)]},
         {"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
