@@ -389,6 +389,33 @@
   document.querySelectorAll('[data-close-search]').forEach(function (button) { button.addEventListener('click', closeSearch); });
   $('menuToggle').addEventListener('click', toggleMenu);
   $('mobileMenu').querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
+  // Desktop dropdowns: hover/focus open them via CSS; a click toggles them for touch screens and keyboards.
+  var navItems = Array.from(document.querySelectorAll('.header-nav .nav-item'));
+  function closeNav(except) {
+    navItems.forEach(function (item) {
+      if (item === except) return;
+      item.classList.remove('is-open');
+      item.querySelector('.nav-trigger').setAttribute('aria-expanded', 'false');
+    });
+  }
+  navItems.forEach(function (item) {
+    var trigger = item.querySelector('.nav-trigger');
+    trigger.addEventListener('click', function (event) {
+      event.stopPropagation();
+      var open = !item.classList.contains('is-open');
+      closeNav(item);
+      item.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (event) { if (!event.target.closest('.header-nav')) closeNav(); });
+  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeNav(); });
+  // Which navigation links people use (Metrika goal "nav_click").
+  document.querySelectorAll('.header-nav a, #mobileMenu a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'nav_click', { link: link.getAttribute('href'), menu: link.closest('#mobileMenu') ? 'mobile' : 'desktop' });
+    });
+  });
   var siteHeader = document.querySelector('.site-header');
   var lastScrollY = window.scrollY;
   function updateMobileHeader() {
