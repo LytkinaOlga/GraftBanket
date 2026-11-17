@@ -92,7 +92,9 @@ module.exports = async function handler(req, res) {
     const time = clean(body.eventTime, 5);
     const payment = clean(body.payment, 8);
     const guests = Number.isInteger(body.guests) && body.guests >= 1 && body.guests <= 1000 ? body.guests : null;
-    const method = clean(body.fulfillment, 12), address = clean(body.address, 200);
+    const method = clean(body.fulfillment, 12);
+    // The address field is only shown for delivery; a value typed before switching to pickup must not reach the admins.
+    const address = method === 'pickup' ? '' : clean(body.address, 200);
     const comment = clean(body.comment, 500), nick = clean(body.telegramNick, 80);
     const digits = phone.replace(/\D/g, '');
     if (name.length < 2 || digits.length < 10 || digits.length > 15 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time) || !['cash', 'card'].includes(payment) || !['pickup', 'minsk', 'other'].includes(method) || (method !== 'pickup' && address.length < 3)) return res.status(400).json({ error: 'Invalid contact details' });

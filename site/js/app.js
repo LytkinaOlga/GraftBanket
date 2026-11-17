@@ -444,7 +444,7 @@
     var payload = {
       name: $('customerName').value.trim(), phone: $('phone').value.trim(), telegramNick: $('tgNick').value.trim(),
       eventDate: $('eventDate').value, eventTime: $('eventTime').value, payment: paymentMethod(), guests: $('guests').value.trim() ? +$('guests').value.trim() : null,
-      fulfillment: $('fulfillment').value, address: $('address').value.trim(), comment: $('comment').value.trim(),
+      fulfillment: $('fulfillment').value, address: $('fulfillment').value === 'pickup' ? '' : $('address').value.trim(), comment: $('comment').value.trim(),
       birthdayDiscount: discountApplied(), birthday: birthdayChecked(),
       items: Object.keys(cart).map(function (id) { return { id: id, quantity: cart[id] }; }),
       source: currentUtm().source || 'site',
