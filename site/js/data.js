@@ -170,7 +170,7 @@ ITEMS.push(
 // Наборы на 10 человек (страница /furshet-na-10-chelovek/, собирается tools/build_furshet10_page.py).
 // oldPrice — сумма боксов набора по ценам сайта.
 ITEMS.push(
-  { id: "set10-sparkling", type: "set", name: "Набор №1 «Классический фуршет» на 10 человек", weight: "5 боксов · 3 770 г", price: 380, oldPrice: 405, img: "assets/boxes/sparkling-box-cover.jpg", url: "/furshet-na-10-chelovek/#set-1", minQty: 1, qtyStep: 1 },
+  { id: "set10-sparkling", type: "set", name: "Набор №1 «Классический фуршет» на 10 человек", weight: "5 боксов · 3 770 г", price: 380, oldPrice: 435, img: "assets/boxes/sparkling-box-cover.jpg", url: "/furshet-na-10-chelovek/#set-1", minQty: 1, qtyStep: 1 },
   { id: "set10-big", type: "set", name: "Набор №2 «Большой фуршет с пирогом и круассанами» на 10 человек", weight: "7 боксов · 5 670 г", price: 540, oldPrice: 570, img: "assets/boxes/croissants-appetizing-mobile.jpg", url: "/furshet-na-10-chelovek/#set-2", minQty: 1, qtyStep: 1 },
   { id: "set10-dessert", type: "set", name: "Набор №3 «Закуски, пирог и десерт» на 10 человек", weight: "4 бокса · 4 280 г", price: 310, oldPrice: 330, img: "assets/boxes/bruschetta-profiterole-roll-cover.jpg", url: "/furshet-na-10-chelovek/#set-3", minQty: 1, qtyStep: 1 }
 );
@@ -179,8 +179,9 @@ ITEMS.push(
 // oldPrice — сумма боксов набора по ценам сайта.
 ITEMS.push(
   { id: "setny-15", type: "set", name: "Новогодний набор на 15 человек", weight: "7 боксов · 6 770 г", price: 629, oldPrice: 740, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-15", minQty: 1, qtyStep: 1 },
-  { id: "setny-20", type: "set", name: "Новогодний набор на 20 человек", weight: "9 боксов · 10 380 г", price: 952, oldPrice: 1120, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-20", minQty: 1, qtyStep: 1 },
-  { id: "setny-30", type: "set", name: "Новогодний набор на 30 человек", weight: "18 боксов · 18 005 г", price: 1424, oldPrice: 1780, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-30", minQty: 1, qtyStep: 1 }
+  { id: "setny-20", type: "set", name: "Новогодний набор на 20 человек", weight: "9 боксов · 10 380 г", price: 952, oldPrice: 1305, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-20", minQty: 1, qtyStep: 1 },
+  { id: "setny-30", type: "set", name: "Новогодний набор на 30 человек", weight: "18 боксов · 18 005 г", price: 1424, oldPrice: 1780, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-30", minQty: 1, qtyStep: 1 },
+  { id: "set-company", type: "set", name: "Набор для компании на 5–8 человек", weight: "3 бокса · 2 535 г", price: 260, oldPrice: 310, noDiscount: true, img: "assets/boxes/croissant-bruschetta-canape-cover.jpg", url: "/keytering-na-den-rozhdeniya/#set-company", minQty: 1, qtyStep: 1 },
 );
 
 ITEMS.forEach(function (item) {

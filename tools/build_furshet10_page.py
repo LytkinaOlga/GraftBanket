@@ -22,7 +22,7 @@ GUESTS = 10
 # "id" is the set's cart item in js/data.js; "boxes" are box ids from site/index.html,
 # a dict overrides the box's own name/weight/price.
 SETS = [
-    {"id": "set10-sparkling", "short": "Классический фуршет", "tagline": "Лёгкий фуршет для встречи",
+    {"id": "set10-sparkling", "list": True, "short": "Классический фуршет", "tagline": "Лёгкий фуршет для встречи",
      "title": "Классический фуршет",
      "lead": "Сыры и мясная нарезка, канапе, профитроли, брускетты и горячие тарталетки — всё для встречи гостей.",
      "boxes": ["box-sparkling", "box-canapes", "box-profiteroles-mini", "box-bruschetta-salmon-shrimp", "box-baked-tartlets"]},
@@ -44,7 +44,7 @@ FAQ = [
     ("Можно ли заменить бокс в наборе?",
      "Да. Позвоните по номеру <a href=\"tel:+375295704749\">+375 29 570-47-49</a> — администратор предложит замену и пересчитает стоимость."),
     ("Действуют ли на наборы подарок и скидка имениннику?",
-     "Скидка 10% имениннику действует и на наборы: отметьте «У меня день рождения» в заявке. А шпинатный рулет в подарок при заказе от 200 BYN на наборы не распространяется — они уже продаются со скидкой. Если в заказе есть и другие блюда, подарок считается по ним. Акции не суммируются."),
+     "Готовые наборы продаются по фиксированной цене. Скидка имениннику и подарок рассчитываются по отдельно добавленным блюдам и боксам. Акции не суммируются."),
     ("Входят ли в набор приборы, салфетки и посуда?",
      "В набор входят только боксы с закусками и десертами — их можно поставить на стол как есть. Приборы, салфетки и посуду можем предоставить за дополнительную плату: сообщите об этом администратору при подтверждении заказа или напишите в комментарии к заявке."),
     ("Как заказать набор?",
@@ -72,6 +72,7 @@ def home_boxes():
             "name": text(re.search(r'<h3>(.*?)</h3>', a, re.S).group(1)),
             "weight": weight and weight_grams(text(weight.group(1))),
             "price": int(re.search(r'<strong>(\d+) BYN</strong>', a).group(1)),
+            "list_price": int((re.search(r'ready-box-old-price"[^>]*>(\d+) BYN<', a) or re.search(r'<strong>(\d+) BYN</strong>', a)).group(1)),
             "img": '/' + src.lstrip('/'), "alt": html.unescape(alt),
         }
     return boxes
@@ -93,13 +94,14 @@ def resolve(sets):
             items.append({**boxes[spec["id"]], **spec})
         s["items"] = items
         s["weight"] = sum(i["weight"] for i in items)
-        s["full_price"] = sum(i["price"] for i in items)
+        # "list": crossed-out price = boxes without their own discounts (as in the ads); otherwise current box prices.
+        s["full_price"] = sum(i.get("list_price", i["price"]) if s.get("list") else i["price"] for i in items)
         s["per_guest"] = round(s["weight"] / GUESTS)
         assert old_price == s["full_price"], f'{s["id"]}: oldPrice {old_price} in js/data.js, boxes sum to {s["full_price"]}'
     return sets
 
 
-def set_card(n, s):
+def set_card(n, s, kicker=None):
     e = html.escape
     tiles = ''.join(
         f'<figure class="set-tile"><img src="{e(i["img"])}" alt="{e(i["alt"])}" loading="lazy"><figcaption>{e(i["name"])}</figcaption></figure>'
@@ -113,7 +115,7 @@ def set_card(n, s):
     return f'''        <article id="set-{n}" class="ready-box set-box">
           <div class="set-mosaic{odd}">{tiles}</div>
           <div class="ready-box-content">
-            <span class="ready-box-kicker">Набор №{n} · <span class="ready-box-weight">{grams(s["weight"])}</span></span>
+            <span class="ready-box-kicker">{kicker if kicker is not None else f"Набор №{n}"} · <span class="ready-box-weight">{grams(s["weight"])}</span></span>
             <h2 class="ready-box-title"><span>{e(s["title"])}</span></h2>
             <p class="set-per-guest"><strong>{grams(s["per_guest"])}</strong> на гостя · {GUESTS} человек · {len(s["items"])} {plural(len(s["items"]))}</p>
             <p>{e(s["lead"])}</p>

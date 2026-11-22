@@ -12,3 +12,12 @@
   .occasion-more { grid-template-columns:1fr; padding:22px 18px; margin:32px -6px 0; }
   .occasion-more-actions { min-width:0; }
 }
+/* Birthday page: ready sets block above the boxes */
+.occasion-section-title { margin: 0 0 8px; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.1; }
+#sets .occasion-note { margin: 0 0 24px; }
+#sets + #boxes .occasion-section-title { margin-bottom: 20px; }
+.set-final-note { margin: 0 0 12px; font-size: 14px; color: var(--text-muted); }
+@media (max-width:680px) {
+  .boxes-list .ready-grid { grid-template-columns:minmax(0,1fr); }
+  .boxes-list .ready-box-order { flex-wrap:wrap; }
+}

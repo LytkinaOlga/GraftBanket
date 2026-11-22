@@ -23,13 +23,13 @@ LAST_DAY = "30 декабря"
 WEIGHTS = {"box-profiteroles": 750}
 
 SETS = [
-    {"id": "set10-sparkling", "anchor": "set-10", "guests": 10, "title": "Небольшая команда",
+    {"id": "set10-sparkling", "list": True, "anchor": "set-10", "guests": 10, "title": "Небольшая команда",
      "lead": "Нарезки к игристому, канапе, брускетты с лососем и креветкой, горячие тарталетки и профитроли.",
      "boxes": ["box-sparkling", "box-canapes", "box-bruschetta-salmon-shrimp", "box-baked-tartlets", "box-profiteroles-mini"]},
     {"id": "setny-15", "anchor": "set-15", "guests": 15, "title": "Отдел",
      "lead": "Бокс «Фуршетный» с лососем и крабом, нарезки к игристому, два бокса брускетт с лососем и креветкой, ассорти рулетиков и солёные «Наполеоны».",
      "boxes": ["box-salmon-crab", "box-sparkling", ("box-bruschetta-salmon-shrimp", 2), "box-assorted-rolls", ("box-napoleons", 2)]},
-    {"id": "setny-20", "anchor": "set-20", "guests": 20, "title": "Весь офис",
+    {"id": "setny-20", "list": True, "anchor": "set-20", "guests": 20, "title": "Весь офис",
      "lead": "Два бокса «Фуршетный» с лососем и крабом, нарезки к игристому, брускетты с лососем и креветкой, брускетты с профитролями и шпинатным рулетом, ассорти рулетиков и большие солёные «Наполеоны».",
      "boxes": [("box-salmon-crab", 2), "box-sparkling", ("box-bruschetta-salmon-shrimp", 2), "box-bruschetta-profiterole-roll",
                "box-assorted-rolls", ("box-napoleons-big", 2)]},
@@ -43,7 +43,7 @@ SETS = [
 FAQ = [
     ("Сколько стоит новогодний корпоратив в офисе?",
      "Готовые наборы: на 10 человек — 380 BYN, на 15 — 629 BYN, на 20 — 952 BYN, на 30 — 1 424 BYN, то есть примерно 38–48 BYN на человека. "
-     "Наборы на 15, 20 и 30 человек — со скидкой 15–20% и бесплатной доставкой по Минску."),
+     "Наборы на 15, 20 и 30 человек — со скидкой 15–27% и бесплатной доставкой по Минску."),
     ("Где провести новогодний корпоратив, если не в ресторане?",
      "В своём офисе: не нужно бронировать зал и подстраиваться под меню ресторана. Мы привезём готовые фуршетные боксы к нужному времени — их можно сразу ставить на стол, а посуду и приборы дадим по запросу."),
     ("До какого числа можно заказать?",
@@ -77,7 +77,8 @@ def resolve():
             s.setdefault("rows", []).append(box | {"name": box["name"] + (f" × {qty}" if qty > 1 else ""), "weight": box["weight"] * qty})
         s["count"] = sum(i["qty"] for i in s["items"])
         s["weight"] = sum(i["weight"] for i in s["items"])
-        s["full_price"] = sum(i["price"] for i in s["items"])
+        # "list": crossed-out price = boxes without their own discounts (as in the ads); otherwise current box prices.
+        s["full_price"] = sum(i.get("list_price", i["price"]) if s.get("list") else i["price"] for i in s["items"])
         s["per_guest"] = round(s["weight"] / s["guests"])
         assert old == s["full_price"], f'{s["id"]}: oldPrice {old} in js/data.js, boxes sum to {s["full_price"]}'
     return SETS
@@ -139,7 +140,7 @@ def build():
               + f", то есть примерно {money(per)}–{money(max(s['price'] / s['guests'] for s in sets))} BYN на человека. "
               "Чем больше набор, тем больше скидка; от 500 BYN доставка по Минску бесплатная.")
     description = (f"Новогодний корпоратив в Минске недорого: еда на корпоратив в офис — фуршетные наборы на 10–30 человек от {money(per)} BYN на человека, "
-                   f"скидка до 20%. Доставка, заказы до {LAST_DAY}.")
+                   f"скидка до 27%. Доставка, заказы до {LAST_DAY}.")
     graph = [
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE + "/"},

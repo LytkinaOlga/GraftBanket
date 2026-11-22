@@ -36,14 +36,15 @@
   function giftItem() { return byId[GIFT_ITEM_ID]; }
   // Promos don't stack. Everyone gets the gift (spinach roll) from 200 BYN; a birthday customer
   // chooses between that gift and the 10% discount (below 200 BYN only the discount applies).
-  // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
+  // Fixed-price sets are excluded from both promotions.
   function giftSubtotal() { return Object.keys(cart).reduce(function (sum, id) { return byId[id].type === 'set' ? sum : sum + lineTotal(byId[id], cart[id]); }, 0); }
   function giftAvailable() { return giftSubtotal() >= GIFT_THRESHOLD && !!giftItem(); }
-  function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked); }
+  function birthdayChecked() { var box = $('birthdayDiscount'); return !!(box && box.checked && discountBase() > 0); }
   function birthdayPerk() { var picked = document.querySelector('input[name="birthdayPerk"]:checked'); return picked ? picked.value : 'discount'; }
   function discountApplied() { return birthdayChecked() && (!giftAvailable() || birthdayPerk() === 'discount'); }
   function giftEligible() { return giftAvailable() && !discountApplied(); }
-  function discountAmount() { return discountApplied() ? Math.round(subtotal() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
+  function discountBase() { return Object.keys(cart).reduce(function (sum, id) { return byId[id].type === 'set' || byId[id].noDiscount ? sum : sum + lineTotal(byId[id], cart[id]); }, 0); }
+  function discountAmount() { return discountApplied() ? Math.round(discountBase() * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0; }
   function delivery() {
     var method = $('fulfillment').value;
     if (method === 'pickup') return 0;
@@ -202,9 +203,10 @@
     var afterDiscount = sub - discount;
     var choice = $('birthdayChoice'), hint = $('birthdayHint');
     if (choice) {
+      $('birthdayDiscount').closest('label').hidden = discountBase() <= 0;
       choice.hidden = !(birthdayChecked() && giftAvailable());
       hint.hidden = !(birthdayChecked() && !giftAvailable());
-      $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(sub * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
+      $('birthdayDiscountValue').textContent = 'Экономия ' + money(Math.round(discountBase() * BIRTHDAY_DISCOUNT_RATE * 100) / 100);
       $('birthdayGiftValue').textContent = (giftItem() ? giftItem().weight + ' · ' : '') + 'стоимость ' + money(giftItem() ? giftItem().price : 0);
     }
     var html = '<div>Закуски: <strong>' + money(sub) + '</strong></div>';
@@ -241,7 +243,7 @@
   }
   function searchCategory(item) {
     if (item.type === 'ready-box') return 'Готовый бокс';
-    if (item.type === 'set') return 'Набор на 10 человек';
+    if (item.type === 'set') return 'Готовый набор';
     var category = CATEGORIES.find(function (entry) { return entry.id === item.category; });
     return category ? category.title : 'Позиция меню';
   }

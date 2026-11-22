@@ -101,22 +101,24 @@ module.exports = async function handler(req, res) {
     if (date < new Date().toISOString().slice(0, 10)) return res.status(400).json({ error: 'Date is in the past' });
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
-    let subtotal = 0, giftSubtotal = 0;
+    let subtotal = 0, giftSubtotal = 0, discountBase = 0;
     const copyItems = [];
     const lines = body.items.map(row => {
       const item = catalog[row.id], qty = row.quantity;
       if (!item || item.available === false || seen.has(row.id) || !Number.isInteger(qty) || qty < item.minQty || qty > 1000 || (qty - item.minQty) % item.qtyStep !== 0) throw new Error('Invalid item or quantity');
       seen.add(row.id); subtotal += lineTotal(item, qty);
-      // Sets are already discounted, so they don't count towards the gift threshold (the birthday discount still applies).
-      if (item.type !== 'set') giftSubtotal += lineTotal(item, qty);
+      if (item.type !== 'set') {
+        giftSubtotal += lineTotal(item, qty);
+        if (!item.noDiscount) discountBase += lineTotal(item, qty);
+      }
       copyItems.push({ id: item.id, title: item.name, qty, pack: item.bundlePrice ? item.minQty : 1, total: lineTotal(item, qty), image: imageUrl(item) });
       return '• ' + item.name + ' — ' + qty + ' × ' + money(item.price) + ' = ' + money(lineTotal(item, qty));
     });
     const GIFT_THRESHOLD = 200;
     const GIFT_ITEM_ID = 'br1'; // spinach roll (from 10.11.2026; before: small profiterole box from 300 BYN)
     const BIRTHDAY_DISCOUNT_RATE = 0.10;
-    const birthdayDiscount = Boolean(body.birthdayDiscount);
-    const discount = birthdayDiscount ? Math.round(subtotal * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
+    const birthdayDiscount = discountBase > 0 && Boolean(body.birthdayDiscount);
+    const discount = birthdayDiscount ? Math.round(discountBase * BIRTHDAY_DISCOUNT_RATE * 100) / 100 : 0;
     const giftItem = catalog[GIFT_ITEM_ID];
     // Promos don't stack: no gift box when the birthday discount is applied.
     const giftApplied = giftSubtotal >= GIFT_THRESHOLD && Boolean(giftItem) && !birthdayDiscount;
@@ -138,7 +140,7 @@ module.exports = async function handler(req, res) {
       '', 'Состав:', ...lines,
       giftApplied ? '🎁 Подарок: ' + giftItem.name + ' — ' + giftItem.weight.replace(/^Бокс №\d+ · /, '') + ' (бесплатно)' : '',
       '', 'Товары: ' + money(subtotal),
-      birthdayDiscount ? 'Скидка (день рождения, −10%): −' + money(discount) : '',
+      discount > 0 ? 'Скидка (день рождения, −10%): −' + money(discount) : '',
       Boolean(body.birthday) && !birthdayDiscount && giftApplied ? '🎂 Именинник: выбрал подарок вместо скидки 10%' : '',
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
       'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))

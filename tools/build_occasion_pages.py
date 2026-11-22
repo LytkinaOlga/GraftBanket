@@ -106,8 +106,9 @@ PAGES = [
         "intro": "Готовые боксы с закусками и десертами, чтобы накрыть праздничный стол без долгой подготовки — дома или в офисе. Закуски приезжают красиво разложенными, их можно сразу ставить на стол. Имениннику — скидка 10%.",
         "guide_title": "Скидка 10% имениннику", "guide_text": "Действует за 5 дней до и 5 дней после дня рождения. Отметьте «У меня день рождения» при оформлении заявки — скидка посчитается автоматически.",
         "guide_link": ("/furshet-na-10-chelovek/", "Наборы на 10 человек"),
-        "terms": ['<li><strong>Скидка 10%:</strong> за 5 дней до и 5 дней после дня рождения, в том числе на наборы.</li>',
-                  '<li><strong>Или подарок:</strong> при заказе от 200 BYN — шпинатный рулет (450 г). Акции не суммируются.</li>',
+        "sets": True,
+        "terms": ['<li><strong>Скидка 10%:</strong> за 5 дней до и 5 дней после дня рождения на отдельные блюда и боксы.</li>',
+                  '<li><strong>Или подарок:</strong> при заказе отдельных блюд и боксов от 200 BYN — шпинатный рулет (450 г). Акции не суммируются.</li>',
                   '<li><strong>Предзаказ:</strong> желательно за 2–3 дня; срочный заказ — по согласованию.</li>'],
         "boxes": ["box-bruschetta-profiterole-roll", "box-sparkling", "box-canapes", "box-bruschetta-salmon-shrimp", "box-baked-tartlets",
                   "box-napoleons", "box-ham-rolls", "box-three-rolls", "box-crostini", "box-greek",
@@ -117,7 +118,7 @@ PAGES = [
             ("Как получить скидку 10% имениннику?",
              "Скидка действует за 5 дней до и 5 дней после дня рождения. При оформлении заявки отметьте «У меня день рождения» — скидка посчитается автоматически. "),
             ("Можно выбрать подарок вместо скидки?",
-             f"{GIFT} {NO_STACK} Подарок не распространяется на готовые наборы на 10 человек — они уже продаются со скидкой; скидка имениннику на них действует."),
+             f"{GIFT} {NO_STACK} Готовые наборы продаются по фиксированной цене. Скидка имениннику и подарок рассчитываются по отдельно добавленным блюдам и боксам."),
             FAQ_GUESTS, FAQ_COMBINE,
             ("За сколько дней оформить заказ?",
              "Желательно за 2–3 дня. Срочный заказ возможен по согласованию — позвоните, и администратор проверит, что мы успеем приготовить к нужному времени."),
@@ -299,7 +300,7 @@ PAGES = [
         "description": "Заказать еду в офис в Минске: {n} готовых фуршетных боксов от {min} BYN для встреч, переговоров и праздников команды. Кейтеринг для офиса с безналичным расчётом и доставкой.",
         "overline": "КЕЙТЕРИНГ ДЛЯ ОФИСА · МИНСК", "h1": 'Еда <span>в офис</span> в Минске',
         "intro": "Заказать еду в офис просто: фуршетные боксы на день рождения коллеги, деловую встречу, переговоры, презентацию или праздник команды. Закуски приезжают красиво разложенными — боксы можно сразу поставить в переговорной или на кухне. Цены и вес указаны заранее, поэтому бюджет легко посчитать до заявки.",
-        "guide_title": "Новогодний корпоратив в офисе?", "guide_text": "Готовые наборы на 10, 15, 20 и 30 человек с весом на гостя — скидка до 20%.",
+        "guide_title": "Новогодний корпоратив в офисе?", "guide_text": "Готовые наборы на 10, 15, 20 и 30 человек с весом на гостя — скидка до 27%.",
         "guide_link": ("/novogodniy-korporativ-v-ofis/", "Наборы для офиса"),
         "terms": ['<li><strong>Для юридических лиц:</strong> безналичный расчёт, документы согласуются при подтверждении заказа.</li>',
                   '<li><strong>Предзаказ:</strong> желательно за 2–3 дня; срочный заказ — по согласованию.</li>',
@@ -327,6 +328,54 @@ PAGES = [
                   ("/goryachee-na-prazdnichnyy-stol/", "Горячее"), ("/kanape-na-zakaz/", "Канапе"), ("/dostavka-i-oplata/", "Доставка и оплата")],
     },
 ]
+
+
+def company_set():
+    """«Набор для компании на 5–8 человек» (cart item set-company): the Slivki set, sold on the site at a final price."""
+    from build_furshet10_page import cart_prices, home_boxes
+    boxes = home_boxes()
+    ids = ["box-croissant-bruschetta-canape", "box-profiteroles", "box-bruschetta-salmon-shrimp"]
+    items = [boxes[i] | {"id": i, "weight": boxes[i]["weight"] or {"box-profiteroles": 750}[i]} for i in ids]
+    price, old = cart_prices("set-company")
+    assert old == sum(i["list_price"] for i in items), f"set-company: oldPrice {old} in js/data.js"
+    return {"id": "set-company", "items": items, "price": price, "full_price": old,
+            "weight": sum(i["weight"] for i in items), "pieces": 66}
+
+
+def sets_html():
+    """Ready sets on the birthday page: 5–8 guests (final price), 10 guests (as on /furshet-na-10-chelovek/), 20 guests (as on /furshet-na-20-chelovek/)."""
+    from build_furshet10_page import SETS as SETS10, grams, resolve as resolve10, set_card as set_card10
+    from build_corporate_ny_page import resolve as resolve_ny, set_card as set_card_ny
+    e = html.escape
+    c = company_set()
+    tiles = ''.join(f'<figure class="set-tile"><img src="{e(i["img"])}" alt="{e(i["alt"])}" loading="lazy"><figcaption>{e(i["name"])}</figcaption></figure>' for i in c["items"])
+    rows = ''.join(f'<li><a href="/gotovye-furshetnye-boksy/#{e(i["id"])}">{e(i["name"])}</a><span>{grams(i["weight"])}</span></li>' for i in c["items"])
+    company = f'''        <article id="set-company" class="ready-box set-box">
+          <div class="set-mosaic set-mosaic-odd">{tiles}</div>
+          <div class="ready-box-content">
+            <span class="ready-box-kicker">На 5–8 человек · <span class="ready-box-weight">{grams(c["weight"])}</span></span>
+            <h2 class="ready-box-title"><span>Набор для компании</span></h2>
+            <p class="set-per-guest"><strong>{c["pieces"]} закусок</strong> · {round(c["weight"] / 8)}–{round(c["weight"] / 5)}&nbsp;г на гостя · 3 бокса</p>
+            <p>Мини-круассаны с форелью, брускетты с ростбифом, канапе, большой бокс профитролей и брускетты с лососем и креветкой — на небольшую компанию.</p>
+            <ul class="set-items">{rows}</ul>
+            <p class="set-final-note">Цена окончательная: скидка имениннику и подарок к этому набору не применяются.</p>
+            <div class="ready-box-order"><div class="ready-box-price"><strong>{c["price"]} BYN</strong><div class="ready-box-price-meta"><s class="ready-box-old-price" aria-label="Цена без скидки">{c["full_price"]} BYN</s><span class="ready-box-saving">скидка {c["full_price"] - c["price"]} BYN</span></div></div><div class="ready-box-action" data-control="set-company"></div></div>
+          </div>
+        </article>
+'''
+    s10 = next(s for s in resolve10(SETS10) if s["id"] == "set10-sparkling")
+    s20 = next(s for s in resolve_ny() if s["guests"] == 20)
+    cards = company + set_card10(1, s10, kicker="На 10 человек") + set_card_ny(dict(s20, anchor="set-20", title="Готовый фуршет на 20 человек"))
+    html_ = ('<section class="boxes-list" id="sets" aria-labelledby="sets-title"><div class="wrap">'
+             '<h2 id="sets-title" class="occasion-section-title">Готовые наборы на день рождения</h2>'
+             '<p class="occasion-note">На 5–8, 10 и 20 человек — дешевле, чем те же боксы по отдельности. Цены наборов фиксированные. Скидка имениннику и подарок действуют на отдельно добавленные боксы и блюда.</p>'
+             f'<div class="ready-grid">\n{cards}</div></div></section>\n')
+    products = [
+        ("Набор для компании на 5–8 человек", c["price"], [i["img"] for i in c["items"]], "set-company"),
+        ("Набор «Классический фуршет» на 10 человек", s10["price"], [i["img"] for i in s10["items"]], "set-1"),
+        ("Готовый фуршет на 20 человек", s20["price"], [i["img"] for i in s20["items"]], "set-20"),
+    ]
+    return html_, products
 
 
 def build_page(cfg, articles, shell, total):
@@ -373,17 +422,34 @@ def build_page(cfg, articles, shell, total):
     links = ''.join(f'<a href="{href}">{e(label)}</a>' for href, label in cfg["links"])
     guide_href, guide_label = cfg["guide_link"]
 
+    sets_block, set_products = sets_html() if cfg.get("sets") else ('', [])
+    if set_products:
+        graph.insert(3, {"@type": "ItemList", "@id": url + "#sets", "name": "Готовые наборы", "numberOfItems": len(set_products),
+                         "itemListElement": [{"@type": "ListItem", "position": n + 1, "item": {
+                             "@type": "Product", "@id": url + "#" + anchor, "name": name, "image": [BASE + i for i in imgs],
+                             "brand": {"@type": "Brand", "name": "Draft Catering"},
+                             "offers": {"@type": "Offer", "price": f"{price:.2f}", "priceCurrency": "BYN", **offer_terms(price),
+                                        "availability": "https://schema.org/InStock", "url": url + "#" + anchor,
+                                        "areaServed": {"@type": "City", "name": "Минск"}, "seller": {"@id": BASE + "/#business"}}}}
+                             for n, (name, price, imgs, anchor) in enumerate(set_products)]})
+        ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(',', ':'))
+    sets_css = f'<link rel="stylesheet" href="/css/sets-page.css?v={asset_version("css/sets-page.css")}">' if sets_block else ''
+    hero_note = (f'Ниже — <strong>готовые наборы на 5–8, 10 и 20 человек</strong> и подборка из <strong>{len(boxes)} боксов {e(cfg["for"])}</strong>.'
+                 if sets_block else f'Ниже — подборка из <strong>{len(boxes)} боксов {e(cfg["for"])}</strong>.')
+    hero_cta = ('<a class="primary-link" href="#sets"><strong>Готовые наборы</strong><span aria-hidden="true">↓</span></a>'
+                if sets_block else '<a class="primary-link" href="#boxes"><strong>Смотреть подборку</strong><span aria-hidden="true">↓</span></a>')
+    boxes_title = '<h2 class="occasion-section-title">Боксы поштучно</h2>' if sets_block else ''
     pieces = cfg.get("pieces")  # (menu category id, title, text): items sold one by one, rendered by js/app.js
     pieces_html = (f'<section class="section" id="pieces" aria-labelledby="pieces-title"><div class="wrap"><h2 id="pieces-title">{e(pieces[1])}</h2>'
                    f'<p class="occasion-note">{pieces[2]}</p><div class="grid" data-menu-category="{pieces[0]}"></div></div></section>\n') if pieces else ''
     page = f'''<!doctype html><html lang="ru-BY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104b"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}"><link rel="stylesheet" href="/css/occasion-pages.css?v={asset_version('css/occasion-pages.css')}">
+{metrika}<title>{e(title)}</title><meta name="description" content="{e(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#f3ca52"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="ru-BY" href="{url}"><link rel="alternate" hreflang="x-default" href="{url}"><meta property="og:locale" content="ru_BY"><meta property="og:type" content="website"><meta property="og:site_name" content="Draft Catering"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="stylesheet" href="{styles_css}"><link rel="stylesheet" href="/css/seo-pages.css?v=20261104b"><link rel="stylesheet" href="/css/boxes-page.css?v={css_version}"><link rel="stylesheet" href="/css/reviews.css?v={asset_version('css/reviews.css')}"><link rel="stylesheet" href="/css/occasion-pages.css?v={asset_version('css/occasion-pages.css')}">{sets_css}
 <script type="application/ld+json">{ld}</script></head><body>
 {header}
 <main><nav class="wrap crumbs" aria-label="Хлебные крошки"><a href="/">Главная</a> → {e(cfg["crumb"])}</nav>
-<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>{e(cfg["overline"])}</span></div><h1>{cfg["h1"]}</h1><p>{e(cfg["intro"])}</p><p class="occasion-note">Ниже — подборка из <strong>{len(boxes)} боксов {e(cfg["for"])}</strong>. Всего у нас {total} готовых боксов, а в меню ещё отдельные закуски, салаты, пироги и десерты.</p><div class="boxes-hero-actions"><a class="primary-link" href="#boxes"><strong>Смотреть подборку</strong><span aria-hidden="true">↓</span></a><a class="secondary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a></div></div></div></section>
+<section class="boxes-hero"><div class="wrap boxes-hero-layout"><div class="boxes-hero-copy"><div class="boxes-hero-overline"><span>{e(cfg["overline"])}</span></div><h1>{cfg["h1"]}</h1><p>{e(cfg["intro"])}</p><p class="occasion-note">{hero_note} Всего у нас {total} готовых боксов, а в меню ещё отдельные закуски, салаты, пироги и десерты.</p><div class="boxes-hero-actions">{hero_cta}<a class="secondary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a></div></div></div></section>
 <section class="boxes-guide" aria-labelledby="guide-title"><div class="wrap boxes-guide-layout"><div class="boxes-guide-offer"><h2 id="guide-title">{e(cfg["guide_title"])}</h2><p>{e(cfg["guide_text"])}</p><a class="secondary-link" href="{guide_href}"><strong>{e(guide_label)}</strong><span aria-hidden="true">→</span></a></div><ul class="boxes-terms" aria-label="Условия заказа">{terms}</ul></div></section>
-<section class="boxes-list" id="boxes" aria-label="{e(cfg["list_name"])}"><div class="wrap"><div class="ready-grid">
+{sets_block}<section class="boxes-list" id="boxes" aria-label="{e(cfg["list_name"])}"><div class="wrap">{boxes_title}<div class="ready-grid">
 {cards}</div><aside class="occasion-more" aria-labelledby="more-title"><div><h2 id="more-title">Это не всё меню</h2><p>Здесь {len(boxes)} боксов {e(cfg["for"])}. Ещё {total - len(boxes)} готовых боксов — на отдельной странице, а в меню можно собрать заказ из отдельных закусок, салатов, пирогов и десертов. Корзина общая: всё попадёт в одну заявку.</p></div><div class="occasion-more-actions"><a class="primary-link" href="/gotovye-furshetnye-boksy/"><strong>Все {total} готовых боксов</strong><span aria-hidden="true">→</span></a><a class="secondary-link" href="/#constructor"><strong>Всё меню</strong><span aria-hidden="true">→</span></a></div></aside></div></section>
 {pieces_html}{reviews_html('wrap')}
 {faq_html}
