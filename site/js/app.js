@@ -292,24 +292,52 @@
       window.setTimeout(function () { target.classList.remove('search-highlight'); }, 1700);
     }, 40);
   }
+  var holidayDate = '2026-12-31';
+  var holidayPickupEnd = '19:00';
+  var holidayNotice = document.createElement('div');
+  holidayNotice.id = 'holidayPickupNotice';
+  holidayNotice.setAttribute('role', 'status');
+  holidayNotice.hidden = true;
+  $('fieldDate').appendChild(holidayNotice);
+  $('eventDate').setAttribute('aria-describedby', holidayNotice.id);
+
   function updateMethod() {
-    var pickup = $('fulfillment').value === 'pickup';
+    var holiday = $('eventDate').value === holidayDate;
+    var method = $('fulfillment');
+    Array.prototype.forEach.call(method.options, function (option) {
+      option.disabled = holiday && option.value !== 'pickup';
+    });
+    if (holiday) method.value = 'pickup';
+    holidayNotice.hidden = !holiday;
+    holidayNotice.textContent = holiday ? '31 декабря работаем только на самовывоз по адресу ул. Нововиленская, 51. Будем рады видеть вас до 19:00 включительно 😊' : '';
+    if (holiday) $('eventTime').max = holidayPickupEnd;
+    else $('eventTime').removeAttribute('max');
+    if ($('eventTime').value || $('fieldTime').classList.contains('invalid')) validateTime();
+    var pickup = method.value === 'pickup';
     $('fieldAddress').hidden = pickup;
     $('eventTimeLabel').textContent = pickup ? 'Время самовывоза' : 'Время доставки';
     renderSummary();
   }
   function paymentMethod() { var picked = document.querySelector('input[name="payment"]:checked'); return picked ? picked.value : ''; }
   function fieldValid(id, ok) { $(id).classList.toggle('invalid', !ok); return ok; }
+  function validateTime() {
+    var day = $('eventDate').value;
+    var now = new Date(), today = now.toISOString().slice(0, 10);
+    var nowTime = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    var time = $('eventTime').value;
+    var afterClosing = day === holidayDate && time > holidayPickupEnd;
+    $('fieldTime').querySelector('.field-error').textContent = afterClosing
+      ? '31 декабря самовывоз возможен до 19:00 включительно'
+      : 'Укажите время — не раньше текущего';
+    return fieldValid('fieldTime', /^([01]\d|2[0-3]):[0-5]\d$/.test(time) && !afterClosing && !(day === today && time <= nowTime));
+  }
   function validate() {
     var name = fieldValid('fieldName', $('customerName').value.trim().length >= 2);
     var digits = $('phone').value.replace(/\D/g, '');
     var phone = fieldValid('fieldPhone', digits.length >= 10 && digits.length <= 15);
     var day = $('eventDate').value;
     var date = fieldValid('fieldDate', !!day && day >= new Date().toISOString().slice(0, 10));
-    var now = new Date(), today = now.toISOString().slice(0, 10);
-    var nowTime = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
-    var timeValue = $('eventTime').value;
-    var time = fieldValid('fieldTime', /^\d{2}:\d{2}$/.test(timeValue) && !(day === today && timeValue <= nowTime));
+    var time = validateTime();
     var address = fieldValid('fieldAddress', $('fulfillment').value === 'pickup' || $('address').value.trim().length >= 3);
     var payment = fieldValid('fieldPayment', !!paymentMethod());
     var guestsValue = $('guests').value.trim();
@@ -447,6 +475,8 @@
   $('backToCartBtn').addEventListener('click', function () { show('viewCart'); });
   $('closeSuccessBtn').addEventListener('click', function () { close(); show('viewCart'); });
   $('fulfillment').addEventListener('change', updateMethod);
+  $('eventDate').addEventListener('input', updateMethod);
+  $('eventTime').addEventListener('input', validateTime);
   $('birthdayDiscount').addEventListener('change', render);
   document.querySelectorAll('input[name="birthdayPerk"]').forEach(function (radio) { radio.addEventListener('change', render); });
   $('eventDate').min = new Date().toISOString().slice(0, 10);
@@ -490,7 +520,7 @@
       pushEcommerce('purchase', purchaseProducts, { id: result.orderId || (payload.eventDate + '-' + Date.now()), revenue: revenue });
       if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { value: Math.round((subtotal() - discountAmount()) * 100) / 100, currency: 'BYN' });
       if (typeof window.ym === 'function') window.ym(113018653, 'reachGoal', 'order_submit_success', payload.guests ? { order_price: revenue, guests: payload.guests } : { order_price: revenue });
-      cart = {}; saveCart(); render(); $('checkoutForm').reset(); updateMethod(); show('viewSuccess');
+      cart = {}; saveCart(); render(); $('checkoutForm').reset(); fieldValid('fieldTime', true); updateMethod(); show('viewSuccess');
     } catch (_) { alert('Не удалось отправить заявку. Данные сохранены — попробуйте ещё раз позднее.'); }
     finally { button.disabled = false; button.textContent = 'Отправить заявку'; }
   });
