@@ -51,7 +51,7 @@
 .set-box { scroll-margin-top:calc(var(--header-h, 96px) + 18px); }
 /* Narrow screens: swipe between the cards, the next one peeks in */
 @media (max-width:900px) {
-  .compare-grid { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; margin:0 -22px; padding:0 22px 4px; scroll-padding-inline:22px; }
+  .compare-grid { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; margin:0 -14px; padding:0 14px 4px; scroll-padding-inline:14px; }
   .compare-grid::-webkit-scrollbar { display:none; }
   .compare-card { flex:0 0 min(84%,420px); scroll-snap-align:start; }
 }

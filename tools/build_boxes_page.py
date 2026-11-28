@@ -197,7 +197,7 @@ def home_shell():
     def between(start, end):
         i = page.index(start)
         return page[i:page.index(end, i)]
-    metrika = between('<script>window.dataLayer', '<meta charset')
+    metrika = between('<script>window.dataLayer', '<meta name="viewport"')
     header = between('  <div class="hours-bar">', '    <nav class="category-nav">')
     bottom = between('  <footer class="site-footer">', '  <script src="js/data.js')
     scripts = between('  <script src="js/data.js', '</body>')

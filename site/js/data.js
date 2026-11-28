@@ -136,7 +136,7 @@ const DEMO_RULES = {
   tartlets: [4, 4], sandwiches: [6, 6], salads: [9, 9],
   burgers: [6, 6], quiches: [6, 6], cheesecakes: [4, 4],
   "biscuit-rolls": [1, 1], desserts: [1, 1],
-  napoleons: [18, 18], pies: [1, 1], hot: [1, 1]
+  napoleons: [18, 18], pies: [1, 1], hot: [1, 1], "new-year": [1, 1]
 };
 
 ITEMS.push(
@@ -182,6 +182,17 @@ ITEMS.push(
   { id: "setny-20", type: "set", name: "Новогодний набор на 20 человек", weight: "9 боксов · 10 380 г", price: 952, oldPrice: 1305, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-20", minQty: 1, qtyStep: 1 },
   { id: "setny-30", type: "set", name: "Новогодний набор на 30 человек", weight: "18 боксов · 18 005 г", price: 1424, oldPrice: 1780, img: "assets/boxes/sparkling-box-cover.jpg", url: "/novogodniy-korporativ-v-ofis/#set-30", minQty: 1, qtyStep: 1 },
   { id: "set-company", type: "set", name: "Набор для компании на 5–8 человек", weight: "3 бокса · 2 535 г", price: 260, oldPrice: 310, noDiscount: true, img: "assets/boxes/croissant-bruschetta-canape-cover.jpg", url: "/keytering-na-den-rozhdeniya/#set-company", minQty: 1, qtyStep: 1 },
+);
+
+// Позиции новогоднего меню 2027.
+ITEMS.push(
+  {"id": "ny2027-chicken-walnut", "type": "snack", "category": "new-year", "name": "Салат с курицей, грибами и грецким орехом", "weight": "1 кг", "price": 65, "img": "assets/new-year-2027/chicken-walnut-2.jpg", "images": ["assets/new-year-2027/chicken-walnut-2.jpg", "assets/new-year-2027/chicken-walnut-3-retouched.jpg"], "url": "/novogodniy-furshet/#ny2027-chicken-walnut", "minQty": 1, "qtyStep": 1, "priceUnit": "бокс", "description": "Упакован в бокс, из которого салат удобно переложить на сервировочное блюдо."},
+  {"id": "ny2027-pomegranate-bracelet", "type": "snack", "category": "new-year", "name": "Салат «Гранатовый браслет» с говядиной", "weight": "1,3 кг", "price": 70, "img": "assets/new-year-2027/pomegranate-bracelet-4.jpg", "images": ["assets/new-year-2027/pomegranate-bracelet-4.jpg", "assets/new-year-2027/pomegranate-bracelet-1.jpg", "assets/new-year-2027/pomegranate-bracelet-2.jpg", "assets/new-year-2027/pomegranate-bracelet-3.jpg?v=2"], "url": "/novogodniy-furshet/#ny2027-pomegranate-bracelet", "minQty": 1, "qtyStep": 1, "priceUnit": "порцию"},
+  {"id": "ny2027-caviar-fish-tartlets", "type": "snack", "category": "new-year", "name": "Бокс тарталеток с икрой и красной рыбой", "weight": "950 г", "price": 120, "img": "assets/new-year-2027/caviar-fish-tartlets-9298-balanced.jpg", "images": ["assets/new-year-2027/caviar-fish-tartlets-9298-balanced.jpg", "assets/new-year-2027/caviar-fish-tartlets-9295-balanced.jpg", "assets/new-year-2027/caviar-fish-tartlets-9301-balanced.jpg"], "url": "/novogodniy-furshet/#ny2027-caviar-fish-tartlets", "minQty": 1, "qtyStep": 1, "priceUnit": "бокс"},
+  {"id": "ny2027-salad-tartlets", "type": "snack", "category": "new-year", "name": "Тарталетки с четырьмя видами салатов", "weight": "1 280 г", "price": 80, "img": "assets/new-year-2027/salad-tartlets-retouched.jpg", "images": ["assets/new-year-2027/salad-tartlets-retouched.jpg", "assets/new-year-2027/salad-tartlets-1.jpg", "assets/new-year-2027/salad-tartlets-3-retouched.jpg"], "url": "/novogodniy-furshet/#ny2027-salad-tartlets", "minQty": 1, "qtyStep": 1, "priceUnit": "бокс", "composition": "Оливье, «Гранатовый браслет», салат с креветками и ананасом, крабовый салат с форелью."},
+  {"id": "ny2027-herring", "type": "snack", "category": "new-year", "name": "Сельдь под шубой", "weight": "1,3 кг", "price": 65, "img": "assets/new-year-2027/herring-retouched.jpg", "images": ["assets/new-year-2027/herring-retouched.jpg", "assets/new-year-2027/herring-2-retouched.jpg"], "url": "/novogodniy-furshet/#ny2027-herring", "minQty": 1, "qtyStep": 1, "priceUnit": "порцию"},
+  {"id": "ny2027-olivier", "type": "snack", "category": "new-year", "name": "Оливье с копчёной курицей и ветчиной", "weight": "1 кг", "price": 60, "img": "assets/new-year-2027/olivier-1-retouched.jpg", "images": ["assets/new-year-2027/olivier-1-retouched.jpg", "assets/new-year-2027/olivier-2.jpg", "assets/new-year-2027/olivier-3.jpg?v=2"], "url": "/novogodniy-furshet/#ny2027-olivier", "minQty": 1, "qtyStep": 1, "priceUnit": "порцию"},
+  {"id": "ny2027-meat-skewers", "type": "snack", "category": "new-year", "name": "Мясные шашлычки", "weight": "900 г", "price": 100, "img": "assets/new-year-2027/meat-skewers-retouched.jpg", "images": ["assets/new-year-2027/meat-skewers-retouched.jpg"], "url": "/novogodniy-furshet/#ny2027-meat-skewers", "minQty": 1, "qtyStep": 1, "priceUnit": "порцию", "composition": "Из птицы с ананасом, из свинины в беконе, из говядины в кисло-сладком соусе."}
 );
 
 ITEMS.forEach(function (item) {

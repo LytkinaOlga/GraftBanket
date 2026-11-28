@@ -1,6 +1,7 @@
 const { ITEMS } = require('../js/data.js');
 const hiddenCategories = new Set(['profiteroles', 'sandwiches', 'burgers', 'quiches', 'cheesecakes']);
 const catalog = Object.fromEntries(ITEMS.filter(item => item.type === 'ready-box' || item.type === 'set' || (item.type === 'snack' && !hiddenCategories.has(item.category))).map(item => [item.id, item]));
+const MAX_ORDER_LINES = Object.keys(catalog).length;
 const lineTotal = (item, qty) => item.bundlePrice ? item.bundlePrice * qty / item.minQty : item.price * qty;
 const money = n => Number(n).toFixed(2) + ' BYN';
 const clean = (value, limit = 200) => String(value || '').trim().slice(0, limit);
@@ -102,7 +103,7 @@ module.exports = async function handler(req, res) {
     if (date === '2026-12-31' && (method !== 'pickup' || time > '19:00')) {
       return res.status(400).json({ error: 'December 31 orders are pickup only until 19:00' });
     }
-    if (!Array.isArray(body.items) || !body.items.length || body.items.length > 50) return res.status(400).json({ error: 'Invalid items' });
+    if (!Array.isArray(body.items) || !body.items.length || body.items.length > MAX_ORDER_LINES) return res.status(400).json({ error: 'Invalid items' });
     const seen = new Set();
     let subtotal = 0, giftSubtotal = 0, discountBase = 0;
     const copyItems = [];
@@ -148,18 +149,40 @@ module.exports = async function handler(req, res) {
       'Доставка: ' + (delivery === null ? 'уточнить' : money(delivery)),
       'Предварительный итог: ' + (delivery === null ? money(discountedSubtotal) + ' + доставка' : money(discountedSubtotal + delivery))
     ].filter(x => x !== '').join('\n');
-    const send = text => Promise.all(chats.map(async (chatId, index) => {
-      try {
-        const response = await fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text }) });
-        const result = await response.json();
-        if (!response.ok || !result.ok) console.error('Telegram delivery failed for administrator ' + (index + 1) + ': ' + (result.description || 'HTTP ' + response.status));
-        // message_id of the order card: photos are sent as a reply to it
-        return response.ok && result.ok ? (result.result && result.result.message_id) || true : false;
-      } catch (error) {
-        console.error('Telegram delivery failed for administrator ' + (index + 1) + ':', error);
-        return false;
+    const send = text => {
+      const parts = [];
+      let part = '';
+      for (const line of text.split('\n')) {
+        if (part && part.length + line.length + 1 > 3900) {
+          parts.push(part);
+          part = 'Заявка ' + orderId + ' · продолжение';
+        }
+        part = part ? part + '\n' + line : line;
       }
-    }));
+      parts.push(part);
+      return Promise.all(chats.map(async (chatId, index) => {
+        try {
+          let firstMessage;
+          for (const part of parts) {
+            const response = await fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ chat_id: chatId, text: part })
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) {
+              console.error('Telegram delivery failed for administrator ' + (index + 1) + ': ' + (result.description || 'HTTP ' + response.status));
+              return false;
+            }
+            firstMessage ||= (result.result && result.result.message_id) || true;
+          }
+          return firstMessage;
+        } catch (error) {
+          console.error('Telegram delivery failed for administrator ' + (index + 1) + ':', error);
+          return false;
+        }
+      }));
+    };
     const photos = orderPhotos(copyItems, giftApplied ? giftItem : null);
     const sendPhotos = cards => Promise.all(chats.map((chatId, index) =>
       typeof cards[index] === 'number' ? sendOrderPhotos(token, chatId, cards[index], photos) : null));

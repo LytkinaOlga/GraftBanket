@@ -122,17 +122,28 @@
       '<div class="gallery-dots" aria-hidden="true">' + images.map(function (_, i) { return '<span' + (i ? '' : ' class="active"') + '></span>'; }).join('') + '</div></div>';
   }
   function initGalleryDots(root) {
-    root.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+    root.querySelectorAll('[data-gallery], #new-year-items .ready-box-gallery').forEach(function (gallery) {
       if (gallery.dataset.dotsReady) return;
       gallery.dataset.dotsReady = '1';
       var track = gallery.querySelector('.ready-box-gallery-track');
       var dots = gallery.querySelectorAll('.gallery-dots span');
-      track.addEventListener('scroll', function () {
+      var photos = gallery.closest('#new-year-items') ? track.querySelectorAll('img') : [];
+      function updateSlide() {
         var active = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
         dots.forEach(function (dot, index) { dot.classList.toggle('active', index === active); });
-      }, { passive: true });
+        var photo = photos[active];
+        if (photo && photo.naturalWidth && photo.naturalHeight) {
+          gallery.style.aspectRatio = photo.naturalWidth + ' / ' + photo.naturalHeight;
+        }
+      }
+      track.addEventListener('scroll', updateSlide, { passive: true });
+      if (photos.length) {
+        track.addEventListener('load', updateSlide, true);
+        updateSlide();
+      }
     });
   }
+
   function simpleCard(item) {
       var note = item.note ? '<div class="card-weight">' + esc(item.note) + '</div>' : '';
       var orderText = item.orderLabel || (item.qtyStep === item.minQty
@@ -143,7 +154,7 @@
       return '<article class="card card-simple">' + cardPhoto(item) + '<div class="card-body"><div class="card-name">' + esc(item.name) + '</div>' + weight + note + orderNote + '<div class="card-footer"><div class="card-price-block" data-price-summary="' + item.id + '">' + priceSummary(item) + '</div><div class="card-action" data-control="' + item.id + '"></div></div></div></article>';
   }
   // Горячее — большие карточки в стиле готовых боксов (фото слева / сверху на телефоне, крупное название и цена).
-  function hotCard(item) {
+  function featuredItemCard(item) {
     var images = item.images && item.images.length ? item.images : [item.img];
     var badge = item.badge ? '<span class="card-badge">' + esc(item.badge) + '</span>' : '';
     var gallery = '<div class="ready-box-gallery ready-box-gallery-cover"' + (images.length > 1 ? ' data-gallery' : '') + ' aria-label="Фотографии: ' + esc(item.name) + '">' + badge + '<div class="ready-box-gallery-track">' +
@@ -153,7 +164,8 @@
     var description = item.description ? '<p>' + esc(item.description) + '</p>' : '';
     var composition = item.composition ? '<p class="ready-box-note">Состав: ' + esc(item.composition) + '</p>' : '';
     var order = item.orderLabel ? '<p class="ready-box-note">' + esc(item.orderLabel) + '</p>' : '';
-    return '<article id="' + item.id + '" class="ready-box hot-box">' + gallery + '<div class="ready-box-content"><span class="ready-box-kicker">Горячее · <span class="ready-box-weight">' + esc(item.weight || '') + '</span></span>' +
+    var categoryLabel = item.category === 'new-year' ? 'Новогоднее меню' : 'Горячее';
+    return '<article id="' + item.id + '" class="ready-box hot-box">' + gallery + '<div class="ready-box-content"><span class="ready-box-kicker">' + categoryLabel + ' · <span class="ready-box-weight">' + esc(item.weight || '') + '</span></span>' +
       '<h3><span>' + esc(item.name) + '</span></h3>' + description + composition + order +
       '<div class="ready-box-order"><div class="ready-box-price"><strong>' + shortMoney(item.price) + '</strong><span>за 1 ' + esc(unit) + '</span></div><div class="ready-box-action" data-control="' + item.id + '"></div></div></div></article>';
   }
@@ -164,7 +176,7 @@
     $('catalog').innerHTML = categories.map(function (category) {
       if (category.id === 'hot') {
         return '<section class="category-section" id="cat-hot"><h2>' + esc(category.title) + '</h2><div class="ready-grid hot-grid">' +
-          products.filter(function (item) { return item.type === 'snack' && item.category === 'hot'; }).map(hotCard).join('') + '</div></section>';
+          products.filter(function (item) { return item.type === 'snack' && item.category === 'hot'; }).map(featuredItemCard).join('') + '</div></section>';
       }
       return '<section class="category-section" id="cat-' + category.id + '"><h2>' + esc(category.title) + '</h2><div class="grid">' + products.filter(function (item) { return item.type === 'snack' && item.category === category.id; }).map(function (item) {
         if (['bruschette', 'rolls', 'croissants', 'crostini', 'biscuit-rolls', 'salads', 'tartlets', 'desserts', 'pies', 'napoleons', 'hot'].indexOf(item.category) !== -1) return simpleCard(item);
@@ -177,9 +189,8 @@
   function renderMenuBlocks() {
     document.querySelectorAll('[data-menu-category]').forEach(function (box) {
       var id = box.getAttribute('data-menu-category');
-      var cat = CATEGORIES.filter(function (c) { return c.id === id; })[0];
-      if (!cat) return;
-      var html = products.filter(function (item) { return item.type === 'snack' && item.category === id; }).map(id === 'hot' ? hotCard : simpleCard).join('');
+      if (id !== 'new-year' && !CATEGORIES.some(function (category) { return category.id === id; })) return;
+      var html = products.filter(function (item) { return item.type === 'snack' && item.category === id; }).map(id === 'hot' || id === 'new-year' ? featuredItemCard : simpleCard).join('');
       if (html) { box.innerHTML = html; initGalleryDots(box); }
     });
   }
@@ -449,7 +460,7 @@
   var siteHeader = document.querySelector('.site-header');
   var lastScrollY = window.scrollY;
   function updateMobileHeader() {
-    if (window.innerWidth > 680) {
+    if (window.innerWidth > 740) {
       siteHeader.classList.remove('is-hidden');
       lastScrollY = window.scrollY;
       return;
@@ -461,7 +472,7 @@
     lastScrollY = currentScrollY;
   }
   window.addEventListener('scroll', updateMobileHeader, { passive: true });
-  window.addEventListener('resize', function () { if (window.innerWidth > 680) closeMenu(); updateMobileHeader(); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 740) closeMenu(); updateMobileHeader(); });
   var scrollTopBtn = $('scrollTopBtn');
   if (scrollTopBtn) {
     function toggleScrollTopBtn() { scrollTopBtn.classList.toggle('visible', window.scrollY > 500); }
